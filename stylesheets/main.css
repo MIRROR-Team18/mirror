@@ -10,6 +10,17 @@
     --mirror-blue: #1f005d;
 }
 
+.row {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.col {
+    flex: 1;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
 nav {
     position: sticky;
     top: 0;
@@ -47,7 +58,75 @@ nav a:not(a:first-child) {
 
 footer {
     width: 100%;
-    padding: 2rem 4rem;
+    padding: 2rem 10vw;
 
-    color: var(--mirror-blue);
+    background: var(--mirror-blue);
+
+    display: flex;
+    flex-flow: row wrap;
+
+    text-align: right;
+}
+
+footer .col:first-child {
+    text-align: left;
+    justify-content: center;
+}
+
+footer a, footer h1 {
+    color: white;
+}
+
+header {
+    height: 30vh;
+    width: 100%;
+    background: grey;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column nowrap;
+}
+
+header h1 {
+    font-size: 4rem;
+}
+
+section {
+    padding: 2rem 10vw;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-content: center;
+}
+
+section h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 1rem;
+
+    background-color: #ddd;
+    padding: 2rem;
+    margin: 1rem;
+    border-radius: 8px;
+}
+
+button {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    background: var(--mirror-blue);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 25%;
+    margin: auto;
 }

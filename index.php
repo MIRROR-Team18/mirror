@@ -10,7 +10,25 @@
 </head>
 <body>
     <?php include 'components/header.php'; ?>
-    <h1>HELLO MIЯЯOR</h1>
+    <header>
+        <h1>MIЯЯOR</h1>
+        <p>we'll have a slogan right?</p>
+    </header>
+    <main>
+        <section>
+            <h1>NEW RELEASES</h1>
+            <div class="grid" id="newReleases">
+                <?php
+                // Example code for fetching products from the database
+                // $products = $db->query('SELECT * FROM products ORDER BY id DESC LIMIT 4');
+                // foreach ($products as $product) {
+                //     include 'components/product.php';
+                // }
+                ?>
+            </div>
+            <button>See the range...</button>
+        </section>
+    </main>
     <?php include 'components/footer.php'; ?>
 </body>
 </html>
