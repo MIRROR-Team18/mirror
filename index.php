@@ -8,6 +8,6 @@
     <title>MIЯЯOR</title>
 </head>
 <body>
-    <h1>HELLO MIЯЯOR</h1>
+    <h2>HELLO MIЯЯOR</h2>
 </body>
 </html>
