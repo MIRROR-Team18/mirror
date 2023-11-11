@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 10, 2023 at 01:59 PM
+-- Generation Time: Nov 11, 2023 at 03:50 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -28,9 +28,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `orders` (
-  `id` int(16) NOT NULL,
-  `status` enum('processing','dispatched') DEFAULT NULL,
-  `paidAmount` float(9,2) DEFAULT NULL
+  `orderID` int(16) NOT NULL,
+  `userID` int(16) NOT NULL,
+  `status` enum('processing','dispatched') NOT NULL DEFAULT 'processing',
+  `paidAmount` float(9,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -40,7 +41,7 @@ CREATE TABLE `orders` (
 --
 
 CREATE TABLE `products` (
-  `id` int(16) NOT NULL,
+  `productID` int(16) NOT NULL,
   `name` varchar(64) NOT NULL,
   `type` enum('tops','bottom','socks','shoes','accessories') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -52,10 +53,10 @@ CREATE TABLE `products` (
 --
 
 CREATE TABLE `products_in_orders` (
-  `oid` int(16) NOT NULL,
-  `pid` int(16) NOT NULL,
-  `sid` int(16) NOT NULL,
-  `quantity` int(2) NOT NULL
+  `orderID` int(16) NOT NULL,
+  `productID` int(16) NOT NULL,
+  `sizeID` int(16) NOT NULL,
+  `quantity` int(2) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -65,8 +66,8 @@ CREATE TABLE `products_in_orders` (
 --
 
 CREATE TABLE `product_sizes` (
-  `pid` int(16) NOT NULL,
-  `sid` int(16) NOT NULL
+  `productID` int(16) NOT NULL,
+  `sizeID` int(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -76,7 +77,7 @@ CREATE TABLE `product_sizes` (
 --
 
 CREATE TABLE `sizes` (
-  `id` int(16) NOT NULL,
+  `sizeID` int(16) NOT NULL,
   `name` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -87,23 +88,12 @@ CREATE TABLE `sizes` (
 --
 
 CREATE TABLE `users` (
-  `uid` int(16) NOT NULL,
+  `userID` int(16) NOT NULL,
   `firstName` varchar(100) NOT NULL,
   `lastName` varchar(100) NOT NULL,
   `email` varchar(320) NOT NULL,
   `password` varchar(256) NOT NULL,
   `admin` int(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user_orders`
---
-
-CREATE TABLE `user_orders` (
-  `oid` int(16) NOT NULL,
-  `uid` int(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -114,73 +104,66 @@ CREATE TABLE `user_orders` (
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`orderID`),
+  ADD KEY `FK_Orders_User` (`userID`);
 
 --
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`productID`);
 
 --
 -- Indexes for table `products_in_orders`
 --
 ALTER TABLE `products_in_orders`
-  ADD PRIMARY KEY (`oid`,`pid`),
-  ADD KEY `FK_ProductsOrders_Product` (`pid`),
-  ADD KEY `FK_ProductsOrders_Size` (`sid`);
+  ADD PRIMARY KEY (`orderID`,`productID`),
+  ADD KEY `FK_ProductsOrders_Product` (`productID`),
+  ADD KEY `FK_ProductsOrders_Size` (`sizeID`);
 
 --
 -- Indexes for table `product_sizes`
 --
 ALTER TABLE `product_sizes`
-  ADD PRIMARY KEY (`pid`,`sid`),
-  ADD KEY `FK_ProductSizes_Size` (`sid`);
+  ADD PRIMARY KEY (`productID`,`sizeID`),
+  ADD KEY `FK_ProductSizes_Size` (`sizeID`);
 
 --
 -- Indexes for table `sizes`
 --
 ALTER TABLE `sizes`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`sizeID`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`uid`);
-
---
--- Indexes for table `user_orders`
---
-ALTER TABLE `user_orders`
-  ADD PRIMARY KEY (`oid`,`uid`),
-  ADD KEY `FK_UserOrders_User` (`uid`);
+  ADD PRIMARY KEY (`userID`);
 
 --
 -- Constraints for dumped tables
 --
 
 --
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `FK_Orders_User` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
+
+--
 -- Constraints for table `products_in_orders`
 --
 ALTER TABLE `products_in_orders`
-  ADD CONSTRAINT `FK_ProductsOrders_Order` FOREIGN KEY (`oid`) REFERENCES `orders` (`id`),
-  ADD CONSTRAINT `FK_ProductsOrders_Product` FOREIGN KEY (`pid`) REFERENCES `products` (`id`),
-  ADD CONSTRAINT `FK_ProductsOrders_Size` FOREIGN KEY (`sid`) REFERENCES `sizes` (`id`);
+  ADD CONSTRAINT `FK_ProductsOrders_Order` FOREIGN KEY (`orderID`) REFERENCES `orders` (`orderID`),
+  ADD CONSTRAINT `FK_ProductsOrders_Product` FOREIGN KEY (`productID`) REFERENCES `products` (`productID`),
+  ADD CONSTRAINT `FK_ProductsOrders_Size` FOREIGN KEY (`sizeID`) REFERENCES `sizes` (`sizeID`);
 
 --
 -- Constraints for table `product_sizes`
 --
 ALTER TABLE `product_sizes`
-  ADD CONSTRAINT `FK_ProductSizes_Product` FOREIGN KEY (`pid`) REFERENCES `products` (`id`),
-  ADD CONSTRAINT `FK_ProductSizes_Size` FOREIGN KEY (`sid`) REFERENCES `sizes` (`id`);
-
---
--- Constraints for table `user_orders`
---
-ALTER TABLE `user_orders`
-  ADD CONSTRAINT `FK_UserOrders_Order` FOREIGN KEY (`oid`) REFERENCES `orders` (`id`),
-  ADD CONSTRAINT `FK_UserOrders_User` FOREIGN KEY (`uid`) REFERENCES `users` (`uid`);
+  ADD CONSTRAINT `FK_ProductSizes_Product` FOREIGN KEY (`productID`) REFERENCES `products` (`productID`),
+  ADD CONSTRAINT `FK_ProductSizes_Size` FOREIGN KEY (`sizeID`) REFERENCES `sizes` (`sizeID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
