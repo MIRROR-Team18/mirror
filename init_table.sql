@@ -67,7 +67,8 @@ CREATE TABLE `products_in_orders` (
 
 CREATE TABLE `product_sizes` (
   `productID` varchar(32) NOT NULL,
-  `sizeID` int(8) NOT NULL
+  `sizeID` int(8) NOT NULL,
+  `price` float(9,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

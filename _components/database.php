@@ -49,6 +49,33 @@ class User {
 	}
 }
 
+class Size {
+	public string $sizeID;
+	public string $name;
+
+	public function __construct(string $sizeID, string $name) {
+		$this->sizeID = $sizeID;
+		$this->name = $name;
+	}
+}
+
+/**
+ * Treat this like an object to store product data.
+ */
+class Product {
+	public string $productID;
+	public string $name;
+	public string $type;
+	public array $sizes;
+
+	public function __construct(string $productID, string $name, string $type, array $sizes = null) {
+		$this->productID = $productID;
+		$this->name = $name;
+		$this->type = $type;
+		$this->sizes = $sizes ?? array();
+	}
+}
+
 class Database {
 	private PDO $conn;
 
@@ -117,6 +144,58 @@ class Database {
 			return new User($result['userID'], $result['email'], $result['firstName'], $result['lastName']);
 
 	}
+
+	/**
+	 * Returns an array of all the products available in the database, with no filtering.
+	 * @return Product[] An array of all the products.
+	 */
+	public function getAllProducts(): array {
+		$stmt = $this->conn->prepare("SELECT * FROM products");
+		$stmt->execute();
+		$productResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		$products = array();
+		foreach ($productResults as $productResult) {
+			$stmt = $this->conn->prepare("SELECT * FROM product_sizes WHERE productID = ?");
+			$stmt->execute([$productResult['productID']]);
+			$sizeResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$sizes = array();
+
+			foreach ($sizeResults as $sizeResult) {
+				$sizes[] = new Size($sizeResult['sizeID'], $sizeResult['name']);
+			}
+
+			$products[] = new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
+		}
+
+		return $products;
+	}
+
+	/**
+	 * Returns a product from a given productID.
+	 * @param string $productID
+	 * @return Product | null
+	 */
+	public function getProduct(string $productID): Product | null {
+		$stmt = $this->conn->prepare("SELECT * FROM products WHERE productID = ?");
+		$stmt->execute([$productID]);
+		$productResult = $stmt->fetch(PDO::FETCH_ASSOC);
+
+		if (!$productResult) return null;
+
+		$stmt = $this->conn->prepare("SELECT * FROM product_sizes WHERE productID = ?");
+		$stmt->execute([$productResult['productID']]);
+		$sizeResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		$sizes = array();
+		foreach ($sizeResults as $sizeResult) {
+			$sizes[] = new Size($sizeResult['sizeID'], $sizeResult['name']);
+		}
+
+		return new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
+	}
+
+
 }
 
 class Tester {
@@ -135,4 +214,4 @@ class Tester {
 	}
 }
 
-Tester::test();
+// Tester::test();
