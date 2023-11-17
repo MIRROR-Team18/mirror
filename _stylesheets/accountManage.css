@@ -5,13 +5,22 @@
     border-radius: 8px;
 
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 0.5fr 2.5fr;
 }
 
-#accountPanel #options {
-
+#accountPanel #options{
+    text-align: center;
+}
+#accountPanel #options a{
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: black;
+}
+#accountPanel #options a:hover{
+    font-weight: bold;
 }
 
 #accountPanel #view {
-
+    font-size: 1rem;
+    text-align: center;
 }
