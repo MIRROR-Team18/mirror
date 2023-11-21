@@ -49,9 +49,10 @@
                         ';
                         break;
                     case "details-change":
-                        //Following stuff needs to be updated to the database when the form is submited
-                        echo '
-                        <form>
+                        //Following stuff needs to be updated to the database when the form is submited + email has to be confirmed
+                        ?>
+                        <form method = "post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+                            <p>Leave any fields you do not wish to change blank.</p><br>
                             <label for="firstName">First Name</label>
                             <input type="text" name="firstName" id="firstName" value="">
                             <br>
@@ -63,10 +64,10 @@
                             <br><br>
                             <input class = "button" type="submit" value = "Submit Changes">
                         </form>
-                        ';
+                        <?php
                         break;
                     case "security":
-                        echo'
+                        ?>
                         <div class="row">
                             <label for="currentPassword">Current Password</label>
                             <input type="password" name="currentPassword" id="currentPassword">
@@ -79,7 +80,7 @@
                             <label for="confirmNewPassword">Confirm New Password</label>
                             <input type="password" name="confirmNewPassword" id="confirmNewPassword">
                         </div>
-                        ';
+                        <?php
                         break;
                     case "pastOrders":
                         // Make call to database to return orders.
