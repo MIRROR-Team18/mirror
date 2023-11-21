@@ -6,6 +6,8 @@
 
     display: grid;
     grid-template-columns: 0.5fr 2.5fr;
+    justify-content: center;
+    align-items: center;
 }
 
 #accountPanel #options{
@@ -23,4 +25,22 @@
 #accountPanel #view {
     font-size: 1rem;
     text-align: center;
+}
+#view a {
+    text-decoration: none;
+    color: black;
+}
+#view a:hover {
+    font-weight: bold;
+}
+
+input.button {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 25%;
+    margin: auto;
 }
