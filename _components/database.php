@@ -52,10 +52,12 @@ class User {
 class Size {
 	public string $sizeID;
 	public string $name;
+	public float $price;
 
-	public function __construct(string $sizeID, string $name) {
+	public function __construct(string $sizeID, string $name, float $price) {
 		$this->sizeID = $sizeID;
 		$this->name = $name;
+		$this->price = $price;
 	}
 }
 
@@ -156,13 +158,13 @@ class Database {
 
 		$products = array();
 		foreach ($productResults as $productResult) {
-			$stmt = $this->conn->prepare("SELECT * FROM product_sizes WHERE productID = ?");
+			$stmt = $this->conn->prepare("SELECT * FROM product_sizes INNER JOIN sizes ON product_sizes.sizeID = sizes.sizeID WHERE productID = ?;");
 			$stmt->execute([$productResult['productID']]);
 			$sizeResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			$sizes = array();
 
 			foreach ($sizeResults as $sizeResult) {
-				$sizes[] = new Size($sizeResult['sizeID'], $sizeResult['name']);
+				$sizes[] = new Size($sizeResult['sizeID'], $sizeResult['name'], $sizeResult['price']);
 			}
 
 			$products[] = new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
@@ -183,23 +185,43 @@ class Database {
 
 		if (!$productResult) return null;
 
-		$stmt = $this->conn->prepare("SELECT * FROM product_sizes WHERE productID = ?");
+		$stmt = $this->conn->prepare("SELECT * FROM product_sizes INNER JOIN sizes ON product_sizes.sizeID = sizes.sizeID WHERE productID = ?;");
 		$stmt->execute([$productResult['productID']]);
 		$sizeResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		$sizes = array();
 		foreach ($sizeResults as $sizeResult) {
-			$sizes[] = new Size($sizeResult['sizeID'], $sizeResult['name']);
+			$sizes[] = new Size($sizeResult['sizeID'], $sizeResult['name'], $sizeResult['price']);
 		}
 
 		return new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
 	}
 
+	/**
+	 * Creates a product with the provided product
+	 * @param Product $product
+	 * @return bool Returns true if product added successfully.
+	 */
+	public function createProduct(Product $product): bool {
+		foreach ($product->sizes as $size) {
+			$stmt = $this->conn->prepare("INSERT INTO product_sizes (productID, sizeID, price) VALUES (?, ?, ?)");
+			$stmt->execute([$product->productID, $size->sizeID, $size->price]);
+		}
 
+		$stmt = $this->conn->prepare("INSERT INTO products (productID, name, type) VALUES (?, ?, ?)");
+		$stmt->execute([$product->productID, $product->name, $product->type]);
+
+		return true;
+	}
 }
 
 class Tester {
-	public static function debug_to_console($data) {
+	/**
+	 * A replication of console.log() but within PHP... by using console.log().
+	 * @param mixed $data - Anything to print
+	 * @return void - Echos the output to the console
+	 */
+	public static function debug_to_console(mixed $data): void {
 		$output = $data;
 		if (is_array($output))
 			$output = implode(',', $output);
@@ -207,11 +229,19 @@ class Tester {
 		echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 	}
 
-	public static function test() {
+	public static function main(): void {
 		$db = new Database();
-		$user = $db->registerUser("224@aston.ac.uk", "Test", "User", "password");
-		self::debug_to_console($user->userID);
+		$prod = $db->createProduct(new Product("universe-briefs-unisex", "Universe Briefs", "bottom", array()) );
+		self::debug_to_console($prod);
+		$prod = $db->createProduct(new Product("bottle-top-unisex", "Bottle Top", "tops", array()) );
+		self::debug_to_console($prod);
+		$prod = $db->createProduct(new Product("charger-socks-womens", "Charger Socks", "socks", array()) );
+		self::debug_to_console($prod);
+		$prod = $db->createProduct(new Product("bag-bag", "The Bag", "accessories", array()) );
+		self::debug_to_console($prod);
+		$prod = $db->createProduct(new Product("laptop-top-mens", "Laptop Top", "tops", array()) );
+		self::debug_to_console($prod);
 	}
 }
 
-// Tester::test();
+// Tester::main();

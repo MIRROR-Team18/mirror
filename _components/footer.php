@@ -1,6 +1,6 @@
 <footer>
     <div class="col">
-        <h1>MIЯЯOR</h1>
+        <h1>MIRЯOR</h1>
     </div>
     <div class="col">
         <a href="">Terms of Service</a>

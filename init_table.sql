@@ -43,7 +43,7 @@ CREATE TABLE `orders` (
 CREATE TABLE `products` (
   `productID` varchar(32) NOT NULL PRIMARY KEY,
   `name` varchar(64) NOT NULL,
-  `type` enum('tops','bottom','socks','shoes','accessories') NOT NULL
+  `type` enum('tops','bottoms','socks','shoes','accessories') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
