@@ -6,6 +6,42 @@
     else {
         $currentView = "details";
     }
+    //Get form submision and update database
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $fName = $_POST['firstName'];
+        $sName = $_POST['surName'];
+        $email = $_POST['email'];
+        //First name
+        if ($fName == "") {
+            //name not changed so do nothing
+        }
+        else if (!preg_match("/^[a-zA-Z-' ]*$/",$fName)) {
+            //name isnt valid
+        }
+        else {
+            //name changed valid so update data base
+        }
+        //Surname
+        if ($sName == "") {
+            //name not changed so do nothing
+        }
+        else if (!preg_match("/^[a-zA-Z-' ]*$/",$sName)) {
+            //name isnt valid
+        }
+        else {
+            //name changed valid so update data base
+        }
+        //Email
+        if ($email == "") {
+            //email not changed so do nothing
+        }
+        else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            //email isnt valid
+        }
+        else {
+            //email changed valid so update data base
+        }
+    }
 ?>
 <!doctype html>
 <html lang="en">
