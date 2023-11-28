@@ -28,8 +28,8 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `orders` (
-  `orderID` int(16) NOT NULL,
-  `userID` int(16) NOT NULL,
+  `orderID` int(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `userID` varchar(8) NOT NULL,
   `status` enum('processing','dispatched') NOT NULL DEFAULT 'processing',
   `paidAmount` float(9,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -41,9 +41,9 @@ CREATE TABLE `orders` (
 --
 
 CREATE TABLE `products` (
-  `productID` int(16) NOT NULL,
+  `productID` varchar(32) NOT NULL PRIMARY KEY,
   `name` varchar(64) NOT NULL,
-  `type` enum('tops','bottom','socks','shoes','accessories') NOT NULL
+  `type` enum('tops','bottoms','socks','shoes','accessories') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -53,9 +53,9 @@ CREATE TABLE `products` (
 --
 
 CREATE TABLE `products_in_orders` (
-  `orderID` int(16) NOT NULL,
-  `productID` int(16) NOT NULL,
-  `sizeID` int(16) NOT NULL,
+  `orderID` int(8) NOT NULL,
+  `productID` varchar(32) NOT NULL,
+  `sizeID` int(8) NOT NULL,
   `quantity` int(2) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -66,8 +66,9 @@ CREATE TABLE `products_in_orders` (
 --
 
 CREATE TABLE `product_sizes` (
-  `productID` int(16) NOT NULL,
-  `sizeID` int(16) NOT NULL
+  `productID` varchar(32) NOT NULL,
+  `sizeID` int(8) NOT NULL,
+  `price` float(9,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -77,7 +78,7 @@ CREATE TABLE `product_sizes` (
 --
 
 CREATE TABLE `sizes` (
-  `sizeID` int(16) NOT NULL,
+  `sizeID` int(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -88,7 +89,7 @@ CREATE TABLE `sizes` (
 --
 
 CREATE TABLE `users` (
-  `userID` int(16) NOT NULL,
+  `userID` varchar(8) NOT NULL PRIMARY KEY,
   `firstName` varchar(100) NOT NULL,
   `lastName` varchar(100) NOT NULL,
   `email` varchar(320) NOT NULL,
@@ -104,14 +105,8 @@ CREATE TABLE `users` (
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
-  ADD PRIMARY KEY (`orderID`),
-  ADD KEY `FK_Orders_User` (`userID`);
-
---
--- Indexes for table `products`
---
-ALTER TABLE `products`
-  ADD PRIMARY KEY (`productID`);
+  ADD KEY `FK_Orders_User` (`userID`),
+  AUTO_INCREMENT=10000000;
 
 --
 -- Indexes for table `products_in_orders`
@@ -127,18 +122,6 @@ ALTER TABLE `products_in_orders`
 ALTER TABLE `product_sizes`
   ADD PRIMARY KEY (`productID`,`sizeID`),
   ADD KEY `FK_ProductSizes_Size` (`sizeID`);
-
---
--- Indexes for table `sizes`
---
-ALTER TABLE `sizes`
-  ADD PRIMARY KEY (`sizeID`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`userID`);
 
 --
 -- Constraints for dumped tables
