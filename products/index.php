@@ -19,10 +19,10 @@
     <main>
         <section id="productsGrid">
             <div class="left">
-                <div id="forProductType" class="filterGroup" data-current-mode="any">
+                <div id="forProductType" class="filterGroup">
                     <div class="title">
                         <h2>Type</h2>
-                        <a href="">With any of...</a> | <a href="">With all of...</a>
+                        <a href="#" id="productType_any" class="selected">Any of...</a>&nbsp;|&nbsp;<a href="#" id="productType_only">Only...</a>
                     </div>
                     <div class="inputLabelGroup">
                         <input type="checkbox" name="tops" id="tops">
