@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Navigation bar styles */
+        .navbar {
+            background-color: #C9DFF2;
+            overflow: hidden;
+        }
+
+        .navbar a {
+            float: left;
+            font-size: 18px;
+            color: black;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        /* Add styles for footer */
+        .footer {
+            background-color: #F2F2F2;
+            color: black;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .about-us {
+            width: 100%;
+            height: calc(100vh - 100px); /* Subtract the height of the navbar and footer */
+            background: linear-gradient(to bottom, #C9DFF2, #C9DFF2 50%, #F2F2F2 50%);
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-image {
+            position: relative;
+            width: 50%;
+            background-image: url('your-image.jpg'); /* Replace 'your-image.jpg' with your image file path */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .about-image-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: black;
+        }
+
+        p {
+            color: #333;
+            font-size: 18px;
+            text-align: center; /* Center-align the text within the column */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="#">Home</a>
+        <a href="#">Products</a>
+        <a href="#">About Us</a>
+        <a href="#">Contact</a>
+    </div>
+
+    <div class="about-us">
+        <div class="about-image">
+            <div class="about-image-content">
+                <h1>OUR STORY</h1>
+                <img src="image.jpg" alt="Your Image" style="max-width: 100%; border-radius: 10px;">
+                <p>"At MIRROR, our story begins with a passion for fashion and a commitment to making every individual feel like a trendsetter. What sets us apart is our relentless pursuit of style and quality. We believe that clothing is more than just fabric; it's an expression of your unique personality and creativity."</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        &copy; 2023 MIRROR
+    </div>
+</body>
+</html>
