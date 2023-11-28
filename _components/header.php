@@ -1,6 +1,6 @@
 <nav>
     <div class="left">
-        <a>MIRЯOR</a>
+        <a href="/">MIRЯOR</a>
     </div>
     <div class="right">
         <a>About Us</a>
