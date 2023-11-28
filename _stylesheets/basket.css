@@ -1,0 +1,59 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+#basket {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#basket th, #basket td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#checkout {
+    display: block;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#order-summary {
+    margin-top: 30px;
+}
+
+#total {
+    text-align: right;
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#continue-to-checkout {
+    display: block;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.product-image {
+    max-width: 100px;
+    max-height: 100px;
+    margin-right: 10px;
+}
