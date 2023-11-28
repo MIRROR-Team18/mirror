@@ -99,22 +99,9 @@ if (isset($_POST['submitted'])) {
     </style>
 
     <title> Login to your MIЯЯOR account </title>
+    <link rel="stylesheet" href="./_stylesheets/main.css">
 </head>
-<div class="tnav">
-    <h1>Login</h1>
-    <header id="main-header"></header>
-
-
-
-    <a href="Register.php"> Register </a>
-    <a href="Homepage. "> Home Page </a> <!-- * Add the homepage once created. --->
-    <a href="AboutUs.php"> About Us </a> <!-- * Add the about us once created. --->
-
-
-
-
-</div>
-
+<?php include '_components/header.php'; ?>
 <body>
     <br>
     <br>
@@ -131,21 +118,7 @@ if (isset($_POST['submitted'])) {
     </div>
 </body>
 
-<footer>
-    <div class="col">
-        <h1>MIЯЯOR</h1>
-    </div>
-    <div class="col">
-        <a href="">Terms of Service</a>
-        <a href="">Privacy Policy</a>
-    </div>
-    <div class="col">
-        <a href="">Help</a>
-        <a href="">Returns</a>
-        <a href="">Deliveries</a>
-        <a href="">Track Order</a>
-    </div>
-</footer>
+<?php include '_components/footer.php'; ?>
 
 </php>
 
