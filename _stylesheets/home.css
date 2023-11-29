@@ -1,0 +1,17 @@
+#welcome {
+    height: 90vh;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#welcome img {
+    max-height: 35vh;
+}
+
+#welcome h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+}
