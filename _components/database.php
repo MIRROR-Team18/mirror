@@ -21,8 +21,14 @@ class Connection {
 	public static function getConnection(): PDO {
 		if (!isset(self::$dbConnection)) {
 			try {
+				require_once '../vendor/autoload.php'; // Loading the .env module.
+				$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../");
+				$dotenv->load();
+
+				$db_host = $_ENV['DB_HOST'];
+				$db_name = $_ENV['DB_NAME'];
 				// Currently this only supports local connections, maybe later I'll add support for virtualmin.
-				self::$dbConnection = new PDO("mysql:host=localhost;dbname=mirror_mvp", "root", "");
+				self::$dbConnection = new PDO("mysql:host=$db_host;dbname=$db_name", $_ENV['DB_USER'], $_ENV['DB_PASS']);
 				self::$dbConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			} catch (PDOException $e) {
 				exit("Database Connection failed: " . $e->getMessage());
@@ -231,16 +237,8 @@ class Tester {
 
 	public static function main(): void {
 		$db = new Database();
-		$prod = $db->createProduct(new Product("universe-briefs-unisex", "Universe Briefs", "bottom", array()) );
-		self::debug_to_console($prod);
-		$prod = $db->createProduct(new Product("bottle-top-unisex", "Bottle Top", "tops", array()) );
-		self::debug_to_console($prod);
-		$prod = $db->createProduct(new Product("charger-socks-womens", "Charger Socks", "socks", array()) );
-		self::debug_to_console($prod);
-		$prod = $db->createProduct(new Product("bag-bag", "The Bag", "accessories", array()) );
-		self::debug_to_console($prod);
-		$prod = $db->createProduct(new Product("laptop-top-mens", "Laptop Top", "tops", array()) );
-		self::debug_to_console($prod);
+		$prod = $db->getAllProducts();
+		self::debug_to_console($prod[0]->productID);
 	}
 }
 
