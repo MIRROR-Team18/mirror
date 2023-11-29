@@ -1,4 +1,3 @@
 .idea/*
-.vscode/launch.json
 .env
 vendor/*
