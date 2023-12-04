@@ -2,7 +2,7 @@
     session_start();
     //if (isset($_SESSION["userID"]) == false) echo '<script>window.location.replace("../index.php");</script>';
     require '../_components/database.php';
-    if (isset($_GET['option']) && in_array($_GET['option'], array('details', "details-change", 'security', 'pastOrders'))) {
+    if (isset($_GET['option']) && in_array($_GET['option'], array('details', "details-change", 'security', 'pastOrders', 'security-change'))) {
         $currentView = $_GET['option'];
     }
     else {
@@ -11,77 +11,126 @@
     //Get form submision and update database
     $inputError = "";
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $fName = $_POST['firstName'];
-        $sName = $_POST['surName'];
-        $email = $_POST['email'];
+        $fName = $_POST['firstName'] ?? null;
+        $sName = $_POST['surName'] ?? null;
+        $email = $_POST['email'] ?? null;
+        $oldPassword = $_POST['currentPassword'] ?? null;
+        $newPassword = $_POST['newPassword'] ?? null;
+        $confNewPassword = $_POST['confirmNewPassword'] ?? null;
         
-        //First name
-        if ($fName == "") {
-            //name not changed so do nothing
+        //POST for details change
+        if($fName != null) {
+            //First name
+            if ($fName == "") {
+                //name not changed so do nothing
+            }
+
+            //ensure fname is valid
+            else if (!preg_match("/^[a-zA-Z-' ]*$/",$fName)) {
+                $inputError .= "First name can only contain letters and spaces.\n";
+                $currentView = "details-change";
+            }
+            else if (strlen($fName) > 100) {
+                $inputError .= "First name cannot exede 100 characters";
+            }
+
+            //update fname in db
+            else {
+                $userID = $_SESSION["userID"];
+                $sql = "UPDATE users SET firstName = '$fName' WHERE userID = '$userID'";
+                $conn = getConnection();
+                $conn->query($sql);
+                $conn->close();
+            }
+
+            //Surname
+            if ($sName == "") {
+                //name not changed so do nothing
+            }
+
+            //Ensure sname is valid
+            else if (!preg_match("/^[a-zA-Z-' ]*$/",$sName)) {
+                $inputError .= "Surname can only contain letters and spaces.\n";
+                $currentView = "details-change";
+            }
+            else if (strlen($sName) > 100) {
+                $inputError .= "Surname name cannot exede 100 characters";
+            }
+
+            //update sname in db
+            else {
+                $userID = $_SESSION["userID"];
+                $sql = "UPDATE users SET lastName = '$sName' WHERE userID = '$userID'";
+                $conn = getConnection();
+                $conn->query($sql);
+                $conn->close();
+            }
+
+            //Email
+            if ($email == "") {
+                //email not changed so do nothing
+            }
+
+            //Ensure email is valid
+            else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $inputError .= "Email is an invalid format.\n";
+                $currentView = "details-change";
+            }
+            else if (strlen($email) > 320) {
+                $inputError .= "Email cannot exede 320 characters";
+            }
+
+            //Update email in db
+            else {
+                $userID = $_SESSION["userID"];
+                $sql = "UPDATE users SET email = '$email' WHERE userID = '$userID'";
+                $conn = getConnection();
+                $conn->query($sql);
+                $conn->close();
+            }
         }
 
-        //ensure fname is valid
-        else if (!preg_match("/^[a-zA-Z-' ]*$/",$fName)) {
-            $inputError .= "First name can only contain letters and spaces.\n";
-            $currentView = "details-change";
-        }
-        else if (strlen($fName) > 100) {
-            $inputError .= "First name cannot exede 100 characters";
-        }
+        //POST for password change
+        else if ($oldPassword != null) {
 
-        //update fname in db
-        else {
+            //Get pre-existing hashed password
+            '''
             $userID = $_SESSION["userID"];
-            $sql = "UPDATE users SET firstName = '$fName' WHERE userID = '$userID'";
+            $sql = "SELECT password WHERE userID = '$userID'";
             $conn = getConnection();
-            $conn->query($sql);
+            $dbPassword = $conn->query($sql);
             $conn->close();
-        }
+            '''
+            $dbPassword = password_hash("password123", null); //for testing while i cannot login for it to work
 
-        //Surname
-        if ($sName == "") {
-            //name not changed so do nothing
-        }
+            //ensure password entered matchs pre-existing password
+            if(password_verify($oldPassword, $dbPassword)) {
 
-        //Ensure sname is valid
-        else if (!preg_match("/^[a-zA-Z-' ]*$/",$sName)) {
-            $inputError .= "Surname can only contain letters and spaces.\n";
-            $currentView = "details-change";
-        }
-        else if (strlen($sName) > 100) {
-            $inputError .= "Surname name cannot exede 100 characters";
-        }
+                //ensure that new password and confirm password match
+                if ($newPassword == $confNewPassword) {
 
-        //update sname in db
-        else {
-            $userID = $_SESSION["userID"];
-            $sql = "UPDATE users SET lastName = '$sName' WHERE userID = '$userID'";
-            $conn = getConnection();
-            $conn->query($sql);
-            $conn->close();
-        }
-
-        //Email
-        if ($email == "") {
-            //email not changed so do nothing
-        }
-
-        //Ensure email is valid
-        else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $inputError .= "Email is an invalid format.\n";
-            $currentView = "details-change";
-        }
-        else if (strlen($email) > 320) {
-            $inputError .= "Email cannot exede 320 characters";
-        }
-
-        //Update email in db
-        else {
-            $userID = $_SESSION["userID"];
-            $sql = "UPDATE users SET email = '$email' WHERE userID = '$userID'";
-            $conn = getConnection();
-            $conn->query($sql);
-            $conn->close();
+                    //ensure that password is stron enough
+                    if (preg_match('/^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[^A-Za-z\d])[\s\S]{7,256}$/', $newPassword)) {
+                        
+                        //update data base with new password
+                        $userID = $_SESSION["userID"];
+                        $newHashedPassword = password_hash($newPassword, null);
+                        $sql = "UPDATE users SET password = ''$newHashedPassword' WHERE userID = '$userID'";
+                        $conn = getConnection();
+                        $conn->query($sql);
+                        $conn->close();
+                    }
+                    else {
+                        $inputError .= "Password not strong enough.\n";
+                    }
+                }
+                else {
+                    $inputError .= "Confirm Password and New Password do not match.\n";
+                }
+            }
+            else {
+                $inputError .= "Current Password is Incorrect.\n";
+            }
         }
     }
 ?>
@@ -143,24 +192,29 @@
                         break;
                     case "security":
                         ?>
-                        <div class="row">
+                        <a href = "manage.php?option=security-change"><input class = "button" type = "submit" value = "Change Password"></a>
+                        <?php
+                        break;
+                    case "security-change":
+                        ?>
+                        <form method = "post" action="<?php echo $_SERVER['PHP_SELF'];?>">
                             <label for="currentPassword">Current Password</label>
                             <input type="password" name="currentPassword" id="currentPassword">
-                        </div>
-                        <div class="row">
+                            <br>
                             <label for="newPassword">New Password</label>
                             <input type="password" name="newPassword" id="newPassword">
-                        </div>
-                        <div class="row">
+                            <br>
                             <label for="confirmNewPassword">Confirm New Password</label>
                             <input type="password" name="confirmNewPassword" id="confirmNewPassword">
-                        </div>
+                            <br><br>
+                            <input class = "button" type = "submit" value = "Submit Changes">
+                        </form>
                         <?php
                         break;
                     case "pastOrders":
                         // Make call to database to return orders.
                         break;
-                }
+                    }
                 ?>
             </div>
         </section>
