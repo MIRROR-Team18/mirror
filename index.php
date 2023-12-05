@@ -8,12 +8,11 @@
     <title>MIЯЯOR</title>
     <link rel="stylesheet" href="_stylesheets/main.css">
     <link rel="stylesheet" href="_stylesheets/home.css">
-
 </head>
 <body>
     <?php include '_components/header.php'; ?>
     <main id="welcome">
-        <img src="./_images/logo_large.svg" alt="MIRROR LOGO" />
+        <img id="logo" src="./_images/logo_large.svg" alt="MIRROR LOGO" />
         <h1>MOST WANTED<br/>AND MOST LOVED</h1>
         <div class="buttons">
             <a class="button" href="./products/">MEN</a>
