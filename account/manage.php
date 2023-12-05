@@ -1,6 +1,6 @@
 <?php
     session_start();
-    //if (isset($_SESSION["userID"]) == false) echo '<script>window.location.replace("../index.php");</script>';
+    if (isset($_SESSION["userID"]) == false) echo '<script>window.location.replace("../index.php");</script>';
     require '../_components/database.php';
     if (isset($_GET['option']) && in_array($_GET['option'], array('details', "details-change", 'security', 'pastOrders', 'security-change'))) {
         $currentView = $_GET['option'];
@@ -94,14 +94,11 @@
         else if ($oldPassword != null) {
 
             //Get pre-existing hashed password
-            '''
             $userID = $_SESSION["userID"];
-            $sql = "SELECT password WHERE userID = '$userID'";
+            $sql = "SELECT password FROM users WHERE userID = '$userID'";
             $conn = getConnection();
             $dbPassword = $conn->query($sql);
             $conn->close();
-            '''
-            $dbPassword = password_hash("password123", null); //for testing while i cannot login for it to work
 
             //ensure password entered matchs pre-existing password
             if(password_verify($oldPassword, $dbPassword)) {
@@ -119,17 +116,21 @@
                         $conn = getConnection();
                         $conn->query($sql);
                         $conn->close();
+                        $currentView = "security";
                     }
                     else {
                         $inputError .= "Password not strong enough.\n";
+                        $currentView = "security-change";
                     }
                 }
                 else {
                     $inputError .= "Confirm Password and New Password do not match.\n";
+                    $currentView = "security-change";
                 }
             }
             else {
                 $inputError .= "Current Password is Incorrect.\n";
+                $currentView = "security-change";
             }
         }
     }
@@ -160,9 +161,14 @@
                 switch ($currentView) {
                     case "details":
                         //Needs to get names and stuff from username based on userID
-                        $fName = "FIRST NAME";
-                        $sName = "LAST NAME";
-                        $email = "EMAIL"; 
+                        $userID = $_SESSION["userID"];
+                        $user = $sql = "SELECT * FROM users WHERE userID = '$userID'";
+                        $conn = getConnection();
+                        $orders = $conn->query($sql);
+                        $conn->close();
+                        $fName = $user["firstName"];
+                        $sName = $user["lastName"];
+                        $email = $user["email"]; 
                         echo'
                         <p>First Name: ' . $fName . ' </p> 
                         <p>Last Name: ' . $sName . ' </p>
@@ -199,6 +205,7 @@
                         ?>
                         <form method = "post" action="<?php echo $_SERVER['PHP_SELF'];?>">
                             <label for="currentPassword">Current Password</label>
+                            <?php echo "<p>". nl2br($inputError) ."</p><br>"?>
                             <input type="password" name="currentPassword" id="currentPassword">
                             <br>
                             <label for="newPassword">New Password</label>
@@ -213,6 +220,18 @@
                         break;
                     case "pastOrders":
                         // Make call to database to return orders.
+                        ?><div class = "wrapper"><?php
+                            $userID = $_SESSION["userID"];
+                            $sql = "SELECT * FROM orders WHERE userID = '$userID'";
+                            $conn = getConnection();
+                            $orders = $conn->query($sql);
+                            $conn->close();
+                            foreach($orders as $order) {
+                                echo '<a href= "orderDetails?orderID="'.$order["orderID"].'><div style="background-color: grey;"><p>'.$order["orderID"].'</p><br>
+                                <p>'.$order["status"].'</p><br></div>
+                                <p>'.$order["paidAmount"].'</p></div></a>';
+                            }
+                        ?></div><?php
                         break;
                     }
                 ?>
