@@ -1,6 +1,6 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Here I need to validate and process the refund request
+    // Here i need to validate and process the refund request
     $order_number = htmlspecialchars($_POST["order_number"]);
     $reason = htmlspecialchars($_POST["reason"]);
 
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <h2>Refund Request Confirmation</h2>
     
-            <p>Thank you for contacting the refund team. Your refund request has been sent, and we will contact you regarding your order very soon.</p>
+            <p>Thank you for contacting the refund team. Your refund request has been sent and we will contact you regarding your order very soon.</p>
             <p>Thank you</p>
     
         <a href="refund.php">Back to Refund Page</a>

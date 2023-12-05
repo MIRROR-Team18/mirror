@@ -44,20 +44,6 @@ body {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-
-
-    input[type="submit"] {
-        background-color: #656eef; 
-        color: white;
-        padding: 10px 15px; /
-        border: none; 
-        border-radius: 5px; 
-        cursor: pointer; 
-        font-size: 16px; 
-    
-    input[type="submit"]:hover {
-        background-color: #4553a0; 
-    }
 }
 
 .product-image {
