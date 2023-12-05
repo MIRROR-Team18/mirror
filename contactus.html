@@ -3,125 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>Contact Us - MIRЯOR</title>
     <style>
+        /* Your existing styles here */
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(to right, #3498db, #2ecc71);
-            color: #fff;
+            background-color: #f8f8f8;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        header {
-            background: #333;
-            padding: 10px 0;
-        }
-
-        nav {
+        .contact-us-content {
+            padding: 2rem 10vw;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: center;
+            align-content: center;
             text-align: center;
         }
 
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            padding: 14px 16px;
-            display: inline-block;
+        .contact-us-content label,
+        .contact-us-content input,
+        .contact-us-content textarea,
+        .contact-us-content button {
+            margin-bottom: 1rem;
         }
 
-        .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 50px;
-            margin-bottom: 50px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        label {
+        .contact-us-content label {
             display: block;
-            margin-bottom: 8px;
-            color: #333;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
         }
 
-        input, textarea {
+        .contact-us-content input,
+        .contact-us-content textarea {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
+            padding: 0.5rem;
+            font-size: 1rem;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
         }
 
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 20px;
+        .contact-us-content button {
+            padding: 1rem 2rem;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
+            background: var(--mirror-blue);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
             cursor: pointer;
-            font-size: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        :root {
+            --mirror-blue: #1f005d;
+        }
+
+        .row {
+            display: flex;
+            flex-flow: row wrap;
+        }
+
+        .col {
+            flex: 1;
+            display: flex;
+            flex-flow: column nowrap;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            left: 0;
             width: 100%;
+            padding: 1rem 2rem;
+            background: var(--mirror-blue);
+            display: flex;
+            justify-content: space-between;
         }
 
-        button:hover {
-            background-color: #45a049;
+        nav .left a {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
         }
 
-        .contact-info {
-            text-align: center;
-            margin-top: 30px;
+        nav .right a {
+            font-size: 1.2rem;
+            color: white;
         }
+
+        nav a:not(a:first-child) {
+            margin-left: 1rem;
+        }
+
+        footer {
+            width: 100%;
+            padding: 2rem 10vw;
+            background: var(--mirror-blue);
+            display: flex;
+            flex-flow: row wrap;
+            text-align: right;
+            margin-top: auto;
+        }
+
+        footer .col:first-child {
+            text-align: left;
+            justify-content: center;
+        }
+
+        footer a, footer h1 {
+            color: white;
+        }
+
     </style>
 </head>
 <body>
-
-<header>
+    <!-- Header -->
     <nav>
-        <a href="aboutus.html">About Us</a>
-        <a href="contactus.html">Contact Us</a>
+        <div class="left">
+            <a href="/">MIRЯOR</a>
+        </div>
+        <div class="right">
+            <a href="#">About Us</a>
+            <a href="#">Login</a>
+        </div>
     </nav>
-</header>
 
-<div class="container">
-    <h1>Contact Us</h1>
-    
-    <!-- Contact Form -->
-    <form id="contactForm">
-        <label for="name">Your Name:</label>
-        <input type="text" id="name" name="name" required>
+    <!-- Contact Us Content -->
+    <div class="contact-us-content">
+        <h1>Contact Us</h1>
+        <form>
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" required>
 
-        <label for="email">Your Email:</label>
-        <input type="email" id="email" name="email" required>
+            <label for="email">Your Email:</label>
+            <input type="email" id="email" name="email" required>
 
-        <label for="message">Your Message:</label>
-        <textarea id="message" name="message" rows="4" required></textarea>
+            <label for="message">Your Message:</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
 
-        <button type="button" onclick="submitForm()">Send Message</button>
-    </form>
-
-    <!-- Contact Information -->
-    <div class="contact-info">
-        <h2>Contact Information</h2>
-        <p>Email: info@example.com</p>
-        <p>Phone: +1 (555) 123-4567</p>
+            <button type="submit" onclick="window.location.href='thankyou.html'">Send Message</button>
+        </form>
     </div>
-</div>
 
-<script>
-    function submitForm() {
-        // You can add your logic here to handle the form submission, e.g., sending an email or saving the message.
-        alert('Message sent successfully!');
-        document.getElementById('contactForm').reset();
-    }
-</script>
-
+    <!-- Footer -->
+    <footer>
+        <div class="col">
+            <h1>MIRЯOR</h1>
+        </div>
+        <div class="col">
+            <a href="#">Terms of Service</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+        <div class="col">
+            <a href="#">Help</a>
+            <a href="#">Returns</a>
+            <a href="#">Deliveries</a>
+            <a href="#">Track Order</a>
+        </div>
+    </footer>
 </body>
 </html>
