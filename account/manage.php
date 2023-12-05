@@ -38,7 +38,7 @@
             else {
                 $userID = $_SESSION["userID"];
                 $sql = "UPDATE users SET firstName = '$fName' WHERE userID = '$userID'";
-                $conn = getConnection();
+                $conn = Connection:: getConnection();
                 $conn->query($sql);
                 $conn->close();
             }
@@ -61,7 +61,7 @@
             else {
                 $userID = $_SESSION["userID"];
                 $sql = "UPDATE users SET lastName = '$sName' WHERE userID = '$userID'";
-                $conn = getConnection();
+                $conn = Connection:: getConnection();
                 $conn->query($sql);
                 $conn->close();
             }
@@ -84,7 +84,7 @@
             else {
                 $userID = $_SESSION["userID"];
                 $sql = "UPDATE users SET email = '$email' WHERE userID = '$userID'";
-                $conn = getConnection();
+                $conn = Connection:: getConnection();
                 $conn->query($sql);
                 $conn->close();
             }
@@ -96,7 +96,7 @@
             //Get pre-existing hashed password
             $userID = $_SESSION["userID"];
             $sql = "SELECT password FROM users WHERE userID = '$userID'";
-            $conn = getConnection();
+            $conn = Connection:: getConnection();
             $dbPassword = $conn->query($sql);
             $conn->close();
 
@@ -113,7 +113,7 @@
                         $userID = $_SESSION["userID"];
                         $newHashedPassword = password_hash($newPassword, null);
                         $sql = "UPDATE users SET password = ''$newHashedPassword' WHERE userID = '$userID'";
-                        $conn = getConnection();
+                        $conn = Connection:: getConnection();
                         $conn->query($sql);
                         $conn->close();
                         $currentView = "security";
@@ -163,7 +163,7 @@
                         //Needs to get names and stuff from username based on userID
                         $userID = $_SESSION["userID"];
                         $user = $sql = "SELECT * FROM users WHERE userID = '$userID'";
-                        $conn = getConnection();
+                        $conn = Connection:: getConnection();
                         $orders = $conn->query($sql);
                         $conn->close();
                         $fName = $user["firstName"];
@@ -223,7 +223,7 @@
                         ?><div class = "wrapper"><?php
                             $userID = $_SESSION["userID"];
                             $sql = "SELECT * FROM orders WHERE userID = '$userID'";
-                            $conn = getConnection();
+                            $conn = Connection:: getConnection();
                             $orders = $conn->query($sql);
                             $conn->close();
                             foreach($orders as $order) {

@@ -20,7 +20,7 @@
             //get price and status of order
             $orderID = $_GET["orderID"];
             $sql = "SELECT * FROM orders WHERE orderID = '$orderID'";
-            $conn = getConnection();
+            $conn = Connection:: getConnection();
             $order = $conn->query($sql);
             $conn->close();
             $price = $order["paidAmount"];
@@ -29,12 +29,12 @@
             //get items in the order
             $products = "";
             $sql = "SELECT productID FROM products_in_orders WHERE orderID = '$orderID'";
-            $conn = getConnection();
+            $conn = Connection:: getConnection();
             $productIDs = $conn->query($sql);
             $conn->close();
             foreach($productIDs as $productID) {
                 $sql = "SELECT name FROM products WHERE productID = '$productID'";
-                $conn = getConnection();
+                $conn = Connection:: getConnection();
                 $productName = $conn->query($sql);
                 $conn->close();
                 $products .= "ProductID: " . $productID . " | Product name: " . $productName . "\n";
