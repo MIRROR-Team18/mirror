@@ -3,100 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us</title>
+    <title>About Us - MIRЯOR</title>
     <style>
+        /* Your existing styles here */
+
         body {
+            background-color: #f8f8f8;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .about-us-content {
+            padding: 2rem 10vw;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: center;
+            align-content: center;
+        }
+
+        .about-us-content img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .about-us-content p {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            text-align: justify;
+            color: #333;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
         }
 
-        /* Navigation bar styles */
-        .navbar {
-            background-color: #C9DFF2;
-            overflow: hidden;
+        :root {
+            --mirror-blue: #1f005d;
         }
 
-        .navbar a {
-            float: left;
-            font-size: 18px;
-            color: black;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
-
-        /* Add styles for footer */
-        .footer {
-            background-color: #F2F2F2;
-            color: black;
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        .about-us {
-            width: 100%;
-            height: calc(100vh - 100px); /* Subtract the height of the navbar and footer */
-            background: linear-gradient(to bottom, #C9DFF2, #C9DFF2 50%, #F2F2F2 50%);
-            background-size: cover;
+        .row {
             display: flex;
-            align-items: center;
+            flex-flow: row wrap;
+        }
+
+        .col {
+            flex: 1;
+            display: flex;
+            flex-flow: column nowrap;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: var(--mirror-blue);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        nav .left a {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        nav .right a {
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        nav a:not(a:first-child) {
+            margin-left: 1rem;
+        }
+
+        footer {
+            width: 100%;
+            padding: 2rem 10vw;
+            background: var(--mirror-blue);
+            display: flex;
+            flex-flow: row wrap;
+            text-align: right;
+            margin-top: auto;
+        }
+
+        footer .col:first-child {
+            text-align: left;
             justify-content: center;
         }
 
-        .about-image {
-            position: relative;
-            width: 50%;
-            background-image: url('your-image.jpg'); /* Replace 'your-image.jpg' with your image file path */
-            background-size: cover;
-            background-position: center;
+        footer a, footer h1 {
+            color: white;
         }
 
-        .about-image-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        header {
+            height: 30vh;
+            width: 100%;
+            background: grey;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-flow: column nowrap;
+        }
+
+        header h1 {
+            font-size: 4rem;
+            color: white;
+        }
+
+        section {
+            padding: 2rem 10vw;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: center;
+            align-content: center;
+        }
+
+        section h1 {
+            font-size: 2rem;
+            font-weight: bold;
             text-align: center;
-            padding: 20px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
-        h1 {
-            color: black;
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-gap: 1rem;
+            background-color: #ddd;
+            padding: 2rem;
+            margin: 1rem;
+            border-radius: 8px;
         }
 
-        p {
-            color: #333;
-            font-size: 18px;
-            text-align: center; /* Center-align the text within the column */
+        button, .button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            background: var(--mirror-blue);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 25%;
+            margin: auto;
         }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <div class="navbar">
-        <a href="#">Home</a>
-        <a href="#">Products</a>
-        <a href="#">About Us</a>
-        <a href="#">Contact</a>
-    </div>
+    <!-- Header -->
+    <nav>
+        <div class="left">
+            <a href="/">MIRЯOR</a>
+        </div>
+        <div class="right">
+            <a href="#">About Us</a>
+            <a href="#">Login</a>
+        </div>
+    </nav>
 
-    <div class="about-us">
-        <div class="about-image">
-            <div class="about-image-content">
-                <h1>OUR STORY</h1>
-                <img src="image.jpg" alt="Your Image" style="max-width: 100%; border-radius: 10px;">
-                <p>"At MIRROR, our story begins with a passion for fashion and a commitment to making every individual feel like a trendsetter. What sets us apart is our relentless pursuit of style and quality. We believe that clothing is more than just fabric; it's an expression of your unique personality and creativity."</p>
-            </div>
+    <!-- About Us Content -->
+    <div class="about-us-content">
+        <h1>About MIRЯOR</h1>
+        <p>
+            Welcome to MIRЯOR, where fashion meets expression. Our journey began with a vision to redefine clothing as more than just fabric. We believe that each piece of clothing tells a unique story, an expression of your individuality and creativity.
+        </p>
+        <p>
+            At MIRЯOR, we are passionate about delivering high-quality fashion that empowers you to be a trendsetter. Our commitment to style and quality sets us apart in the world of fashion. Explore our collection and discover the perfect ensemble to showcase your personality.
+        </p>
+        <p>
+            Join us on this fashion-forward journey, where every piece is a reflection of your unique style. MIRЯOR - Reflect Your Style.
+        </p>
+
+        <!-- Creative Addition with Spacing -->
+        <div style="margin-top: 2rem;">
+            <h2>Discover Your Style, Redefine Your Wardrobe</h2>
+            <p>
+                Immerse yourself in the world of MIRЯOR, where fashion is more than just garments; it's an experience. Unleash your creativity, experiment with styles, and embrace the extraordinary. Our curated collections are not just clothes; they're a canvas for your self-expression. Elevate your wardrobe with MIRЯOR, where every thread weaves a story of individuality and charm.
+            </p>
         </div>
     </div>
 
     <!-- Footer -->
-    <div class="footer">
-        &copy; 2023 MIRROR
-    </div>
+    <footer>
+        <div class="col">
+            <h1>MIRЯOR</h1>
+        </div>
+        <div class="col">
+            <a href="#">Terms of Service</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+        <div class="col">
+            <a href="#">Help</a>
+            <a href="#">Returns</a>
+            <a href="#">Deliveries</a>
+            <a href="#">Track Order</a>
+        </div>
+    </footer>
 </body>
 </html>
