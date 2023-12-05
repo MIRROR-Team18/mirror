@@ -1,0 +1,31 @@
+#welcome {
+    height: 90vh;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+    align-items: center;
+
+    background-image: url("../_images/home.png");
+    background-size: cover;
+}
+
+#welcome img {
+    max-height: 35vh;
+}
+
+#welcome h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+}
+
+#welcome .buttons {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
+    width: 75%;
+
+    text-align: center;
+}
