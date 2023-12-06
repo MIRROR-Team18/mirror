@@ -17,11 +17,19 @@ class Connection {
 	/**
 	 * This function is used to get, or initialize the connection.
 	 * @return PDO The connection.
+     * @throws Exception If unable to start a connection.
 	 */
 	public static function getConnection(): PDO {
 		if (!isset(self::$dbConnection)) {
 			try {
-				require_once '../vendor/autoload.php'; // Loading the .env module.
+                if (file_exists("../vendor/autoload.php")) {
+                    require_once '../vendor/autoload.php'; // Loading the .env module.
+                } else if (file_exists("./vendor/autoload.php")) {
+                    require_once './vendor/autoload.php'; // Loading the .env module but if it's in the wrong place for some reason
+                } else {
+                    throw new Exception("Cannot locate dotenv file.");
+                }
+
 				$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../");
 				$dotenv->load();
 
@@ -219,6 +227,28 @@ class Database {
 
 		return true;
 	}
+
+    /**
+     * Creates an enquiry made from the contact us form.
+     * @return boolean If enquiry was added successfully
+     */
+    public function createContactEnquiry(string $name, string $email, string $message): bool {
+        // Check that this isn't a duplicate entry (caused by network errors, user resubmitting by accident, etc.)
+        $check = $this->conn->prepare("SELECT * FROM enquiries WHERE email = ?");
+        $check->execute([$email]);
+        $results = $check->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($results as $row) {
+            if ($row["name"] == $name && $row["message"] == $message) // Don't check email again.
+                return false; // Do not save it again.
+        }
+
+        // Save new enquiry.
+        $stmt = $this->conn->prepare("INSERT INTO enquiries (type, nameProvided, email, message) VALUES (?,?,?,?)");
+        $stmt->execute(["contact", $name, $email, $message]);
+
+        return true; // As we were successful.
+    }
 }
 
 class Tester {

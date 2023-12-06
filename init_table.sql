@@ -97,6 +97,21 @@ CREATE TABLE `users` (
   `admin` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contact`
+--
+
+CREATE TABLE `contact` (
+  `enquiryID` int(8) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `type` enum('contact', 'refund') NOT NULL,
+  `nameProvided` varchar(256) DEFAULT NULL,
+  `emailProvided` varchar(320) DEFAULT NULL,
+  `userID` varchar(8) DEFAULT NULL,
+  `message` varchar(2000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Indexes for dumped tables
 --
@@ -147,6 +162,12 @@ ALTER TABLE `products_in_orders`
 ALTER TABLE `product_sizes`
   ADD CONSTRAINT `FK_ProductSizes_Product` FOREIGN KEY (`productID`) REFERENCES `products` (`productID`),
   ADD CONSTRAINT `FK_ProductSizes_Size` FOREIGN KEY (`sizeID`) REFERENCES `sizes` (`sizeID`);
+
+--
+-- Constraints for table `contact`
+--
+ALTER TABLE `contact`
+  ADD CONSTRAINT `FK_ContactUser_User` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
