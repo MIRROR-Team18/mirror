@@ -1,5 +1,6 @@
 <?php
     session_start();
+    $_SESSION["userID"] = 1;
     if (isset($_SESSION["userID"]) == false) echo '<script>window.location.replace("../index.php");</script>';
     require '../_components/database.php';
     if (isset($_GET['option']) && in_array($_GET['option'], array('details', "details-change", 'security', 'pastOrders', 'security-change'))) {
@@ -17,9 +18,8 @@
         $oldPassword = $_POST['currentPassword'] ?? null;
         $newPassword = $_POST['newPassword'] ?? null;
         $confNewPassword = $_POST['confirmNewPassword'] ?? null;
-        
         //POST for details change
-        if($fName != null) {
+        if($fName != null || $sName != null || $email != null) {
             //First name
             if ($fName == "") {
                 //name not changed so do nothing
@@ -32,6 +32,7 @@
             }
             else if (strlen($fName) > 100) {
                 $inputError .= "First name cannot exede 100 characters";
+                $currentView = "details-change";
             }
 
             //update fname in db
@@ -40,7 +41,7 @@
                 $sql = "UPDATE users SET firstName = '$fName' WHERE userID = '$userID'";
                 $conn = Connection:: getConnection();
                 $conn->query($sql);
-                $conn->close();
+                $conn = null;
             }
 
             //Surname
@@ -55,6 +56,7 @@
             }
             else if (strlen($sName) > 100) {
                 $inputError .= "Surname name cannot exede 100 characters";
+                $currentView = "details-change";
             }
 
             //update sname in db
@@ -63,7 +65,7 @@
                 $sql = "UPDATE users SET lastName = '$sName' WHERE userID = '$userID'";
                 $conn = Connection:: getConnection();
                 $conn->query($sql);
-                $conn->close();
+                $conn = null;
             }
 
             //Email
@@ -78,6 +80,7 @@
             }
             else if (strlen($email) > 320) {
                 $inputError .= "Email cannot exede 320 characters";
+                $currentView = "details-change";
             }
 
             //Update email in db
@@ -86,19 +89,22 @@
                 $sql = "UPDATE users SET email = '$email' WHERE userID = '$userID'";
                 $conn = Connection:: getConnection();
                 $conn->query($sql);
-                $conn->close();
+                $conn = null;
             }
         }
 
         //POST for password change
-        else if ($oldPassword != null) {
+        else if ($oldPassword != null || $newPassword != null || $confNewPassword != null) {
 
             //Get pre-existing hashed password
             $userID = $_SESSION["userID"];
-            $sql = "SELECT password FROM users WHERE userID = '$userID'";
+            $sql = "SELECT password FROM users WHERE userID = :userID";
             $conn = Connection:: getConnection();
-            $dbPassword = $conn->query($sql);
-            $conn->close();
+            $statment = $conn->prepare($sql);
+            $statment->bindParam(':userID', $userID, PDO::PARAM_INT);
+            $statment->execute();
+            $dbPassword = $statment->fetchColumn();
+            $conn = null;
 
             //ensure password entered matchs pre-existing password
             if(password_verify($oldPassword, $dbPassword)) {
@@ -107,15 +113,15 @@
                 if ($newPassword == $confNewPassword) {
 
                     //ensure that password is stron enough
-                    if (preg_match('/^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[^A-Za-z\d])[\s\S]{7,256}$/', $newPassword)) {
+                    if (preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[\s\S]{7,256}$/', $newPassword)) {
                         
                         //update data base with new password
                         $userID = $_SESSION["userID"];
                         $newHashedPassword = password_hash($newPassword, null);
-                        $sql = "UPDATE users SET password = ''$newHashedPassword' WHERE userID = '$userID'";
+                        $sql = "UPDATE users SET password = '$newHashedPassword' WHERE userID = '$userID'";
                         $conn = Connection:: getConnection();
                         $conn->query($sql);
-                        $conn->close();
+                        $conn = null;
                         $currentView = "security";
                     }
                     else {
@@ -162,10 +168,10 @@
                     case "details":
                         //Needs to get names and stuff from username based on userID
                         $userID = $_SESSION["userID"];
-                        $user = $sql = "SELECT * FROM users WHERE userID = '$userID'";
+                        $sql = "SELECT * FROM users WHERE userID = '$userID'";
                         $conn = Connection:: getConnection();
-                        $orders = $conn->query($sql);
-                        $conn->close();
+                        $user = $conn->query($sql)->fetch(PDO::FETCH_ASSOC);
+                        $conn = null;
                         $fName = $user["firstName"];
                         $sName = $user["lastName"];
                         $email = $user["email"]; 
@@ -204,8 +210,8 @@
                     case "security-change":
                         ?>
                         <form method = "post" action="<?php echo $_SERVER['PHP_SELF'];?>">
-                            <label for="currentPassword">Current Password</label>
                             <?php echo "<p>". nl2br($inputError) ."</p><br>"?>
+                            <label for="currentPassword">Current Password</label>
                             <input type="password" name="currentPassword" id="currentPassword">
                             <br>
                             <label for="newPassword">New Password</label>
@@ -222,14 +228,12 @@
                         // Make call to database to return orders.
                         ?><div class = "wrapper"><?php
                             $userID = $_SESSION["userID"];
-                            $sql = "SELECT * FROM orders WHERE userID = '$userID'";
+                            $sql = "SELECT orderID FROM orders WHERE userID = '$userID'";
                             $conn = Connection:: getConnection();
-                            $orders = $conn->query($sql);
-                            $conn->close();
+                            $orders = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                            $conn = null;
                             foreach($orders as $order) {
-                                echo '<a href= "orderDetails?orderID="'.$order["orderID"].'><div style="background-color: grey;"><p>'.$order["orderID"].'</p><br>
-                                <p>'.$order["status"].'</p><br></div>
-                                <p>'.$order["paidAmount"].'</p></div></a>';
+                                echo '<a href="orderDetails.php?orderID=' . $order["orderID"] . '"><div style = "background-color: grey;"><br><p>Order no. '.$order["orderID"].'</p><br></div></a>';
                             }
                         ?></div><?php
                         break;

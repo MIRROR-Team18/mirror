@@ -22,33 +22,33 @@
             $orderID = $_GET["orderID"];
             $sql = "SELECT * FROM orders WHERE orderID = '$orderID'";
             $conn = Connection:: getConnection();
-            $order = $conn->query($sql);
-            $conn->close();
+            $order = $conn->query($sql)->fetch(PDO::FETCH_ASSOC);
+            $conn = null;
             $price = $order["paidAmount"];
-            $starus = $order["status"];
+            $status = $order["status"];
 
             //get items in the order
             $products = "";
             $sql = "SELECT productID FROM products_in_orders WHERE orderID = '$orderID'";
             $conn = Connection:: getConnection();
-            $productIDs = $conn->query($sql);
-            $conn->close();
+            $productIDs = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+            $conn = null;
             foreach($productIDs as $productID) {
-                $sql = "SELECT name FROM products WHERE productID = '$productID'";
-                $conn = Connection:: getConnection();
-                $productName = $conn->query($sql);
-                $conn->close();
-                $products .= "ProductID: " . $productID . " | Product name: " . $productName . "\n";
+                $sql = "SELECT name FROM products WHERE productID = '{$productID['productID']}'";
+                $conn = Connection::getConnection();
+                $productName = $conn->query($sql)->fetch(PDO::FETCH_ASSOC);
+                $conn = null;
+                $products .= "ProductID: " . $productID['productID'] . " | Product name: " . $productName['name'] . "\n";
             }
             ?>
-            <div style = "display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                <div><?php 
-                    echo '<p>'.$orderID.'</p>'; 
+            <section id = "accountPanel">
+                <div id = "options">
+                    <a class = "button" href = "manage.php?option=pastOrders" type = "submit">Return to previous orders</a>
+                </div>
+                <div id = "view"><?php
+                    echo '<p>OrderID: '.$orderID. '</p><br><p>Order status: '.$status.'</p><br><p>Order price: £'.$price.'</p><br><p>'.nl2br($products).'</p>';
                 ?></div>
-                <div><?php
-                    echo '<p> Order status: '.$status.'</p><br>' .'<p>Order price: £'.$price.'</p><br>'.'<p>'.nl2br($products).'</p>';
-                ?></div>
-            </div>
+            </section>
             <?php
         ?>
     </main>
