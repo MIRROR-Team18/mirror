@@ -69,6 +69,9 @@ footer {
     flex-flow: row wrap;
 
     text-align: right;
+
+    position: fixed;
+    bottom: 0;
 }
 
 footer .col:first-child {

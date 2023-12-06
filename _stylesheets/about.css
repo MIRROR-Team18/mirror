@@ -1,0 +1,27 @@
+body {
+    background-color: #f8f8f8;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.about-us-content {
+    padding: 2rem 10vw;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-content: center;
+}
+
+.about-us-content img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.about-us-content p {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    text-align: justify;
+    color: #333;
+}
