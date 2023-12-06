@@ -1,6 +1,5 @@
 <?php
     session_start();
-    $_SESSION["userID"] = 1;
     if (isset($_SESSION["userID"]) == false) echo '<script>window.location.replace("../index.php");</script>';
     require '../_components/database.php';
     if (isset($_GET['option']) && in_array($_GET['option'], array('details', "details-change", 'security', 'pastOrders', 'security-change'))) {
