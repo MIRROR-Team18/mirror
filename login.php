@@ -10,32 +10,22 @@ if (isset($_POST['submitted'])) {
     require_once("_components/database.php"); //db name
     $db = new Database();
     try {
+        $login = $db->loginUser($_POST["email"], $_POST["password"]);
 
-        //A query that should help find the matching records.
-        $password = $db->getPassword($_POST['email']);
-
-        if (!is_null($password)) {  // matching username
-            if (password_verify($_POST['password'], $password)) { //matching password
-
-                //recording the user session  
-                session_start();
-                $_SESSION["email"] = $_POST['email'];
-                header("Location:index.php"); // Change location to home page
-                exit();
-
-            } else {
-                echo "<p style='color:red'>Error logging in, Password does not match </p>";
-            }
-        } else {
-            //else display an error
-            echo "<p style='color:red'>Error logging in, email not found </p>";
-        }
+        //recording the user session
+        session_start();
+        $_SESSION["userID"] = $login->userID;
+        $_SESSION["isAdmin"] = $login->isAdmin;
+        header("Location:index.php"); // Change location to home page
+        exit();
     } catch (PDOException $ex) {
         echo ("Failed to connect to the database.<br>");
         echo ($ex->getMessage());
         exit;
+    } catch (Exception $e) {
+        echo "<p style='color:red'>" . $e->getMessage() . "</p>";
+        exit;
     }
-
 }
 ?>
 
