@@ -4,21 +4,25 @@ if (isset($_POST['submitted'])){
  #prepare the form input
 
   // connect to the database
-  require_once('connectdb.php');
-	
-  $username=isset($_POST['username'])?$_POST['username']:false;
-  $password=isset($_POST['password'])?password_hash($_POST['password'],PASSWORD_DEFAULT):false;
-  $confirm_pass=isset($_POST['confirm_pass'])?$_POST['confirm_pass']:true;
-  $email=isset($_POST['email'])?$_POST['email']:false;
+  require_once('./_components/database.php');
+  $db = new Database();
   
-  if (!($username)){
-	echo "Username wrong!";
+  if (!isset($_POST['email'])){
+	echo "Email wrong!";
     exit;
 	}
-  if (!($password)){
+  if (!isset($_POST['password']) || !isset($_POST['confirm_pass'])){
 	exit("password wrong!");
 	}
+  if (!isset($_POST['Firstname']) || !isset($_POST['Last_name'])) {
+    exit("Name not provided!");
+  }
  
+  $email = $_POST["email"];
+  $password = $_POST["password"];
+  $confirm_pass = $_POST["confirm_pass"];
+  $firstname = $_POST["Firstname"];
+  $lastname = $_POST["Last_name"];
     
   //Creating a stronger password, 
   $number = preg_match('@[0-9]@', $password,$confirm_pass);
@@ -50,11 +54,10 @@ if (isset($_POST['submitted'])){
  try{
 	
 	#register user by inserting the user info 
-
-	$stat=$db->prepare("insert into users values(default,?,?,?)");
-	$stat->execute(array($username, $password, $email));
+  echo $email;
+  $user = $db->registerUser($email, $firstname, $lastname, $password);
 	
-	$id=$db->lastInsertId();
+	$id= $user->userID;
 	echo " Congratulations! You are now registered. Your ID is: $id  ";  	
 	
  }
@@ -73,72 +76,82 @@ if (isset($_POST['submitted'])){
 <head>
 <link rel = "stylesheet" type="text/css" href="css\main.css"/>
 
-
-<link rel="stylesheet" type="text/css"
-href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
-/>
 <style>
-    body{
-       /*  background-image:url('https://img.freepik.com/premium-photo/abstract-luxury-gradient-blue-background-smooth-dark-blue-with-black-vignette-studio-banner_1258-54339.jpg');
-        background-repeat:no-repeat; */
-        background-size:  100% 100%;
-        background-attachment:fixed;
-        }
-    
-</style>
+      
+      
+   h2{
+    text-align: center;
+    text-decoration: underline;
+   }
+
+   /* .mirrorlogo{
+     position:fixed;
+     left:0;
+     top:0;
+   }
+ */
+    .Register {
+      background-color: #fff;
+      border:1px solid #ccc;
+      padding: 20px;
+      width: 500px;
+      border-radius: 18px;
+      margin:auto ;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    } 
+
+    label {
+      margin-bottom: 4px;
+    }
+
+    input {
+      padding: 4px;
+      margin-bottom: 10px;
+    } 
+      
+    </style>
+
   
-  <title>Registration System </title>
+  <title>Register </title>
+  <link rel="stylesheet" href="./_stylesheets/main.css">
 
 </head>
-<div class = "tnav">
-    <h1>Register</h1>
-    <header id = "main-header"></header>
 
-    
-    <a href = "Login.php"> Login </a>
-    
-    
-</div>
+<?php include '_components/header.php'; ?>
+
 <body>
-<section id = "Register">
-  You can register if you are a new user and need to set up login details. 
-  <br> Please be ready to provide a username, password and valid email address.<br>
-  <br><br>
+<div class = "Register">
+<h2>Register</h2><br>
+ <h4> You can register if you are a new user and need to set up login details. </h4>
+  <br><h4> Please be ready to provide a username, password and valid email address.</h4><br>
+  <br>
   
   <form  method = "post" action="Register.php">
 	
-    FirstName: <input type = "text" name = "firstname" placeholder = "firstname"/><br>
-    LastName: <input type = "text" name = "lastname" placeholder = "lastname"/><br>
-    Email: <input type="email" placeholder="email" required pattern=".+(\.co.uk\.uk|\.com)"title=
+    FirstName: <input type = "text" name = "Firstname" placeholder = "First name" required /><br>
+    LastName: <input type = "text" name = "Last name" placeholder = "Last name" required/><br>
+    Email: <input type="email" name="email" placeholder="Email" required pattern=".+(\.co.uk\.uk|\.com)"title=
   "Please a valid email address."/><br>
-	Password: <input type="password" name="password" placeholder = "password"/><br>
-    Confirm Password: <input type="password" name="confirm_pass" placeholder = "confirmpassword"/><br>
+	Password: <input type="password" name="password" placeholder = "Password" required/><br>
+    Confirm Password: <input type="password" name="confirm_pass" placeholder = "Confirm password" required/><br>
     
 
 	<input type="submit" value="Register" /> 
-	<input type="reset" value="clear"/>
+	<input type="reset" value="Clear"/>
 	<input type="hidden" name="submitted" value="true"/>
   </form>  
 
   <p> Already a user? <a href="Login.php">Log in</a>  </p>
-   <p> Want to return back to the home page <a href = ""><em>Home page</em></a></p> <!-- change html to homepage  -->
-  </section>
-
+   <p> Return back to the home page <a href = ""><em>Home page</em></a></p> <!-- change html to homepage  -->
+  
+  </div>
 </body>
+<?php include '_components/footer.php'; ?>
 
-<footer>
-    <div class="col">
-        <h1>MIЯЯOR</h1>
-    </div>
-    <div class="col">
-        <a href="">Terms of Service</a>
-        <a href="">Privacy Policy</a>
-    </div>
-    <div class="col">
-        <a href="">Help</a>
-        <a href="">Returns</a>
-        <a href="">Deliveries</a>
-        <a href="">Track Order</a>
-    </div>
-</footer>
+
+      </php>
 </html>
