@@ -1,121 +1,86 @@
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f6f6f6;
-}
+/* styles.css */
 
+body {
+    font-family: 'Roboto', sans-serif; /* Added font-family */
+}
 .container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    text-align: center;
+    margin-top: 20px;
 }
 
 .header {
-    text-align: center;
-    margin-bottom: 20px;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+}
+
+.sort-options {
+    margin-top: 10px;
 }
 
 .reviews-container {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 20px;
 }
+
+/* styles.css */
 
 .review {
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin: 10px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    width: calc(33.333% - 20px); /* Adjust the width as needed */
-    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1px;
+    margin-bottom: 15px; /* Adjust the margin between reviews */
+    margin-right: 50;
 }
 
-.review h3 {
-    margin-bottom: 5px;
-    color: #333;
-}
 
-.review p {
-    margin: 0;
-    color: #555;
-}
 
 .review img {
     max-width: 100%;
+    height: 150px; /* Fixed height for images */
     border-radius: 50%;
-    margin-bottom: 10px;
 }
 
-.review-form {
+#review-form {
+    display: none;
     text-align: center;
     margin-top: 20px;
 }
 
-form {
-    display: grid;
-    gap: 10px;
+#review-form h2 {
+    color: #333;
+    margin-bottom: 20px;
 }
 
-button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 15px;
+#user-review-form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+#user-review-form label {
+    display: block;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+#user-review-form input,
+#user-review-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 6px 0;
+    box-sizing: border-box;
+}
+
+#user-review-form button {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
     border: none;
     cursor: pointer;
-    border-radius: 5px;
 }
 
-button:hover {
-    background-color: #0056b3;
+#user-review-form button:hover {
+    background-color: #555;
 }
-
-.reviews-info {
-    display: flex;
-}
-
-.reviews-info p {
-    margin: 5px 0;
-    font-weight: bold;
-    color: #333;
-}
-/* Add this CSS for smaller and blue text */
-body {
-    font-size: 14px; /* Adjust the base font size for the entire page */
-}
-
-.container {
-    max-width: 600px; /* Adjust the max width of the container as needed */
-}
-
-.header h1 {
-    font-size: 24px; /* Adjust the font size for the header */
-}
-
-.reviews-info p {
-    font-size: 12px; /* Adjust the font size for review information */
-    color: blue; /* Change the text color to blue */
-    margin-right: 10px; /* Add space between each review information */
-}
-
-
-.sort-options button,
-button,
-label,
-textarea {
-    font-size: 12px; /* Adjust the font size for buttons, labels, and textarea */
-}
-
-/* Add this CSS for smaller blue circles */
-.reviews-info span {
-    display: inline-block;
-    width: 10px; /* Adjust the width of the circle as needed */
-    height: 10px; /* Adjust the height of the circle as needed */
-    background-color: blue;
-    border-radius: 50%;
-    margin-left: 5px; /* Add space between text and circle */
-}
-
