@@ -19,11 +19,10 @@
                     <th>Description</th>
                     <th>Quantity</th>
                     <th>Price</th>
-                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Add your product rows dynamically here using PHP -->
+                <!-- Product 1: Hoodie -->
                 <tr>
                     <td><img src="./_images/peach.jpg" alt="Hoodie" class="product-image"></td>
                     <td>
@@ -41,8 +40,28 @@
         </select>
                     </td>
                     <td>£19.99</td>
-                    <td><!-- Actions buttons go here --></td>
                 </tr>
+
+               <!-- Product 2: Jeans 
+               <tr>
+                    <td><img src="./_images/jeans2.jpg" alt="Jeans" class="product-image"></td>
+                    <td>
+                        <p><strong>Jeans</strong></p>
+                        <p>Color: Blue</p>
+                    </td>
+                    <td>
+                        <select>
+                            <?php
+                                // Assuming a maximum quantity of 10, you can adjust as needed
+                                for ($i = 1; $i <= 10; $i++) {
+                                    echo "<option value='$i'>$i</option>";
+                                }
+                            ?>
+                        </select>
+                    </td>
+                    <td>£29.99</td>
+                </tr>   -->
+
             </tbody>
         </table>
 
