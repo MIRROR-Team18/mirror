@@ -47,7 +47,7 @@ if (isset($_POST['submitted'])) {
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" type="text/css" href="css\main.css" />
+    <link rel="stylesheet" type="text/css" href="_stylesheets/main.css" />
 
 <style>
       
@@ -112,7 +112,7 @@ if (isset($_POST['submitted'])) {
       
     </form>
     
-    <p> Not a register user? <a href="Register.php"> Register </a> </p>
+    <p> Not a register user? <a href="register.php"> Register </a> </p>
          
     </style>
   </div>

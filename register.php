@@ -32,7 +32,7 @@ if (isset($_POST['submitted'])){
   
   if (!$uppercase || !$lowercase || !$number || !$specialchars || strlen($password) < 7) {
     echo 'Password needs to be stronger. ';
-    echo ' <a href = "Register.php"> Try again</a>';
+    echo ' <a href = "register.php"> Try again</a>';
     exit;
    } else {
    echo(" ");
@@ -47,7 +47,7 @@ if (isset($_POST['submitted'])){
    }
    else {
       echo'Passwords need to  match';
-      echo ' <a href = "Register.php"> Try again</a>';
+      echo ' <a href = "register.php"> Try again</a>';
      exit;
    }
     
@@ -74,7 +74,7 @@ if (isset($_POST['submitted'])){
 <html lang ="en">
   <meta charset = "utf-8">
 <head>
-<link rel = "stylesheet" type="text/css" href="css\main.css"/>
+    <link rel="stylesheet" type="text/css" href="_stylesheets/main.css" />
 
 <style>
       
@@ -130,7 +130,7 @@ if (isset($_POST['submitted'])){
   <br><h4> Please be ready to provide a username, password and valid email address.</h4><br>
   <br>
   
-  <form  method = "post" action="Register.php">
+  <form  method = "post" action="register.php">
 	
     FirstName: <input type = "text" name = "Firstname" placeholder = "First name" required /><br>
     LastName: <input type = "text" name = "Last name" placeholder = "Last name" required/><br>
@@ -145,7 +145,7 @@ if (isset($_POST['submitted'])){
 	<input type="hidden" name="submitted" value="true"/>
   </form>  
 
-  <p> Already a user? <a href="Login.php">Log in</a>  </p>
+  <p> Already a user? <a href="login.php">Log in</a>  </p>
    <p> Return back to the home page <a href = ""><em>Home page</em></a></p> <!-- change html to homepage  -->
   
   </div>
