@@ -1,59 +1,148 @@
+/* basket.css */
+/*Style for basket page */
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+    background-color: #f4f4f4;
 }
 
-h1 {
-    text-align: center;
+.basket-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 #basket {
     width: 100%;
-    border-collapse: collapse;
     margin-top: 20px;
+    border-collapse: collapse;
 }
 
-#basket th, #basket td {
+#basket th,
+#basket td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 12px;
     text-align: left;
 }
 
-#checkout {
-    display: block;
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
 #order-summary {
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 #total {
-    text-align: right;
+    font-size: 1.2rem;
     margin-top: 10px;
-    font-size: 18px;
-    font-weight: bold;
 }
 
 #continue-to-checkout {
-    display: block;
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #4CAF50;
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--mirror-blue); /* Change the button color */
     color: white;
     border: none;
     border-radius: 5px;
+    font-size: 1rem;
     cursor: pointer;
+    text-decoration: none; /* Remove underline from anchor tag */
+    transition: background-color 0.3s ease; /* Add a smooth transition effect */
 }
 
-.product-image {
-    max-width: 100px;
-    max-height: 100px;
-    margin-right: 10px;
+#continue-to-checkout:hover {
+    background-color: #0d0032; /* Change the button color on hover */
+}
+
+/* Fancy drop-down menu */
+#basket select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+#basket select::after {
+    content: '\25BC'; /* Unicode character for down arrow */
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+#basket select:focus {
+    outline: none;
+    border-color: var(--mirror-blue);
+    box-shadow: 0 0 5px rgba(31, 0, 93, 0.5);
+}
+
+
+
+/* Style for Checkout Page */
+
+.checkout-container {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.checkout-content {
+    text-align: center;
+}
+
+.checkout-content p {
+    margin: 10px 0;
+}
+
+.checkout-content form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.checkout-content form button {
+    width: 100%; /* Set the button width to 100% */
+    max-width: 200px; /* Set a max-width to avoid excessive stretching */
+    margin: 10px auto; /* Center the button with margin */
+}
+
+/* Common styles for footer */
+.footer {
+    background-color: var(--mirror-blue);
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+
+
+
+/* Style for Processed Checkout Page */
+.confirmation-container {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.confirmation-container h1 {
+    color: #1f005d; /* Mirror theme color, adjust as needed */
+}
+
+.confirmation-container p {
+    font-size: 1rem;
+    margin: 10px 0;
+}
+
+
+
+/* email to appear bigger test code*/
+
+.label-large {
+    font-size: 1.2rem; /* Adjust the font size as needed */
+}
+
+.input-large {
+    width: 100%; /* Make the input field take up 100% of the available width */
+    padding: 8px; /* Adjust the padding as needed */
+    font-size: 1rem; /* Adjust the font size as needed */
 }
