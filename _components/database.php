@@ -147,6 +147,14 @@ class Database {
 
 	}
 
+	public function getPassword(string $email): string | null {
+		$stmt = $this->conn->prepare('SELECT * FROM users WHERE email = ?');
+		$stmt->execute([$email]);
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+		return $result['password'] ?? null;
+	}
+
 	/**
 	 * Returns an array of all the products available in the database, with no filtering.
 	 * @return Product[] An array of all the products.

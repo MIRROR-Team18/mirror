@@ -2,29 +2,28 @@
 
 //if the form has been submitted
 if (isset($_POST['submitted'])) {
-    if (!isset($_POST['username'], $_POST['password'])) {
+    if (!isset($_POST['email'], $_POST['password'])) {
         // Could not get the data that should have been sent.
-        exit('Please fill both the username and password fields!');
+        exit('Please fill both the email and password fields!');
     }
     // connecting to the DataBase
-    require_once("connectdb.php"); //db name
+    require_once("_components/database.php"); //db name
+    //require_once("connectdb.php"); //db name
+    $db = new Database();
     try {
 
         //A query that should help find the matching records.
+        /* var_dump($_POST);*/
+        $password = $db->getPassword($_POST['email']);
+        /*var_dump($password); */
 
-        $stat = $db->prepare('SELECT password FROM users WHERE username = ?');
-        $stat->execute(array($_POST['username']));
-
-
-        if ($stat->rowCount() > 0) {  // matching username
-            $row = $stat->fetch();
-
-            if (password_verify($_POST['password'], $row['password'])) { //matching password
+        if (!is_null($password)) {  // matching username
+            if (password_verify($_POST['password'], $password)) { //matching password
 
                 //recording the user session  
                 session_start();
-                $_SESSION["username"] = $_POST['username'];
-                header("Location: .php"); // Change location to home page
+                $_SESSION["email"] = $_POST['email'];
+                header("Location:index.php"); // Change location to home page
                 exit();
 
             } else {
@@ -32,7 +31,7 @@ if (isset($_POST['submitted'])) {
             }
         } else {
             //else display an error
-            echo "<p style='color:red'>Error logging in, Username not found </p>";
+            echo "<p style='color:red'>Error logging in, email not found </p>";
         }
     } catch (PDOException $ex) {
         echo ("Failed to connect to the database.<br>");
@@ -50,72 +49,74 @@ if (isset($_POST['submitted'])) {
 <head>
     <link rel="stylesheet" type="text/css" href="css\main.css" />
 
-    <style>
-        body {
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            background-attachment: fixed;
-        }
+<style>
+      
+      
+   h2{
+    text-align: center;
+   }
 
-        .login-1 {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+   /* .mirrorlogo{
+     position:fixed;
+     left:0;
+     top:0;
+   }
+ */
+    .login-1 {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 20px;
+      width: 300px;
+      border-radius: 8px;
+      margin:auto ;
+    }
 
-        .login-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
 
-        .login-container label {
-            display: block;
-            margin-bottom: 8px;
-        }
+    label {
+      margin-bottom: 8px;
+    }
 
-        .login-container input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            box-sizing: border-box;
-        }
-
-        .login-container button {
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+    input {
+      padding: 8px;
+      margin-bottom: 16px;
+    }
+      
     </style>
 
     <title> Login to your MIЯЯOR account </title>
-    <link rel="stylesheet" href="./_stylesheets/main.css">
+    <!-- <div id = "mirrorlogo">
+        <img src = "_images\logo_narrow.svg">
+</div> -->
+    
 </head>
 <?php include '_components/header.php'; ?>
 <body>
-    <br>
-    <br>
+    
+    
+    <div class="login-1">
 
-    <div class="login-l">
-        <form method="post" action="Login.php">
-            <p> Username: <input type="text" name="username" /> </p>
-            <p> Password: <input type="password" name="password" /> </p>
+    <h2>Log In</h2>
+    <form method="POST">
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+     <label for = "name"> Password:</label>
+         <input type="password" id = "email" name="password"  required /> 
             <input type="submit" value="Log in" /><br></br>
             <input type="hidden" name="submitted" value="true" />
-        </form>
-        <p> Not a user? <a href="Register.php"> Register </a> </p>
-
-    </div>
+      
+    </form>
+    
+    <p> Not a register user? <a href="Register.php"> Register </a> </p>
+         
+    </style>
+  </div>
+   
 </body>
 
 <?php include '_components/footer.php'; ?>
