@@ -6,7 +6,7 @@ if (isset($_POST['submitted'])){
   // connect to the database
   require_once('./_components/database.php');
   $db = new Database();
-  
+
   if (!isset($_POST['email'])){
 	echo "Email wrong!";
     exit;
@@ -17,19 +17,19 @@ if (isset($_POST['submitted'])){
   if (!isset($_POST['Firstname']) || !isset($_POST['Last_name'])) {
     exit("Name not provided!");
   }
- 
+
   $email = $_POST["email"];
   $password = $_POST["password"];
   $confirm_pass = $_POST["confirm_pass"];
   $firstname = $_POST["Firstname"];
   $lastname = $_POST["Last_name"];
-    
-  //Creating a stronger password, 
+
+  //Creating a stronger password,
   $number = preg_match('@[0-9]@', $password,$confirm_pass);
   $lowercase = preg_match('@[a-z]@', $password,$confirm_pass);
   $uppercase = preg_match('@[A-Z]@', $password,$confirm_pass);
-  $specialchars = preg_match('@[^\w]@', $password,$confirm_pass);
-  
+  $specialchars = preg_match('@\W@', $password,$confirm_pass);
+
   if (!$uppercase || !$lowercase || !$number || !$specialchars || strlen($password) < 7) {
     echo 'Password needs to be stronger. ';
     echo ' <a href = "register.php"> Try again</a>';
@@ -37,12 +37,12 @@ if (isset($_POST['submitted'])){
    } else {
    echo(" ");
  }
- 
-    
+
+
  // checking if the passwords match
- 
+
     if ($_POST["password"] === $_POST["confirm_pass"]) {
-    
+
       echo '';
    }
    else {
@@ -50,20 +50,22 @@ if (isset($_POST['submitted'])){
       echo ' <a href = "register.php"> Try again</a>';
      exit;
    }
-    
+
  try{
-	
-	#register user by inserting the user info 
+
+	#register user by inserting the user info
   echo $email;
   $user = $db->registerUser($email, $firstname, $lastname, $password);
-	
+
 	$id= $user->userID;
-	echo " Congratulations! You are now registered. Your ID is: $id  ";  	
-	
+	echo " Congratulations! You are now registered. Your ID is: $id  ";
+
  }
  catch (PDOexception $ex){
 	echo "Sorry, a database error occurred! <br>";
 	echo "Error details: <em>". $ex->getMessage()."</em>";
+ } catch (Exception $e) {
+   echo "Sorry, an error occurred!<br>Do you already have an account?";
  }
 
 }
@@ -71,87 +73,51 @@ if (isset($_POST['submitted'])){
 
 
 <!DOCTYPE html>
-<html lang ="en">
-  <meta charset = "utf-8">
+<html lang="en">
+<meta charset="utf-8">
 <head>
-    <link rel="stylesheet" type="text/css" href="_stylesheets/main.css" />
+    <link rel="stylesheet" type="text/css" href="_stylesheets/main.css"/>
+    <link rel="stylesheet" type="text/css" href="_stylesheets/login.css"/>
 
-<style>
-      
-      
-   h2{
-    text-align: center;
-    text-decoration: underline;
-   }
-
-   /* .mirrorlogo{
-     position:fixed;
-     left:0;
-     top:0;
-   }
- */
-    .Register {
-      background-color: #fff;
-      border:1px solid #ccc;
-      padding: 20px;
-      width: 500px;
-      border-radius: 18px;
-      margin:auto ;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-    } 
-
-    label {
-      margin-bottom: 4px;
-    }
-
-    input {
-      padding: 4px;
-      margin-bottom: 10px;
-    } 
-      
-    </style>
-
-  
-  <title>Register </title>
-  <link rel="stylesheet" href="./_stylesheets/main.css">
+    <title>Register </title>
+    <link rel="stylesheet" href="./_stylesheets/main.css">
 
 </head>
 
-<?php include '_components/header.php'; ?>
-
 <body>
-<div class = "Register">
-<h2>Register</h2><br>
- <h4> You can register if you are a new user and need to set up login details. </h4>
-  <br><h4> Please be ready to provide a username, password and valid email address.</h4><br>
-  <br>
-  
-  <form  method = "post" action="register.php">
-	
-    FirstName: <input type = "text" name = "Firstname" placeholder = "First name" required /><br>
-    LastName: <input type = "text" name = "Last name" placeholder = "Last name" required/><br>
-    Email: <input type="email" name="email" placeholder="Email" required pattern=".+(\.co.uk\.uk|\.com)"title=
-  "Please a valid email address."/><br>
-	Password: <input type="password" name="password" placeholder = "Password" required/><br>
-    Confirm Password: <input type="password" name="confirm_pass" placeholder = "Confirm password" required/><br>
-    
+<?php include '_components/header.php'; ?>
+<div class="Register">
+    <h2>Register</h2><br>
+    <h4> You can register if you are a new user and need to set up login details. </h4>
+    <br><h4> Please be ready to provide a username, password and valid email address.</h4><br>
+    <br>
 
-	<input type="submit" value="Register" /> 
-	<input type="reset" value="Clear"/>
-	<input type="hidden" name="submitted" value="true"/>
-  </form>  
+    <form method="post" action="register.php">
 
-  <p> Already a user? <a href="login.php">Log in</a>  </p>
-   <p> Return back to the home page <a href = ""><em>Home page</em></a></p> <!-- change html to homepage  -->
-  
-  </div>
-</body>
+        <label for="Firstname">First Name:</label>
+        <input type="text" id="Firstname" name="Firstname" placeholder="First name" required/><br>
+        <label for="Lastname">Last Name:</label>
+        <input type="text" id="Lastname" name="Last name" placeholder="Last name" required/><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Email" required pattern=".+(\.co.uk\.uk|\.com)" title="Please a valid email address."/><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Password" required/><br>
+        <label for="confirm_pass">Confirm Password:</label>
+        <input type="password" id="confirm_pass" name="confirm_pass" placeholder="Confirm password" required/><br>
+
+
+        <input type="submit" value="Register"/>
+        <input type="reset" value="Clear"/>
+        <input type="hidden" name="submitted" value="true"/>
+    </form>
+
+    <p> Already a user? <a href="login.php">Log in</a></p>
+    <p> Return back to the <a href="index.php"><em>home page</em></a></p> <!-- change html to homepage  -->
+
+</div>
 <?php include '_components/footer.php'; ?>
+</body>
 
-
-      </php>
 </html>

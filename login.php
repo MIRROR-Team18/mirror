@@ -8,14 +8,11 @@ if (isset($_POST['submitted'])) {
     }
     // connecting to the DataBase
     require_once("_components/database.php"); //db name
-    //require_once("connectdb.php"); //db name
     $db = new Database();
     try {
 
         //A query that should help find the matching records.
-        /* var_dump($_POST);*/
         $password = $db->getPassword($_POST['email']);
-        /*var_dump($password); */
 
         if (!is_null($password)) {  // matching username
             if (password_verify($_POST['password'], $password)) { //matching password
@@ -47,80 +44,32 @@ if (isset($_POST['submitted'])) {
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" type="text/css" href="_stylesheets/main.css" />
+    <link rel="stylesheet" type="text/css" href="_stylesheets/main.css"/>
+    <link rel="stylesheet" type="text/css" href="_stylesheets/login.css"/>
 
-<style>
-      
-      
-   h2{
-    text-align: center;
-   }
-
-   /* .mirrorlogo{
-     position:fixed;
-     left:0;
-     top:0;
-   }
- */
-    .login-1 {
-      background-color: #fff;
-      border: 1px solid #ccc;
-      padding: 20px;
-      width: 300px;
-      border-radius: 8px;
-      margin:auto ;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-    }
-
-    label {
-      margin-bottom: 8px;
-    }
-
-    input {
-      padding: 8px;
-      margin-bottom: 16px;
-    }
-      
-    </style>
-
-    <title> Login to your MIЯЯOR account </title>
-    <!-- <div id = "mirrorlogo">
-        <img src = "_images\logo_narrow.svg">
-</div> -->
-    
+    <title> Login to your MIRЯOR account </title>
 </head>
-<?php include '_components/header.php'; ?>
 <body>
-    
-    
-    <div class="login-1">
+<?php include '_components/header.php'; ?>
+
+<div class="login-1">
 
     <h2>Log In</h2>
     <form method="POST">
 
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
 
-     <label for = "name"> Password:</label>
-         <input type="password" id = "email" name="password"  required /> 
-            <input type="submit" value="Log in" /><br></br>
-            <input type="hidden" name="submitted" value="true" />
-      
+        <label for="name"> Password:</label>
+        <input type="password" id="email" name="password" required />
+        <input type="submit" value="Log in" /><br />
+        <input type="hidden" name="submitted" value="true" />
+
     </form>
-    
-    <p> Not a register user? <a href="register.php"> Register </a> </p>
-         
-    </style>
-  </div>
-   
-</body>
+
+    <p> Not a register user? <a href="register.php"> Register </a></p>
+</div>
 
 <?php include '_components/footer.php'; ?>
-
-</php>
-
+</body>
 </html>
