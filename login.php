@@ -12,8 +12,8 @@ if (isset($_POST['submitted'])) {
     try {
         $login = $db->loginUser($_POST["email"], $_POST["password"]);
 
-        //recording the user session
-        session_start();
+        // recording the user session
+        if (session_status() === PHP_SESSION_NONE) session_start();
         $_SESSION["userID"] = $login->userID;
         $_SESSION["isAdmin"] = $login->isAdmin;
         header("Location:index.php"); // Change location to home page

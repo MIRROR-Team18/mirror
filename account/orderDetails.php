@@ -1,7 +1,7 @@
 <?php
     session_start();
     require '../_components/database.php';
-    if (isset($_SESSION["userID"]) == false) echo '<script>window.location.replace("../index.php");</script>';
+    if (!isset($_SESSION["userID"])) echo '<script>window.location.replace("../index.php");</script>';
 ?>
 <!doctype html>
 <html lang="en">
