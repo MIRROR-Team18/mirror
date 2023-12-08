@@ -22,59 +22,77 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Product 1: Hoodie -->
-                <tr>
-                    <td><img src="./_images/peach.jpg" alt="Hoodie" class="product-image"></td>
-                    <td>
-                        <p><strong>Hoodie</strong></p>
-                        <p>Color: Peach</p>
-                    </td>
-                    <td>
-                    <select>
-            <?php
-                // Assuming a maximum quantity of 10, you can adjust as needed
-                for ($i = 1; $i <= 10; $i++) {
-                    echo "<option value='$i'>$i</option>";
-                }
-            ?>
-        </select>
-                    </td>
-                    <td>£19.99</td>
-                </tr>
+                <?php
+				    require_once '_components/database.php';
+				    if (session_status() === PHP_SESSION_NONE) session_start();
+				    // $_SESSION['basket'] = [new Product("hardtail-shoes-men", "Hardtail Shoes", "shoes", [new Size("1", "10", 10)])];
+                    // Unset session basket
+                    // unset($_SESSION['basket']);
+				    $total = 0; // Used at the bottom
 
-               <!-- Product 2: Jeans 
-               <tr>
-                    <td><img src="./_images/jeans2.jpg" alt="Jeans" class="product-image"></td>
-                    <td>
-                        <p><strong>Jeans</strong></p>
-                        <p>Color: Blue</p>
-                    </td>
-                    <td>
-                        <select>
-                            <?php
-                                // Assuming a maximum quantity of 10, you can adjust as needed
-                                for ($i = 1; $i <= 10; $i++) {
-                                    echo "<option value='$i'>$i</option>";
-                                }
-                            ?>
-                        </select>
-                    </td>
-                    <td>£29.99</td>
-                </tr>   -->
+                    if (isset($_SESSION['basket'])) {
+                        foreach ($_SESSION['basket'] as $item) {
+							/* @var $item Product */
 
+                            $MAX_QUANTITY = 10;
+                            $quantityOptions = "";
+                            for ($i = 1; $i <= $MAX_QUANTITY; $i++) {
+                                $quantityOptions .= "<option value='$i'>$i</option>";
+                            }
+
+							$pathForPhoto = "./_images/products/" . $item->productID . "/";
+							$photo = file_exists($pathForPhoto) ? $pathForPhoto . scandir($pathForPhoto)[2] : "https://picsum.photos/512"; // [0] is ".", [1] is ".."
+
+                            echo <<<EOT
+                            <tr>
+                                <td><img src="{$photo}" alt="{$item->name}" class="product-image"></td>
+                                <td>
+                                    <p><strong>{$item->name}</strong></p>
+                                    <p>Color: {$item->sizes[0]->name}</p>
+                                </td>
+                                <td>
+                                    <select>$quantityOptions</select>
+                                </td>
+                                <td class="price">£{$item->sizes[0]->price}</td>
+                            </tr>      
+                            EOT;
+
+                            $total += $item->sizes[0]->price;
+                        }
+                    } else {
+                        echo "<tr><td colspan='4'>Your basket is empty!</td></tr>";
+                    }
+				?>
             </tbody>
         </table>
 
         <!-- Order Summary Section -->
         <div id="order-summary">
             <h2>Order Summary</h2>
-            <p>Order Value: £19.99</p>
+            <!-- <p>Order Value: £19.99</p> Reimplement after MVP -->
             <!-- Add other order summary details as needed -->
-            <div id="total">TOTAL: £19.99</div>
+            <div id="total">TOTAL: £0.00</div>
             <!-- Use an anchor tag around the button for navigation -->
             <a href="checkout.php" id="continue-to-checkout">Continue to Checkout</a>
         </div>
     </div>
+
+    <script>
+        function calculateTotal() {
+            const basket = document.getElementById("basket");
+            const total = document.getElementById("total");
+
+            // Add up all totals
+            let totalValue = 0;
+            for (let i = 1; i < basket.rows.length; i++) {
+                totalValue += parseFloat(basket.rows[i].cells[3].innerText.replace("£", "")) * parseInt(basket.rows[i].cells[2].children[0].value)
+            }
+            total.innerText = `TOTAL: £${totalValue.toFixed(2)}`;
+        }
+
+        window.addEventListener("load", calculateTotal)
+        document.querySelectorAll("select").forEach(select => select.addEventListener("change", calculateTotal));
+    </script>
 
     <?php include '_components/footer.php'; ?>
 </body>

@@ -23,7 +23,6 @@
         </form>
     </div>
 </div>
-<br><br><br><br><br></br> <!--need a proper soution to move footer to the bottom -->
     
     <?php include '_components/footer.php'; ?>
 

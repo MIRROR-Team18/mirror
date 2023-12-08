@@ -15,9 +15,7 @@
         <p>Orders usually take 3-5 working days to be delivered.</p>
         <p>To track your order, go to <a href="http://ww*.trackmyMIRROR.com" target="_blank">www.trackmyMIRROR.com</a></p>
     </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br></br> <!--need a proper soution to move footer to the bottom -->
+    <!-- Don't worry I accidentally did this for you haha -->
     <?php include '_components/footer.php'; ?>
 </body>
 </html>
-
-
