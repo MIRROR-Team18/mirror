@@ -25,9 +25,6 @@
                 <?php
 				    require_once '_components/database.php';
 				    if (session_status() === PHP_SESSION_NONE) session_start();
-				    $_SESSION['basket'] = [new Product("hardtail-shoes-men", "Hardtail Shoes", "shoes", [new Size("1", "10", 10)])];
-                    // Unset session basket
-                    // unset($_SESSION['basket']);
 				    $total = 0; // Used at the bottom
 
                     if (isset($_SESSION['basket'])) {
@@ -44,7 +41,7 @@
 							$photo = file_exists($pathForPhoto) ? $pathForPhoto . scandir($pathForPhoto)[2] : "https://picsum.photos/512"; // [0] is ".", [1] is ".."
 
                             echo <<<EOT
-                            <tr>
+                            <tr id="{$item->productID}">
                                 <td><img src="{$photo}" alt="{$item->name}" class="product-image"></td>
                                 <td>
                                     <p class="name">{$item->name}</p>
@@ -83,7 +80,7 @@
             const quantities = {};
             for (let i = 1; i < basket.rows.length; i++) {
                 if (basket.rows[i].cells.length === 1) continue; // Skip if the row is empty
-                quantities[`${basket.rows[i].cells[1].querySelector(".name").innerText}`] = basket.rows[i].cells[2].children[0].value
+                quantities[`${basket.rows[i].id}`] = basket.rows[i].cells[2].children[0].value
             }
             // Save cookie
             document.cookie = `quantities=${JSON.stringify(quantities)}; path=/`;

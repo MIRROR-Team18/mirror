@@ -263,9 +263,14 @@ class Database {
 		// Create order
 		$totalPrice = 0;
 		$productsInOrdersQueue = array(); // Used to store the insertion of products into the products_in_orders table.
+
+		// Fixes __PHP_Incomplete_Class_Name. Did you know I dislike PHP? - Pawel
+		$basket = array_map(function ($item) {
+			return unserialize(serialize($item));
+		}, $basket);
+
 		foreach	($basket as $item) {
 			/* @var $item Product */
-			var_dump($item);
 			$totalPrice += $item->sizes[0]->price * $quantityMap[$item->productID];
 			$productsInOrdersQueue[] = [$item->productID, $item->sizes[0]->sizeID, $quantityMap[$item->productID]];
 		}
