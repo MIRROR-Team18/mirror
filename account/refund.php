@@ -6,6 +6,7 @@ if (!isset($_SESSION['userID'])) {
 	header("Location: login.php?error=not_logged_in");
 	exit();
 }
+$orderNum = $_GET['order_number'] ?? "";
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +27,7 @@ if (!isset($_SESSION['userID'])) {
         <h2>Refund Request</h2>
         <form action="refund_processed.php" method="post">
             <label for="order_number">Order Number:</label>
-            <input type="text" id="order_number" name="order_number" required>
+            <input type="text" id="order_number" name="order_number" value="<?= $orderNum ?>" required>
 
             <label for="reason">Reason for Refund:</label>
             <textarea id="reason" name="reason" rows="4" required></textarea>

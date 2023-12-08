@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Process refund (simulated output, replace with your logic)
     $refund_message = "Refund request for Order Number $order_number due to: $reason";
     try {
-		$db->createRefundRequest($_SESSION["userID"], $reason);
+		$db->createRefundRequest($_SESSION["userID"], $refund_message);
     } catch (Exception $e) {
         // Redirect back to the refund page with an error message
         header("Location: refund.php?error=database_error");

@@ -235,7 +235,7 @@ class Database {
      */
     public function createContactEnquiry(string $name, string $email, string $message): bool {
         // Check that this isn't a duplicate entry (caused by network errors, user resubmitting by accident, etc.)
-        $check = $this->conn->prepare("SELECT * FROM enquiries WHERE email = ?");
+        $check = $this->conn->prepare("SELECT * FROM enquiries WHERE emailProvided = ?");
         $check->execute([$email]);
         $results = $check->fetchAll(PDO::FETCH_ASSOC);
 
@@ -245,7 +245,7 @@ class Database {
         }
 
         // Save new enquiry.
-        $stmt = $this->conn->prepare("INSERT INTO enquiries (type, nameProvided, email, message) VALUES (?,?,?,?)");
+        $stmt = $this->conn->prepare("INSERT INTO enquiries (type, nameProvided, emailProvided, message) VALUES (?,?,?,?)");
         $stmt->execute(["contact", $name, $email, $message]);
 
         return true; // As we were successful.
@@ -262,7 +262,7 @@ class Database {
 		$results = $check->fetchAll(PDO::FETCH_ASSOC);
 
 		foreach ($results as $row) {
-			if ($row["reason"] == $reason) // Don't check orderID again.
+			if ($row["message"] == $reason) // Don't check orderID again.
 				return false; // Do not save it again.
 		}
 
