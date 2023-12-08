@@ -30,7 +30,7 @@
     <div class="reviews-container">
         <!-- John Doe -->
         <div class="review">
-            <img src="images\male 1.jpg" alt="John Doe" class="person-image">
+            <img src="./images/male 1.jpg" alt="John Doe" class="person-image">
             <p><strong>John Doe</strong></p>
             <p>Rating: 4/5 </p>
             <p>Comment: Great product! I love how it exceeded my expectations. The quality is exceptional, and it arrived sooner than I expected.</p>
@@ -39,7 +39,7 @@
 
         <!-- Jane Smith -->
         <div class="review">
-            <img src="images\female5.jpg" alt="Jane Smith" class="person-image">
+            <img src="./images/female5.jpg" alt="Jane Smith" class="person-image">
             <p><strong>Jane Smith</strong></p>
             <p>Rating: 5/5 </p>
             <p>Comment: Excellent service! The customer support team was very helpful in addressing my queries. The product itself is of top-notch quality. Will definitely recommend to others.</p>
@@ -48,7 +48,7 @@
 
         <!-- Alice -->
         <div class="review">
-            <img src="images\female4.jpg" alt="Alice" class="person-image">
+            <img src="./images/female4.jpg" alt="Alice" class="person-image">
             <p><strong>Alice</strong></p>
             <p>Rating: 3/5 </p>
             <p>Comment: Good experience. The product was decent, but there is room for improvement. Delivery was prompt, and the packaging was secure.</p>
@@ -57,7 +57,7 @@
 
         <!-- Bob -->
         <div class="review">
-            <img src="images\male2.webp" alt="Bob" class="person-image">
+            <img src="./images/male2.webp" alt="Bob" class="person-image">
             <p><strong>Bob</strong></p>
             <p>Rating: 5/5</p>
             <p>Comment: Impressive quality. I was pleasantly surprised by the high quality of the product. It has added great value to my daily routine.</p>
@@ -66,7 +66,7 @@
 
         <!-- Eve -->
         <div class="review">
-            <img src="images\female2.webp" alt="Eve" class="person-image">
+            <img src="./images/female2.webp" alt="Eve" class="person-image">
             <p><strong>Eve</strong></p>
             <p>Rating: 4/5 </p>
             <p>Comment: I'm happy with my purchase. The product is durable and meets my expectations. Delivery was on time, and the packaging was secure.</p>
@@ -75,7 +75,7 @@
 
         <!-- Charlie -->
         <div class="review">
-            <img src="images\male3.jpg" alt="Charlie" class="person-image">
+            <img src="./images/male3.jpg" alt="Charlie" class="person-image">
             <p><strong>Charlie</strong></p>
             <p>Rating: 2/5 </p>
             <p>Comment: Not satisfied with the product quality. It didn't meet my expectations, and I encountered issues shortly after purchase. Customer support was slow to respond.</p>
@@ -84,7 +84,7 @@
 
         <!-- Grace -->
         <div class="review">
-            <img src="images\female3.webp" alt="Grace" class="person-image">
+            <img src="./images/female3.webp" alt="Grace" class="person-image">
             <p><strong>Grace</strong></p>
             <p>Rating: 5/5 </p>
             <p>Comment: Amazing product! It exceeded my expectations, and the customer service was exceptional. I highly recommend it to others.</p>
