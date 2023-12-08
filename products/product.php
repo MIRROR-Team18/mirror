@@ -21,10 +21,16 @@
            // This will fetch product from the database
            $product = $db->getProduct($product_id);
            
-           if (!is_Null($product)) {
+           if (!is_null($product)) {
                echo "<h1>" . $product->name . "</h1>";
                echo "<p>" . $product->type . "</p>";
                echo "<p>Price: $2.00</p>";
+
+               echo "<form action='add_to_cart.php' method='post'>";
+               echo "<input type='hidden' name='product_id' value='" . $product_id . "'>";
+               echo "<input type='submit' value='Add to Cart'>";
+               echo "</form>";
+
 
            } else {
                echo "Product not found";
