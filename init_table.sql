@@ -103,7 +103,7 @@ CREATE TABLE `users` (
 -- Table structure for table `contact`
 --
 
-CREATE TABLE `contact` (
+CREATE TABLE `enquiries` (
   `enquiryID` int(8) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `type` enum('contact', 'refund') NOT NULL,
   `nameProvided` varchar(256) DEFAULT NULL,
@@ -166,7 +166,7 @@ ALTER TABLE `product_sizes`
 --
 -- Constraints for table `contact`
 --
-ALTER TABLE `contact`
+ALTER TABLE `enquiries`
   ADD CONSTRAINT `FK_ContactUser_User` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
 COMMIT;
 

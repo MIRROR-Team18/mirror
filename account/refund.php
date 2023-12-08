@@ -1,3 +1,13 @@
+<?php
+// Only accessible if logged in
+if (session_status() === PHP_SESSION_NONE) session_start();
+if (!isset($_SESSION['userID'])) {
+	// Redirect back to the refund page with an error message
+	header("Location: login.php?error=not_logged_in");
+	exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
