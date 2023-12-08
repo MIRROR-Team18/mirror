@@ -1,0 +1,27 @@
+h2{
+    text-align: center;
+    text-decoration: underline;
+}
+
+.Register, .login-1 {
+    background-color: #fff;
+    border:1px solid #ccc;
+    padding: 20px;
+    width: 500px;
+    border-radius: 8px;
+    margin:auto ;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 4px;
+}
+
+input {
+    padding: 4px;
+    margin-bottom: 10px;
+}

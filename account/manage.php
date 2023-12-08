@@ -1,6 +1,6 @@
 <?php
-    session_start();
-    if (isset($_SESSION["userID"]) == false) echo '<script>window.location.replace("../index.php");</script>';
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    if (!isset($_SESSION["userID"])) echo '<script>window.location.replace("../index.php");</script>';
     require '../_components/database.php';
     if (isset($_GET['option']) && in_array($_GET['option'], array('details', "details-change", 'security', 'pastOrders', 'security-change'))) {
         $currentView = $_GET['option'];

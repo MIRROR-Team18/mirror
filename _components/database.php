@@ -35,7 +35,6 @@ class Connection {
 
 				$db_host = $_ENV['DB_HOST'];
 				$db_name = $_ENV['DB_NAME'];
-				// Currently this only supports local connections, maybe later I'll add support for virtualmin.
 				self::$dbConnection = new PDO("mysql:host=$db_host;dbname=$db_name", $_ENV['DB_USER'], $_ENV['DB_PASS']);
 				self::$dbConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			} catch (PDOException $e) {
@@ -54,12 +53,14 @@ class User {
 	public string $email;
 	public string $firstName;
 	public string $lastName;
+    public bool $isAdmin;
 
-	public function __construct(int $userID, string $email, string $firstName, string $lastName) {
+	public function __construct(int $userID, string $email, string $firstName, string $lastName, int $isAdmin = 0) {
 		$this->userID = $userID;
 		$this->email = $email;
 		$this->firstName = $firstName;
 		$this->lastName = $lastName;
+        $this->isAdmin = $isAdmin === 1;
 	}
 }
 
@@ -139,7 +140,7 @@ class Database {
 		$stmt = $this->conn->prepare("INSERT INTO users (userID, email, firstName, lastName, password) VALUES (?, ?, ?, ?, ?)");
 		$stmt->execute([$id, $email, $firstName, $lastName, $hashPassword]);
 
-		return new User($id, $email, $firstName, $lastName);
+		return new User($id, $email, $firstName, $lastName, 0);
 	}
 
 	/**
@@ -157,7 +158,7 @@ class Database {
 		if (!$result || !password_verify($password, $result['password'])) {
 			throw new Exception("Incorrect email or password!"); // We use the same error to prevent brute force attacks
 		} else
-			return new User($result['userID'], $result['email'], $result['firstName'], $result['lastName']);
+			return new User($result['userID'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']);
 
 	}
 
