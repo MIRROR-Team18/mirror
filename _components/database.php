@@ -114,11 +114,11 @@ class Database {
 		return $randomNumber;
 	}
 
-	public function getUser(int $id) {
+	public function getUser(int $id): User | null {
 		$stmt = $this->conn->prepare("SELECT * FROM users WHERE userID = ?");
 		$stmt->execute([$id]);
 		$result = $stmt->fetch(PDO::FETCH_ASSOC);
-		return $result ?? null;
+		return $result ? new User($result['userID'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']) : null;
 	}
 
 	/**
@@ -235,7 +235,7 @@ class Database {
      */
     public function createContactEnquiry(string $name, string $email, string $message): bool {
         // Check that this isn't a duplicate entry (caused by network errors, user resubmitting by accident, etc.)
-        $check = $this->conn->prepare("SELECT * FROM enquiries WHERE email = ?");
+        $check = $this->conn->prepare("SELECT * FROM enquiries WHERE emailProvided = ?");
         $check->execute([$email]);
         $results = $check->fetchAll(PDO::FETCH_ASSOC);
 
@@ -245,11 +245,37 @@ class Database {
         }
 
         // Save new enquiry.
-        $stmt = $this->conn->prepare("INSERT INTO enquiries (type, nameProvided, email, message) VALUES (?,?,?,?)");
+        $stmt = $this->conn->prepare("INSERT INTO enquiries (type, nameProvided, emailProvided, message) VALUES (?,?,?,?)");
         $stmt->execute(["contact", $name, $email, $message]);
 
         return true; // As we were successful.
     }
+
+	/**
+	 * Creates a refund request made from the refund form.
+	 * @return boolean If refund request was added successfully
+	 */
+	public function createRefundRequest(string $userID, string $reason): bool {
+		// Check that this isn't a duplicate entry (caused by network errors, user resubmitting by accident, etc.)
+		$check = $this->conn->prepare("SELECT * FROM enquiries WHERE userID = ?");
+		$check->execute([$userID]);
+		$results = $check->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach ($results as $row) {
+			if ($row["message"] == $reason) // Don't check orderID again.
+				return false; // Do not save it again.
+		}
+
+		$user = $this->getUser($userID);
+		if (!$user) throw new Exception("User does not exist! (This shouldn't have happened!)");
+
+		// Save new enquiry.
+		$stmt = $this->conn->prepare("INSERT INTO enquiries (type, nameProvided, emailProvided, userID, message) VALUES (?,?,?,?,?)");
+		$stmt->execute(["refund", $user->firstName . " " . $user->lastName, $user->email, $user->userID, $reason]);
+
+		return true; // As we were successful.
+
+	}
 
 	/**
 	 * Creates an order with the provided userID and basket
@@ -286,6 +312,13 @@ class Database {
 		}
 
 		return $orderID;
+	}
+
+	public function getOrderByID(string $orderID) {
+		$stmt = $this->conn->prepare("SELECT * FROM orders WHERE orderID = ?");
+		$stmt->execute([$orderID]);
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+
 	}
 }
 

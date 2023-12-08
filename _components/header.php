@@ -1,7 +1,7 @@
 <?php if (session_status() === PHP_SESSION_NONE) session_start(); ?>
 <nav>
     <div class="left">
-        <a href="/"><img src="./_images/logo_square.svg" alt=""></a>
+        <a href="/"><img src="../_images/logo_square.svg" alt=""></a>
     </div>
     <div class="right">
         <a>About Us</a>

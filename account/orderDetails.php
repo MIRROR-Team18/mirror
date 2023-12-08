@@ -44,6 +44,8 @@
             <section id = "accountPanel">
                 <div id = "options">
                     <a class = "button" href = "manage.php?option=pastOrders" type = "submit">Return to previous orders</a>
+                    <br>
+                    <a href="refund.php?order_number=<?= $orderID ?>" class="button">Request Refund</a>
                 </div>
                 <div id = "view"><?php
                     echo '<p>OrderID: '.$orderID. '</p><br><p>Order status: '.$status.'</p><br><p>Order price: £'.$price.'</p><br><p>'.nl2br($products).'</p>';

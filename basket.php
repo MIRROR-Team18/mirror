@@ -28,7 +28,12 @@
 				    $total = 0; // Used at the bottom
 
                     if (isset($_SESSION['basket'])) {
-                        foreach ($_SESSION['basket'] as $item) {
+						// Fixes __PHP_Incomplete_Class_Name. Did you know I dislike PHP? - Pawel
+						$basket = array_map(function ($item) {
+							return unserialize(serialize($item));
+						}, $_SESSION['basket']);
+
+                        foreach ($basket as $item) {
 							/* @var $item Product */
 
                             $MAX_QUANTITY = 10;
@@ -40,21 +45,24 @@
 							$pathForPhoto = "./_images/products/" . $item->productID . "/";
 							$photo = file_exists($pathForPhoto) ? $pathForPhoto . scandir($pathForPhoto)[2] : "https://picsum.photos/512"; // [0] is ".", [1] is ".."
 
+                            $sizeName = $item->sizes[0]->name ?? "One Size";
+                            $sizePrice = $item->sizes[0]->price ?? 0;
+
                             echo <<<EOT
                             <tr id="{$item->productID}">
                                 <td><img src="{$photo}" alt="{$item->name}" class="product-image"></td>
                                 <td>
                                     <p class="name">{$item->name}</p>
-                                    <p>Color: {$item->sizes[0]->name}</p>
+                                    <p>Color: {$sizeName}</p>
                                 </td>
                                 <td>
                                     <select>$quantityOptions</select>
                                 </td>
-                                <td class="price">£{$item->sizes[0]->price}</td>
+                                <td class="price">£{$sizePrice}</td>
                             </tr>      
                             EOT;
 
-                            $total += $item->sizes[0]->price;
+                            $total += $sizePrice;
                         }
                     } else {
                         echo "<tr><td colspan='4'>Your basket is empty!</td></tr>";
