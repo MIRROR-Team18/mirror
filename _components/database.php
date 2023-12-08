@@ -250,6 +250,38 @@ class Database {
 
         return true; // As we were successful.
     }
+
+	/**
+	 * Creates an order with the provided userID and basket
+	 * @param string $userID
+	 * @param Product[] $basket
+	 * @param array $quantityMap A map/associative array of productID to quantity
+	 * @return string OrderID of the order created.
+
+	 */
+	public function createOrder(string $userID, array $basket, array $quantityMap): string {
+		// Create order
+		$totalPrice = 0;
+		$productsInOrdersQueue = array(); // Used to store the insertion of products into the products_in_orders table.
+		foreach	($basket as $item) {
+			/* @var $item Product */
+			var_dump($item);
+			$totalPrice += $item->sizes[0]->price * $quantityMap[$item->productID];
+			$productsInOrdersQueue[] = [$item->productID, $item->sizes[0]->sizeID, $quantityMap[$item->productID]];
+		}
+
+		$stmt = $this->conn->prepare("INSERT INTO orders (userID, status, paidAmount) VALUES (?, ?, ?)");
+		$stmt->execute([$userID, "processing", $totalPrice]);
+		$orderID = $this->conn->lastInsertId();
+
+		// Create products in orders
+		foreach ($productsInOrdersQueue as $productInOrder) {
+			$stmt = $this->conn->prepare("INSERT INTO products_in_orders (orderID, productID, sizeID, quantity) VALUES (?, ?, ?, ?)");
+			$stmt->execute([$orderID, $productInOrder[0], $productInOrder[1], $productInOrder[2]]);
+		}
+
+		return $orderID;
+	}
 }
 
 class Tester {

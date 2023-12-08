@@ -25,7 +25,7 @@
                 <?php
 				    require_once '_components/database.php';
 				    if (session_status() === PHP_SESSION_NONE) session_start();
-				    // $_SESSION['basket'] = [new Product("hardtail-shoes-men", "Hardtail Shoes", "shoes", [new Size("1", "10", 10)])];
+				    $_SESSION['basket'] = [new Product("hardtail-shoes-men", "Hardtail Shoes", "shoes", [new Size("1", "10", 10)])];
                     // Unset session basket
                     // unset($_SESSION['basket']);
 				    $total = 0; // Used at the bottom
@@ -47,7 +47,7 @@
                             <tr>
                                 <td><img src="{$photo}" alt="{$item->name}" class="product-image"></td>
                                 <td>
-                                    <p><strong>{$item->name}</strong></p>
+                                    <p class="name">{$item->name}</p>
                                     <p>Color: {$item->sizes[0]->name}</p>
                                 </td>
                                 <td>
@@ -73,11 +73,24 @@
             <!-- Add other order summary details as needed -->
             <div id="total">TOTAL: £0.00</div>
             <!-- Use an anchor tag around the button for navigation -->
-            <a href="checkout.php" id="continue-to-checkout">Continue to Checkout</a>
+            <button onclick="storeQuantityData()" id="continue-to-checkout">Continue to Checkout</button>
         </div>
     </div>
 
     <script>
+        function storeQuantityData() {
+            const basket = document.getElementById("basket");
+            const quantities = {};
+            for (let i = 1; i < basket.rows.length; i++) {
+                if (basket.rows[i].cells.length === 1) continue; // Skip if the row is empty
+                quantities[`${basket.rows[i].cells[1].querySelector(".name").innerText}`] = basket.rows[i].cells[2].children[0].value
+            }
+            // Save cookie
+            document.cookie = `quantities=${JSON.stringify(quantities)}; path=/`;
+
+            window.location.href = "checkout.php";
+        }
+
         function calculateTotal() {
             const basket = document.getElementById("basket");
             const total = document.getElementById("total");
