@@ -314,11 +314,51 @@ class Database {
 		return $orderID;
 	}
 
-	public function getOrderByID(string $orderID) {
+	/**
+	 * Gets an order by the provided orderID
+	 * @param string $orderID
+	 * @return mixed
+	 * @note This function should update to use a class instead!
+	 */
+	public function getOrderByID(string $orderID): mixed {
 		$stmt = $this->conn->prepare("SELECT * FROM orders WHERE orderID = ?");
 		$stmt->execute([$orderID]);
 		return $stmt->fetch(PDO::FETCH_ASSOC);
+	}
 
+	/**
+	 * Gets a list of all the reviews in the "reviews" table of the database.
+	 * @return array Array of all reviews
+	 * @note This function should update to use a class instead!
+	 */
+	public function getAllReviews(): array {
+		$stmt = $this->conn->prepare("SELECT * FROM reviews");
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	/**
+	 * Adds a revwiew with the provided parameters.
+	 * @param string $name
+	 * @param int $rating
+	 * @param string $comment
+	 * @return bool True if succeeded successfully
+	 * @throws Exception If an error occurred (and a check should've happened already)
+	 */
+	public function addReview(string $name, int $rating, string $comment): bool {
+		if ($rating > 5 || $rating < 1) throw new Exception("Invalid rating provided!");
+
+		$check = $this->conn->prepare("SELECT * FROM reviews WHERE name = ?");
+		$check->execute([$name]);
+		$reviews = $check->fetchAll(PDO::FETCH_ASSOC);
+		foreach ($reviews as $review) {
+			if ($review['rating'] == $rating && $review['comment'] == $comment) return false; // Duplicate entry, do not enter
+		}
+
+		$stmt = $this->conn->prepare("INSERT INTO reviews (name, rating, comment) VALUES (?, ?, ?)");
+		$stmt->execute([$name, $rating, $comment]);
+
+		return true;
 	}
 }
 

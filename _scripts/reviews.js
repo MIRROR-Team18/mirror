@@ -15,7 +15,7 @@ function renderReviews(reviews) {
         reviewElement.classList.add("review");
 
         reviewElement.innerHTML = `'
-            <img src="./images/istockphoto-1364917563-612x612.jpg" alt="${review.name}">
+            <img src="../images/istockphoto-1364917563-612x612.jpg" alt="${review.name}">
             <p><strong>${review.name}</strong></p>
             <p>Rating: ${review.rating}/5</p>
             <p>Comment: ${review.comment}</p>

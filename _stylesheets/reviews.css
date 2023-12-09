@@ -31,11 +31,9 @@ body {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 1px;
-    margin-bottom: 15px; /* Adjust the margin between reviews */
-    margin-right: 50%;
+    margin: 1rem auto;
+    max-width: 60%
 }
-
-
 
 .review img {
     max-width: 100%;

@@ -1,15 +1,31 @@
+<?php
+    require_once "./_components/database.php";
+    $db = new Database();
+
+    if (isset($_POST["submitted"])) {
+        $db = new Database();
+        try {
+			$db->addReview($_POST["username"], $_POST["rating"], $_POST["comment"]);
+        } catch (Exception $e) {
+            exit("An error occurred when saving your review! " . $e->getMessage());
+        }
+
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="_stylesheets/main.css">
     <link rel="stylesheet" href="_stylesheets/reviews.css">
     <title>Rating & Reviews</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
 
 </head>
 <body>
-
+<?php include "_components/header.php"; ?>
 <div class="container">
     <div class="header">
         <h1>Rating & Reviews</h1>
@@ -92,27 +108,44 @@
         </div>
     </div>
 
+    <?php
+        $allReviews = $db->getAllReviews();
+
+        foreach ($allReviews as $review) {
+            echo <<<EOT
+            <div class="review">
+                <!-- <img src="./images/{$review['image']}" alt="{$review['name']}" class="person-image"> -->
+                <p><strong>{$review['name']}</strong></p>
+                <p>Rating: {$review['rating']}/5 </p>
+                <p>Comment: {$review['comment']}</p>
+                <p>Date: {$review['date']}</p>
+            </div>
+            EOT;
+        }
+	?>
+
     <!-- Add a Review Button -->
     <button id="add-review-button" onclick="showReviewForm()">Add a Review</button>
 
     <!-- Updated review form initially hidden -->
     <div id="review-form" class="review-form" style="display: none; text-align: center; margin-top: 20px;">
-        <form id="user-review-form">
+        <form id="user-review-form" action="" method="POST">
             <label for="username">Your Name:</label>
             <input type="text" id="username" required><br><br>
             <label for="rating">Rating:</label>
             <input type="number" id="rating" min="1" max="5" required><br><br>
             <label for="comment">Your Review:</label><br>
             <textarea id="comment" required></textarea><br><br>
+            <input type="hidden" name="submitted" value="yeah">
             <button type="button" onclick="submitReview()">Submit Review</button>
         </form>
     </div>
 
-    <script src="script.js"></script>
+    <script src="_scripts/reviews.js"></script>
     <script>
         
     </script>
 </div>
-
+<?php include "_components/footer.php"; ?>
 </body>
 </html>
