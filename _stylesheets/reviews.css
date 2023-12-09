@@ -1,8 +1,4 @@
 /* reviews.css */
-
-body {
-    font-family: 'Roboto', sans-serif; /* Added font-family */
-}
 .container {
     text-align: center;
     margin-top: 20px;
@@ -12,6 +8,7 @@ body {
     background-color: #333;
     color: white;
     padding: 10px;
+    text-align: center;
 }
 
 .sort-options {
@@ -20,24 +17,22 @@ body {
 
 .reviews-container {
     display: flex;
-    flex-wrap: wrap;
+    flex-flow: column nowrap;
     justify-content: space-around;
     margin-top: 20px;
 }
-
-/* reviews.css */
 
 .review {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 1px;
     margin: 1rem auto;
-    max-width: 60%
+    width: 60%
 }
 
 .review img {
     max-width: 100%;
-    height: 150px; /* Fixed height for images */
+    height: 150px; /* Fixed height for reviews */
     border-radius: 50%;
 }
 

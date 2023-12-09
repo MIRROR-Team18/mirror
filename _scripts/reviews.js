@@ -1,9 +1,5 @@
-// Sample reviews data (replace with your actual data)
-const reviewsData = [
-    { name: "John Doe", rating: 4, comment: "Great product!", date: "November 10, 2023" },
-    { name: "Jane Smith", rating: 5, comment: "Excellent service!", date: "November 15, 2023" },
-    // Add more reviews as needed
-];
+// Array to hold data when sorting
+const reviewsData = [];
 
 // Function to render reviews
 function renderReviews(reviews) {
@@ -15,7 +11,7 @@ function renderReviews(reviews) {
         reviewElement.classList.add("review");
 
         reviewElement.innerHTML = `'
-            <img src="../images/istockphoto-1364917563-612x612.jpg" alt="${review.name}">
+            <img src="../_images/reviews/istockphoto-1364917563-612x612.jpg" alt="${review.name}">
             <p><strong>${review.name}</strong></p>
             <p>Rating: ${review.rating}/5</p>
             <p>Comment: ${review.comment}</p>

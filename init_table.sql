@@ -112,6 +112,20 @@ CREATE TABLE `enquiries` (
   `message` varchar(2000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reviews`
+--
+
+CREATE TABLE `reviews` (
+    reviewID int(8) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name varchar(100) NOT NULL,
+    rating int(1) NOT NULL,
+    comment varchar(2000) NOT NULL,
+    date date default current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Indexes for dumped tables
 --
