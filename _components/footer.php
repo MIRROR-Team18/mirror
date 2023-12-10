@@ -13,5 +13,6 @@
         <a href="/contact.php">Help</a>
         <a href="/reviews.php">Reviews</a>
         <a href="/account/manage.php">Manage Account</a>
+        <a href="/account/refund.php">Refund Request</a>
     </div>
 </footer>
