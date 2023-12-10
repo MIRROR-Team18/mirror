@@ -23,7 +23,7 @@ $orderNum = $_GET['order_number'] ?? "";
     <?php include '../_components/header.php'; ?>
 
 
-    <div class="container">
+    <main class="container">
         <h2>Refund Request</h2>
         <form action="refund_processed.php" method="post">
             <label for="order_number">Order Number:</label>
@@ -34,7 +34,7 @@ $orderNum = $_GET['order_number'] ?? "";
 
             <input type="submit" value="Submit Refund Request">
         </form>
-    </div>
+    </main>
 
 
 

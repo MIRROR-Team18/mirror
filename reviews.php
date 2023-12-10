@@ -30,7 +30,7 @@
         <h1>Rating & Reviews</h1>
     </div>
 
-    <div class="container">
+    <main class="container">
         <div class="sort-options">
             <label for="sort-select">Sort By:</label>
             <select id="sort-select" onchange="redirectToReviews(this.value)">

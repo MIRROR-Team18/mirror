@@ -47,6 +47,16 @@ nav .left a img {
     padding: .5rem 1rem;
 }
 
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+nav a:hover {
+    cursor: pointer;
+    color: #ddd;
+}
+
 nav .right {
     padding: 1rem 2rem;
 }
@@ -69,9 +79,6 @@ footer {
     flex-flow: row wrap;
 
     text-align: right;
-
-    position: fixed;
-    bottom: 0;
 }
 
 footer .col:first-child {
@@ -79,8 +86,12 @@ footer .col:first-child {
     justify-content: center;
 }
 
-footer a, footer h1 {
+footer a, footer h1, footer p {
     color: white;
+}
+
+main {
+    min-height: 80vh;
 }
 
 header {

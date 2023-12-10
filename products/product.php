@@ -23,7 +23,7 @@
 <body>
 <?php include '../_components/header.php'; ?>
 
-<div class="container">
+<main class="container">
 	<?php
 	// This will get product ID from URL
     if (!isset($_GET['id'])) {
@@ -50,7 +50,7 @@
 		echo "Product not found";
 	}
 	?>
-</div>
+</main>
 
 <?php include '../_components/footer.php'; ?>
 </body>

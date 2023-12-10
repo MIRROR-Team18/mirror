@@ -12,10 +12,10 @@
     <?php include "_components/header.php"; ?>
 
     <!-- Follow-Up Content -->
-    <div class="follow-up-content">
+    <main class="follow-up-content">
         <h1>Message Sent!</h1>
         <p>Thank you for reaching out to us. We have received your message and will get back to you shortly.</p>
-    </div>
+    </main>
 
     <!-- Footer -->
     <?php include "_components/footer.php"; ?>
