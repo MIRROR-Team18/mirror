@@ -364,8 +364,8 @@ class Database {
 			if ($review['rating'] == $rating && $review['comment'] == $comment) return false; // Duplicate entry, do not enter
 		}
 
-		$stmt = $this->conn->prepare("INSERT INTO reviews (name, rating, comment) VALUES (?, ?, ?)");
-		$stmt->execute([$name, $rating, $comment]);
+		$stmt = $this->conn->prepare("INSERT INTO reviews (name, rating, comment, date) VALUES (?, ?, ?, ?)");
+		$stmt->execute([$name, $rating, $comment, date("Y-m-d")]);
 
 		return true;
 	}
