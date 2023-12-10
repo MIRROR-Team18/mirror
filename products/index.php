@@ -72,7 +72,7 @@
                         }
 
                     ?>
-                        <div class="product" id="<?= $product->productID ?>" data-product-type="<?= $product->type ?>">
+                        <div class="product" id="<?= $product->productID ?>" data-product-type="<?= $product->type ?>" onclick="window.location.href='./product.php?id=<?= $product->productID ?>'">
                             <img src="<?= $photo ?>" alt="<?= $product->productID . "_image" ?>">
                             <h1><?= $product->name ?></h1>
                             <h2><?= $price ?></h2>
