@@ -182,6 +182,22 @@ ALTER TABLE `product_sizes`
 --
 ALTER TABLE `enquiries`
   ADD CONSTRAINT `FK_ContactUser_User` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
+
+--
+-- Inserts for table `products`
+--
+
+INSERT INTO `products` (`productID`, `name`, `type`) VALUES
+    ('bag-bag', 'Bag Bag', 'accessories'),
+    ('black-socks', 'Plain Black Socks', 'socks'),
+    ('conversation-high-shoes', 'Conversation High-Top Shoes', 'shoes'),
+    ('hardtail-shoes-men', 'Hardtail Mens Shoes', 'shoes'),
+    ('headfirst-jeans', 'Headfirst Jeans', 'bottoms'),
+    ('highrise-tee-unisex', 'Highrise Unisex Top', 'tops'),
+    ('mirror-cap', 'MIRЯOR Cap', 'accessories'),
+    ('pole-recycle-trousers', 'Recycleable Pole Trousers', 'bottoms'),
+    ('shephard-tee-men', 'Shephard Mens Top', 'tops'),
+    ('white-socks', 'Plain White Socks', 'socks');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
