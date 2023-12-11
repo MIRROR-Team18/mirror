@@ -11,11 +11,21 @@
 }
 #accountPanel #options{
     text-align: center;
+    display: flex;
+    flex-flow: column nowrap;
 }
 #accountPanel #options a{
     font-size: 1.5rem;
     text-decoration: none;
+
     color: black;
+    white-space: nowrap;
+    width: 100%;
+
+    margin-bottom: 1rem;
+}
+#accountPanel #options a.button {
+    color: white;
 }
 #accountPanel #options a:hover{
     font-weight: bold;

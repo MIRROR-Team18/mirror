@@ -62,14 +62,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 
-    <div class="container">
+    <main class="container">
         <h2>Refund Request Confirmation</h2>
     
             <p>Thank you for contacting the refund team. Your refund request has been sent, and we will contact you regarding your order very soon.</p>
             <p>Thank you</p>
     
         <a href="refund.php">Back to Refund Page</a>
-    </div>
+    </main>
 
 
 

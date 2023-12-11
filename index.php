@@ -15,9 +15,9 @@
         <img id="logo" src="./_images/logo_large.svg" alt="MIRROR LOGO" />
         <h1>MOST WANTED<br/>AND MOST LOVED</h1>
         <div class="buttons">
+            <a class="button" href="./products/">WOMEN</a>
             <a class="button" href="./products/">MEN</a>
-            <a class="button" href="./about/">WOMEN</a>
-            <a class="button" href="./about/">KIDS</a>
+            <a class="button" href="./products/">KIDS</a>
         </div>
     </main>
     <?php include '_components/footer.php'; ?>

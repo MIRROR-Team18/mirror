@@ -41,7 +41,7 @@
     <?php include "_components/header.php"; ?>
 
     <!-- Contact Us Content -->
-    <div class="contact-us-content">
+    <main class="contact-us-content">
         <h1>Contact Us</h1>
         <form method="POST">
             <label for="name">Your Name:</label>
@@ -58,7 +58,7 @@
         </form>
 
         <pre><?= $errorMessage ?></pre>
-    </div>
+    </main>
 
     <!-- Footer -->
     <?php include "_components/footer.php"; ?>

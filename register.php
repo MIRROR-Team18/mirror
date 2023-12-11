@@ -86,7 +86,7 @@ if (isset($_POST['submitted'])){
 
 <body>
 <?php include '_components/header.php'; ?>
-<div class="Register">
+<main class="Register">
     <h2>Register</h2><br>
     <h4> You can register if you are a new user and need to set up login details. </h4>
     <br><h4> Please be ready to provide a username, password and valid email address.</h4><br>
@@ -116,7 +116,7 @@ if (isset($_POST['submitted'])){
     <p> Already a user? <a href="login.php">Log in</a></p>
     <p> Return back to the <a href="index.php"><em>home page</em></a></p> <!-- change html to homepage  -->
 
-</div>
+</main>
 <?php include '_components/footer.php'; ?>
 </body>
 

@@ -10,7 +10,7 @@
 <body>
     <?php include '_components/header.php'; ?>
 
-    <div class="basket-container">
+    <main class="basket-container">
         <h1>Your Shopping Basket</h1>
         <table id="basket">
             <thead>
@@ -80,7 +80,7 @@
             <!-- Use an anchor tag around the button for navigation -->
             <button onclick="storeQuantityData()" id="continue-to-checkout">Continue to Checkout</button>
         </div>
-    </div>
+    </main>
 
     <script>
         function storeQuantityData() {

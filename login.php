@@ -42,7 +42,7 @@ if (isset($_POST['submitted'])) {
 <body>
 <?php include '_components/header.php'; ?>
 
-<div class="login-1">
+<main class="login-1">
 
     <h2>Log In</h2>
     <form method="POST">
@@ -58,7 +58,7 @@ if (isset($_POST['submitted'])) {
     </form>
 
     <p> Not a register user? <a href="register.php"> Register </a></p>
-</div>
+</main>
 
 <?php include '_components/footer.php'; ?>
 </body>

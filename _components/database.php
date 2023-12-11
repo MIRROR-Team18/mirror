@@ -27,7 +27,7 @@ class Connection {
                 } else if (file_exists("./vendor/autoload.php")) {
                     require_once './vendor/autoload.php'; // Loading the .env module but if it's in the wrong place for some reason
                 } else {
-                    throw new Exception("Cannot locate dotenv file.");
+                    throw new Exception("Cannot locate autoload file for dotenv! Did you run 'composer install'?.");
                 }
 
 				$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../");
@@ -64,6 +64,9 @@ class User {
 	}
 }
 
+/**
+ * Class to store Size data
+ */
 class Size {
 	public string $sizeID;
 	public string $name;
@@ -97,15 +100,19 @@ class Database {
 	private PDO $conn;
 
 	public function __construct() {
-		$this->conn = Connection::getConnection();
+        try {
+            $this->conn = Connection::getConnection();
+        } catch (Exception $e) {
+            exit("Could not create database connection! " . $e->getMessage());
+        }
 	}
 
 	private function generateUserID(): string {
 		// Keep generating a random number until we find one that doesn't exist.
 		do {
-			// Generate random 16 digit number and make it a string
+			// Generate random 16-digit number and make it a string
 			$randomNumber = strval(random_int(10000000, 99999999));
-			// Check user does not exists with that ID.
+			// Check a user does not exist with that ID.
 			$stmt = $this->conn->prepare("SELECT * FROM users WHERE userID = ?");
 			$stmt->execute([$randomNumber]);
 			$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -157,10 +164,27 @@ class Database {
 
 		if (!$result || !password_verify($password, $result['password'])) {
 			throw new Exception("Incorrect email or password!"); // We use the same error to prevent brute force attacks
-		} else
-			return new User($result['userID'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']);
-
+		} else return new User($result['userID'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']);
 	}
+
+    /**
+     * Returns an array of sizes from a given productID.<br>Private as this should not be necessary outside of other database functions.
+     * @param string $productID
+     * @return Size[]
+     * @see getProduct()
+     */
+    private function getSizesOfProduct(string $productID): array {
+        $stmt = $this->conn->prepare("SELECT * FROM product_sizes INNER JOIN sizes ON product_sizes.sizeID = sizes.sizeID WHERE productID = ?;");
+        $stmt->execute([$productID]);
+        $sizeResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $sizes = array();
+        foreach ($sizeResults as $sizeResult) {
+            $sizes[] = new Size($sizeResult['sizeID'], $sizeResult['name'], $sizeResult['price']);
+        }
+
+        return $sizes;
+    }
 
 	/**
 	 * Returns an array of all the products available in the database, with no filtering.
@@ -173,15 +197,7 @@ class Database {
 
 		$products = array();
 		foreach ($productResults as $productResult) {
-			$stmt = $this->conn->prepare("SELECT * FROM product_sizes INNER JOIN sizes ON product_sizes.sizeID = sizes.sizeID WHERE productID = ?;");
-			$stmt->execute([$productResult['productID']]);
-			$sizeResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			$sizes = array();
-
-			foreach ($sizeResults as $sizeResult) {
-				$sizes[] = new Size($sizeResult['sizeID'], $sizeResult['name'], $sizeResult['price']);
-			}
-
+            $sizes = $this->getSizesOfProduct($productResult['productID']);
 			$products[] = new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
 		}
 
@@ -200,15 +216,7 @@ class Database {
 
 		if (!$productResult) return null;
 
-		$stmt = $this->conn->prepare("SELECT * FROM product_sizes INNER JOIN sizes ON product_sizes.sizeID = sizes.sizeID WHERE productID = ?;");
-		$stmt->execute([$productResult['productID']]);
-		$sizeResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-		$sizes = array();
-		foreach ($sizeResults as $sizeResult) {
-			$sizes[] = new Size($sizeResult['sizeID'], $sizeResult['name'], $sizeResult['price']);
-		}
-
+        $sizes = $this->getSizesOfProduct($productResult['productID']);
 		return new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
 	}
 
@@ -254,6 +262,7 @@ class Database {
 	/**
 	 * Creates a refund request made from the refund form.
 	 * @return boolean If refund request was added successfully
+     * @throws Exception In case of serious error (a check for a user should've already occurred)
 	 */
 	public function createRefundRequest(string $userID, string $reason): bool {
 		// Check that this isn't a duplicate entry (caused by network errors, user resubmitting by accident, etc.)
@@ -338,7 +347,7 @@ class Database {
 	}
 
 	/**
-	 * Adds a revwiew with the provided parameters.
+	 * Adds a review with the provided parameters.
 	 * @param string $name
 	 * @param int $rating
 	 * @param string $comment
@@ -355,8 +364,8 @@ class Database {
 			if ($review['rating'] == $rating && $review['comment'] == $comment) return false; // Duplicate entry, do not enter
 		}
 
-		$stmt = $this->conn->prepare("INSERT INTO reviews (name, rating, comment) VALUES (?, ?, ?)");
-		$stmt->execute([$name, $rating, $comment]);
+		$stmt = $this->conn->prepare("INSERT INTO reviews (name, rating, comment, date) VALUES (?, ?, ?, ?)");
+		$stmt->execute([$name, $rating, $comment, date("Y-m-d")]);
 
 		return true;
 	}

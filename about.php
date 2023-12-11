@@ -12,7 +12,7 @@
     <?php include "./_components/header.php" ?>
 
     <!-- About Us Content -->
-    <div class="about-us-content">
+    <main class="about-us-content">
         <h1>About MIRЯOR</h1>
         <p>
             Welcome to MIRЯOR, where fashion meets expression. Our journey began with a vision to redefine clothing as more than just fabric. We believe that each piece of clothing tells a unique story, an expression of your individuality and creativity.
@@ -31,7 +31,7 @@
                 Immerse yourself in the world of MIRЯOR, where fashion is more than just garments; it's an experience. Unleash your creativity, experiment with styles, and embrace the extraordinary. Our curated collections are not just clothes; they're a canvas for your self-expression. Elevate your wardrobe with MIRЯOR, where every thread weaves a story of individuality and charm.
             </p>
         </div>
-    </div>
+    </main>
 
     <!-- Footer -->
     <?php include "./_components/footer.php" ?>
