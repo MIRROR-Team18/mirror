@@ -1,10 +1,10 @@
-# MIRЯOR (Minimum Viable Product)
+# MIRЯOR (Final)
 _Reflect your Style_
 
 We are a luxury e-commerce website, selling a wide range of clothing in different categories. If you care about the fashion you wear, and the way you present yourself, we are here for you.
-This code is the MVP (Minimum Viable Product) version of the website, meaning only the bare-bones functionality is available.
+This is the repository for the final version of the website, meaning we are aiming to finish all the requirements for the project, and have a fully functional website before the final deadline, at the **25th of March, 2024**.
 
-**The website is being hosted at https://220134662.cs2410-web01pvm.aston.ac.uk/**
+**The website (with the current main branch) is being hosted at https://220134662.cs2410-web01pvm.aston.ac.uk/**
 
 ## The Team
 MIRЯOR is being developed by Team 18 for the Team Project module at Aston University. Team 18 consists of the following people (please see other documentation for Student IDs):
@@ -36,7 +36,7 @@ If you would like to run the website on your machine, please follow the followin
 5. Create a `.env` file in the folder, fill it out with the details of your database.
 6. Start Apache and MySQL from the XAMPP Control Panel.
 7. Open phpMyAdmin by clicking on the `Admin` button next to MySQL.
-8. Create a database (we called ours `mvp`, but it is up to you!), and then import the database file that's in this repo, [this one](init_table.sql "init_table.sql").
+8. Create a database (we called ours `mirror`, but it is up to you!), and then import the database file that's in this repo, [this one](init_table.sql "init_table.sql").
 9. You can now navigate to `localhost/<folder name>`, and the website will be up and running!
 
 _Do not forget to import the database and create the .env file!_
