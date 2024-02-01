@@ -1,0 +1,59 @@
+/* zen-kaku-gothic-new-300 - latin */
+@font-face {
+    font-display: swap; 
+    font-family: 'Zen Kaku Gothic New';
+    font-style: normal;
+    font-weight: 300;
+    src: url('./zen-kaku-gothic-new-v15-latin/zen-kaku-gothic-new-v15-latin-300.woff2') format('woff2'), /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+    url('./zen-kaku-gothic-new-v15-latin/zen-kaku-gothic-new-v15-latin-300.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5+, IE 9+, Safari 3.1+, iOS 4.2+, Android Browser 2.2+ */
+}
+
+/* zen-kaku-gothic-new-regular - latin */
+@font-face {
+    font-display: swap; 
+    font-family: 'Zen Kaku Gothic New';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./zen-kaku-gothic-new-v15-latin/zen-kaku-gothic-new-v15-latin-regular.woff2') format('woff2'), /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+    url('./zen-kaku-gothic-new-v15-latin/zen-kaku-gothic-new-v15-latin-regular.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5+, IE 9+, Safari 3.1+, iOS 4.2+, Android Browser 2.2+ */
+}
+
+/* zen-kaku-gothic-new-500 - latin */
+@font-face {
+    font-display: swap; 
+    font-family: 'Zen Kaku Gothic New';
+    font-style: normal;
+    font-weight: 500;
+    src: url('./zen-kaku-gothic-new-v15-latin/zen-kaku-gothic-new-v15-latin-500.woff2') format('woff2'), /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+    url('./zen-kaku-gothic-new-v15-latin/zen-kaku-gothic-new-v15-latin-500.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5+, IE 9+, Safari 3.1+, iOS 4.2+, Android Browser 2.2+ */
+}
+
+/* zen-kaku-gothic-new-700 - latin */
+@font-face {
+    font-display: swap; 
+    font-family: 'Zen Kaku Gothic New';
+    font-style: normal;
+    font-weight: 700;
+    src: url('./zen-kaku-gothic-new-v15-latin/zen-kaku-gothic-new-v15-latin-700.woff2') format('woff2'), /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+    url('./zen-kaku-gothic-new-v15-latin/zen-kaku-gothic-new-v15-latin-700.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5+, IE 9+, Safari 3.1+, iOS 4.2+, Android Browser 2.2+ */
+}
+
+/* zen-kaku-gothic-new-900 - latin */
+@font-face {
+    font-display: swap; 
+    font-family: 'Zen Kaku Gothic New';
+    font-style: normal;
+    font-weight: 900;
+    src: url('./zen-kaku-gothic-new-v15-latin/zen-kaku-gothic-new-v15-latin-900.woff2') format('woff2'), /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+    url('./zen-kaku-gothic-new-v15-latin/zen-kaku-gothic-new-v15-latin-900.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5+, IE 9+, Safari 3.1+, iOS 4.2+, Android Browser 2.2+ */
+}
+
+/* dela-gothic-one-regular - latin */
+@font-face {
+    font-display: swap; 
+    font-family: 'Dela Gothic One';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./dela-gothic-one-v15-latin/dela-gothic-one-v15-latin-regular.woff2') format('woff2'), /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+    url('./dela-gothic-one-v15-latin/dela-gothic-one-v15-latin-regular.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5+, IE 9+, Safari 3.1+, iOS 4.2+, Android Browser 2.2+ */
+}
