@@ -14,11 +14,11 @@
     <?php include '_components/header.php'; ?>
     <main id="welcome">
         <img id="logo" src="./_images/logo_large.svg" alt="MIRROR LOGO" />
-        <h1>MOST WANTED<br/>AND MOST LOVED</h1>
+        <h1 id="slogan">reflect your style</h1>
         <div class="buttons">
-            <a class="button" href="./products/">WOMEN</a>
-            <a class="button" href="./products/">MEN</a>
-            <a class="button" href="./products/">KIDS</a>
+            <a class="button" href="./products/">Womens</a>
+            <a class="button" href="./products/">Mens</a>
+            <a class="button" href="./products/">Kids</a>
         </div>
     </main>
     <?php include '_components/footer.php'; ?>

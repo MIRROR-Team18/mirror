@@ -5,7 +5,7 @@
     justify-content: space-around;
     align-items: center;
 
-    background-image: url("../_images/home.png");
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url("../_images/home.png");
     background-size: cover;
 }
 
@@ -14,10 +14,11 @@
 }
 
 #welcome h1 {
-    font-size: 3rem;
-    font-weight: bold;
+    font-size: 4rem;
     text-align: center;
-    color: white;
+    font-weight: 300;
+    letter-spacing: 8px;
+    color: var(--white);
 }
 
 #welcome .buttons {

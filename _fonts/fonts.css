@@ -1,6 +1,6 @@
 /* zen-kaku-gothic-new-300 - cyrillic_japanese_latin_latin-ext */
 @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-display: swap; 
     font-family: 'Zen Kaku Gothic New';
     font-style: normal;
     font-weight: 300;
@@ -10,7 +10,7 @@
 
 /* zen-kaku-gothic-new-regular - cyrillic_japanese_latin_latin-ext */
 @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-display: swap; 
     font-family: 'Zen Kaku Gothic New';
     font-style: normal;
     font-weight: 400;
@@ -20,7 +20,7 @@
 
 /* zen-kaku-gothic-new-500 - cyrillic_japanese_latin_latin-ext */
 @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-display: swap; 
     font-family: 'Zen Kaku Gothic New';
     font-style: normal;
     font-weight: 500;
@@ -30,7 +30,7 @@
 
 /* zen-kaku-gothic-new-700 - cyrillic_japanese_latin_latin-ext */
 @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-display: swap; 
     font-family: 'Zen Kaku Gothic New';
     font-style: normal;
     font-weight: 700;
@@ -40,7 +40,7 @@
 
 /* zen-kaku-gothic-new-900 - cyrillic_japanese_latin_latin-ext */
 @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-display: swap; 
     font-family: 'Zen Kaku Gothic New';
     font-style: normal;
     font-weight: 900;
@@ -50,7 +50,7 @@
 
 /* dela-gothic-one-regular - cyrillic_greek_japanese_latin_latin-ext_vietnamese */
 @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-display: swap; 
     font-family: 'Dela Gothic One';
     font-style: normal;
     font-weight: 400;
