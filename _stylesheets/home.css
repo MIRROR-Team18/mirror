@@ -30,3 +30,49 @@
 
     text-align: center;
 }
+
+.home-content {
+    padding: 2rem 0;
+    text-align: center;
+    color: var(--white);
+}
+.home-content:nth-of-type(even) { background-color: var(--blue-1); }
+.home-content:nth-of-type(odd) { background-color: var(--blue-2); }
+
+.home-content h1 {
+    font-family: 'Dela Gothic One', cursive;
+    margin-bottom: 2rem;
+}
+
+#notice p {
+    font-size: 1.5rem;
+    font-weight: 400;
+
+}
+
+#notice i.fa-leaf {
+    color: var(--green);
+    font-size: 2rem;
+    margin-right: 0.5rem;
+}
+
+.home-content .row {
+    justify-content: center;
+    align-items: center;
+}
+
+.product {
+    /* decided against the background colour, keeping it in case I change my mind */
+    /* background-color: var(--blue-3); */
+    padding: 2rem;
+    flex: 1;
+    margin: 0 1rem;
+    border-radius: 24px;
+}
+
+.product img {
+    width: 75%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 24px;
+}

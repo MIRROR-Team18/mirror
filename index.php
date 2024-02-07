@@ -12,13 +12,46 @@
 </head>
 <body>
     <?php include '_components/header.php'; ?>
-    <main id="welcome">
-        <img id="logo" src="./_images/logo_large.svg" alt="MIRROR LOGO" />
-        <h1 id="slogan">reflect your style</h1>
-        <div class="buttons">
-            <a class="button" href="./products/">Womens</a>
-            <a class="button" href="./products/">Mens</a>
-            <a class="button" href="./products/">Kids</a>
+    <main>
+        <div id="welcome">
+            <img id="logo" src="./_images/logo_large.svg" alt="MIRROR LOGO" />
+            <h1 id="slogan">reflect your style</h1>
+            <div class="buttons">
+                <a class="button" href="./products/">Womens</a>
+                <a class="button" href="./products/">Mens</a>
+                <a class="button" href="./products/">Kids</a>
+            </div>
+        </div>
+        <div id="featured" class="home-content">
+            <h1>MOST WANTED <br /> AND MOST LOVED</h1>
+            <?php // before writing any code, i'm gonna first code a product ?>
+            <div class="row">
+                <div class="product">
+                    <img src="./_images/products/bag-bag/pexels-ge-yonk-1152077.jpg" alt="Product 1" />
+                    <h2>Product 1</h2>
+                </div><div class="product">
+                    <img src="./_images/products/bag-bag/pexels-ge-yonk-1152077.jpg" alt="Product 1" />
+                    <h2>Product 1</h2>
+                </div><div class="product">
+                    <img src="./_images/products/bag-bag/pexels-ge-yonk-1152077.jpg" alt="Product 1" />
+                    <h2>Product 1</h2>
+                </div><div class="product">
+                    <img src="./_images/products/bag-bag/pexels-ge-yonk-1152077.jpg" alt="Product 1" />
+                    <h2>Product 1</h2>
+                </div><div class="product">
+                    <img src="./_images/products/bag-bag/pexels-ge-yonk-1152077.jpg" alt="Product 1" />
+                    <h2>Product 1</h2>
+                </div>
+            </div>
+        </div>
+        <div id="new" class="home-content">
+            <h1>LATEST AND <br /> GREATEST RELEASES</h1>
+        </div>
+        <div id="notice" class="home-content">
+            <div class="row">
+                <i class="fa-solid fa-leaf"></i>
+                <p>Check for this icon to make sustainable options!</p>
+            </div>
         </div>
     </main>
     <?php include '_components/footer.php'; ?>
