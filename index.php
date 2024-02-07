@@ -24,24 +24,27 @@
         </div>
         <div id="featured" class="home-content">
             <h1>MOST WANTED <br /> AND MOST LOVED</h1>
-            <?php // before writing any code, i'm gonna first code a product ?>
-            <div class="row">
-                <div class="product">
-                    <img src="./_images/products/bag-bag/pexels-ge-yonk-1152077.jpg" alt="Product 1" />
-                    <h2>Product 1</h2>
-                </div><div class="product">
-                    <img src="./_images/products/bag-bag/pexels-ge-yonk-1152077.jpg" alt="Product 1" />
-                    <h2>Product 1</h2>
-                </div><div class="product">
-                    <img src="./_images/products/bag-bag/pexels-ge-yonk-1152077.jpg" alt="Product 1" />
-                    <h2>Product 1</h2>
-                </div><div class="product">
-                    <img src="./_images/products/bag-bag/pexels-ge-yonk-1152077.jpg" alt="Product 1" />
-                    <h2>Product 1</h2>
-                </div><div class="product">
-                    <img src="./_images/products/bag-bag/pexels-ge-yonk-1152077.jpg" alt="Product 1" />
-                    <h2>Product 1</h2>
-                </div>
+            <div class="row products">
+            <?php
+			    require_once '_components/database.php';
+                $db = new Database();
+                try {
+                    $products = $db->getProductsByPopularity(5);
+
+                    foreach ($products as $product) {
+                        $pathForPhoto = "_images/products/" . $product->productID . "/";
+                        $photo = file_exists($pathForPhoto) ? $pathForPhoto . scandir($pathForPhoto)[2] : "https://picsum.photos/512"; // [0] is ".", [1] is ".."
+                    ?>
+                    <div class="product" onclick="window.location.href='./products/product.php?id=<?= $product->productID ?>'">
+                        <img src="<?php echo $photo; ?>" alt="<?php echo $product->name; ?>" />
+                        <h2><?php echo $product->name; ?></h2>
+                    </div>
+                    <?php
+                    }
+				} catch (Exception $e) {
+					echo "Error: " . $e->getMessage();
+				}
+                ?>
             </div>
         </div>
         <div id="new" class="home-content">
