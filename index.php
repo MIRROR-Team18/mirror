@@ -49,6 +49,26 @@
         </div>
         <div id="new" class="home-content">
             <h1>LATEST AND <br /> GREATEST RELEASES</h1>
+            <div class="row products">
+            <?php
+                try {
+                    $products = $db->getProductsByRecency(5);
+
+                    foreach ($products as $product) {
+                        $pathForPhoto = "_images/products/" . $product->productID . "/";
+                        $photo = file_exists($pathForPhoto) ? $pathForPhoto . scandir($pathForPhoto)[2] : "https://picsum.photos/512"; // [0] is ".", [1] is ".."
+                    ?>
+                    <div class="product" onclick="window.location.href='./products/product.php?id=<?= $product->productID ?>'">
+                        <img src="<?php echo $photo; ?>" alt="<?php echo $product->name; ?>" />
+                        <h2><?php echo $product->name; ?></h2>
+                    </div>
+                    <?php
+                    }
+                } catch (Exception $e) {
+                    echo "Error: " . $e->getMessage();
+                }
+                ?>
+            </div>
         </div>
         <div id="notice" class="home-content">
             <div class="row">
