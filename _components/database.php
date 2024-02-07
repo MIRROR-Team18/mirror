@@ -230,8 +230,7 @@ class Database {
 	 * @param string $productID
 	 * @return Product | null
 	 */
-	public function getProduct(string $productID): Product | null
-	{
+	public function getProduct(string $productID): Product | null{
 		$stmt = $this->conn->prepare("SELECT * FROM products WHERE productID = ?");
 		$stmt->execute([$productID]);
 		$productResult = $stmt->fetch(PDO::FETCH_ASSOC);
