@@ -6,6 +6,7 @@ if (isset($_POST['submitted'])) {
         // Could not get the data that should have been sent.
         exit('Please fill both the email and password fields!');
     }
+
     // connecting to the DataBase
     require_once("_components/database.php"); //db name
     $db = new Database();
@@ -26,6 +27,19 @@ if (isset($_POST['submitted'])) {
         echo "<p style='color:red'>" . $e->getMessage() . "</p>";
         exit;
     }
+}
+
+    //Creating the OTP
+
+    $sql = "SELECT * FROM User WHERE email='$email'";
+    $query = mysqli_query($conn, $sql);
+    $code = mysqli_fetch_array($query);
+
+    if ($code && password_verify($password, $data['password'])) {
+        $otp = rand(100000, 999999);
+        $otp_expiry = date("Y-m-d H:i:s", strtotime("+3 minute"));
+        $subject= "Your OTP for Login";
+        $message="Your OTP is: $otp";
 }
 ?>
 
