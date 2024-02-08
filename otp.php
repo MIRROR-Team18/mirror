@@ -53,10 +53,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div id="container">
         <h1>Two-Step Verification</h1>
-        <p>Enter the 6 Digit OTP Code that has been sent <br> to your email address: <?php echo $_SESSION['email']; ?></p>
+        <p>Enter the 5 Digit OTP Code that has been sent <br> to your email address: <?php echo $_SESSION['email']; ?></p>
         <form method="post" action="otp_verification.php">
             <label for="otp">Enter OTP Code:</label><br>
-            <input type="number" name="otp" pattern="\d{6}" placeholder="Six-Digit OTP" required><br><br>
+            <input type="number" name="otp" pattern="\d{5}" placeholder="Five-Digit OTP" required><br><br>
             <button type="submit">Verify OTP</button>
         </form>
     </div>
