@@ -33,7 +33,7 @@ if (isset($_POST['submitted'])) {
 
     $sql = "SELECT * FROM User WHERE email='$email'";
     $query = mysqli_query($conn, $sql);
-    $code = mysqli_fetch_array($query);
+   // $code = mysqli_fetch_array($query);
 
     if ($code && password_verify($password, $data['password'])) {
         $otp = rand(100000, 999999);
