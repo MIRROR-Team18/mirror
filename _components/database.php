@@ -37,6 +37,7 @@ class Connection {
 				$db_name = $_ENV['DB_NAME'];
 				self::$dbConnection = new PDO("mysql:host=$db_host;dbname=$db_name", $_ENV['DB_USER'], $_ENV['DB_PASS']);
 				self::$dbConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				self::$dbConnection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); // This allows us to use LIMIT in prepared statements.
 			} catch (PDOException $e) {
 				exit("Database Connection failed: " . $e->getMessage());
 			}
@@ -205,18 +206,60 @@ class Database {
 	}
 
 	/**
+	 * Returns an array of products, sorted by the latest 100 orders. Consider changing this to time based when we add that information to the db.
+	 * @param int $limit The maximum number of products to return. -1 for no limit.
+	 * @param bool $invert If true, the order is inverted (least popular first)
+	 * @return array An array of products, sorted by popularity.
+	 */
+	public function getProductsByPopularity(int $limit = -1, bool $invert = false): array {
+		$stmt = $this->conn->prepare("SELECT products.productID, name, type, COUNT(products_in_orders.productID) as popularity FROM products_in_orders RIGHT OUTER JOIN products ON products_in_orders.productID = products.productID GROUP BY productID ORDER BY popularity DESC LIMIT ?;");
+		$stmt->execute([$limit === -1 ? 1000 : $limit]); // Pretty sure 1000 is max MySQL supports anyway
+		// Below is a duplicated code fragment. Consider moving parts to a private function interpolateSizes()
+		$productResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		$products = array();
+		foreach ($productResults as $productResult) {
+			$sizes = $this->getSizesOfProduct($productResult['productID']);
+			$products[] = new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
+		}
+
+		return $products;
+	}
+
+	/**
+	 * Returns an array of products, sorted by the newest products first. Consider changing this to time based when we add that information to the db.
+	 * @param int $limit The maximum number of products to return. -1 for no limit.
+	 * @param bool $invert If true, the order is inverted (oldest first)
+	 * @return array An array of products, sorted by recency.
+	 */
+	public function getProductsByRecency(int $limit = -1, bool $invert = false): array {
+		// Yes, this is completely ineffective as of right now, but it's a placeholder for when we add time to the database.
+		$stmt = $this->conn->prepare("SELECT * FROM products ORDER BY productID DESC LIMIT ?");
+		$stmt->execute([$limit === -1 ? 1000 : $limit]);
+		$productResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		$products = array();
+		foreach ($productResults as $productResult) {
+			$sizes = $this->getSizesOfProduct($productResult['productID']);
+			$products[] = new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
+		}
+
+		return $products;
+	}
+
+	/**
 	 * Returns a product from a given productID.
 	 * @param string $productID
 	 * @return Product | null
 	 */
-	public function getProduct(string $productID): Product | null {
+	public function getProduct(string $productID): Product | null{
 		$stmt = $this->conn->prepare("SELECT * FROM products WHERE productID = ?");
 		$stmt->execute([$productID]);
 		$productResult = $stmt->fetch(PDO::FETCH_ASSOC);
 
 		if (!$productResult) return null;
 
-        $sizes = $this->getSizesOfProduct($productResult['productID']);
+		$sizes = $this->getSizesOfProduct($productResult['productID']);
 		return new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
 	}
 

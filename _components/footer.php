@@ -1,6 +1,6 @@
 <footer>
     <div class="col">
-        <h1>MIRЯOR</h1>
+        <h1>RЯ</h1>
     </div>
     <div class="col">
         <p><i>See our range:</i></p>
