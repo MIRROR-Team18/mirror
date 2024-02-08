@@ -29,7 +29,18 @@ if (isset($_POST['submitted'])) {
     }
 }
 
-  
+    //Creating the OTP
+
+    $sql = "SELECT * FROM User WHERE email='$email'";
+    $query = mysqli_query($conn, $sql);
+    $code = mysqli_fetch_array($query);
+
+    if ($code && password_verify($password, $data['password'])) {
+        $otp = rand(100000, 999999);
+        $otp_expiry = date("Y-m-d H:i:s", strtotime("+3 minute"));
+        $subject= "Your OTP for Login";
+        $message="Your OTP is: $otp";
+}
 ?>
 
 
