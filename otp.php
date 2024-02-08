@@ -44,43 +44,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
     <title></title>
-    <style type="text/css">
-        #container{
-            border: 1px solid black;
-            width: 400px;
-            margin-left: 400px;
-            margin-top: 50px;
-            height: 330px;
-        }
-        form{
-            margin-left: 50px;
-        }
-        p{
-            margin-left: 50px;
-        }
-        h1{
-            margin-left: 50px;
-        }
-        input[type=number]{
-            width: 290px;
-            padding: 10px;
-            margin-top: 10px;
+    <link rel="stylesheet" type="text/css" href="_stylesheets/main.css"/>
+    <link rel="stylesheet" type="text/css" href="_stylesheets/login.css"/>
 
-        }
-        button{
-            background-color: orange;
-            border: 1px solid orange;
-            width: 100px;
-            padding: 9px;
-            margin-left: 100px;
-        }
-        button:hover{
-            cursor: pointer;
-            opacity: .9;
-        }
-    </style>
 </head>
 <body>
     <div id="container">
