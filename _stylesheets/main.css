@@ -46,6 +46,7 @@ nav {
     background: var(--black);
     display: flex;
     justify-content: space-between;
+    z-index: 100;
 }
 
 nav .left, nav .right {
@@ -98,6 +99,7 @@ footer {
     flex-flow: row wrap;
 
     text-align: right;
+    z-index: 100;
 }
 
 footer .col:first-child {
