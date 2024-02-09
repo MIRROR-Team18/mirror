@@ -35,7 +35,7 @@ function updateMode(ev) {
     parent.querySelector(".title a.selected").classList.remove("selected"); // Remove the selected class from the old mode
     clicked.classList.add("selected"); // Add the selected class to the new mode
 
-    filter(parent.parentElement.id); // Call the filter function to update the display, providing the parent's parent's ID (filterGroup)
+    filter(parent.parentElement.parentElement.id); // Call the filter function to update the display, providing the parent's parent's ID (filterGroup)
 }
 
 /**
