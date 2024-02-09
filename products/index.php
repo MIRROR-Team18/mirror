@@ -8,17 +8,17 @@
 </head>
 <body>
     <?php include '../_components/header.php'; ?>
-    <header>
-        <h1>PRODUCTS</h1>
-        <p>we have products. see them.</p>
-    </header>
     <main>
-        <section id="productsGrid">
-            <div class="left">
+        <aside>
+            <div class="asideContent">
                 <div id="forProductType" class="filterGroup">
                     <div class="title">
-                        <h2>Type</h2>
-                        <a href="#" id="productType_any" class="selected">Any of...</a>&nbsp;|&nbsp;<a href="#" id="productType_only">Only...</a>
+                        <h2>TYPE</h2>
+                        <span>
+                            <a href="#" id="productType_any" class="selected">Any of...</a>
+                            &nbsp;|&nbsp;
+                            <a href="#" id="productType_only">Only...</a>
+                        </span>
                     </div>
                     <div class="inputLabelGroup">
                         <input type="checkbox" name="tops" id="tops">
@@ -42,7 +42,10 @@
                     </div>
                 </div>
             </div>
-            <div class="right">
+        </aside>
+        <section id="products">
+            <h1 id="productsDescriptor">PRODUCTS</h1>
+            <div id="productsGrid">
                 <?php
                 require_once '../_components/database.php';
                 $db = new Database();

@@ -20,6 +20,11 @@
     --green: #2DF695;
 }
 
+body {
+    background: var(--blue-1);
+    color: var(--white);
+}
+
 .row {
     display: flex;
     flex-flow: row wrap;

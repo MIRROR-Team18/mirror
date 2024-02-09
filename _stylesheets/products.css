@@ -1,19 +1,24 @@
-#productsGrid {
+main {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 25% 1fr;
     gap: 1rem;
-
-    margin: 2rem 2vw;
 }
 
-#productsGrid .left {
+aside {
+    place-self: stretch;
+
     display: flex;
     flex-direction: column;
     justify-content: start;
 
-    background-color: #ddd;
-    height: auto;
-    padding: 1rem;
+    background-color: var(--blue-2);
+    z-index: 0;
+}
+
+aside .asideContent {
+    position: sticky;
+    top: calc(69px + 1rem); /* 69px is the height of the header */
+    margin: 1rem;
 }
 
 .filterGroup {
@@ -25,25 +30,36 @@
     display: flex;
     flex-flow: row wrap;
     align-items: center;
+    justify-content: space-between;
 }
 
 .filterGroup .title h2 {
-    margin: 1rem 2rem 1rem .5rem;
+    font-family: 'Dela Gothic One', cursive;
+    margin: 1rem .5rem .5rem;
 }
 
 .filterGroup a {
-    color: black;
+    color: var(--disabled);
+    font-weight: 300;
+    margin: 1rem .2rem .5rem;
 }
 
 .filterGroup a.selected {
-    color: #0000ff;
+    color: var(--white);
+    font-weight: 600;
 }
 
 .inputLabelGroup {
     padding: .125rem 1rem
 }
 
-#productsGrid .right {
+#products { padding: 2rem 5vw; } /* overwriting main.css */
+#products #productsDescriptor {
+    font-family: 'Dela Gothic One', cursive;
+    font-size: 3rem;
+}
+
+#productsGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 
@@ -51,19 +67,24 @@
 }
 
 .product {
-    place-self: center;
+    place-self: stretch;
 
     display: flex;
     flex-flow: column nowrap;
+    justify-content: space-between;
 
-    padding: 1rem 1rem;
+    padding: 1rem;
+    margin: .5rem;
+    transition: margin .25s ease-in-out;
 
-    background-color: #ddd;
+    background: var(--blue-3);
     border-radius: 8px;
 }
 
 .product:hover {
     cursor: pointer;
+    margin: .1rem;
+    background: linear-gradient(rgba(255, 255, 255, 10%), rgba(255, 255, 255, 10%)), var(--blue-3);
 }
 
 .product img {
