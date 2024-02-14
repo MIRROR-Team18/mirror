@@ -53,7 +53,7 @@ aside .asideContent {
     padding: .125rem 1rem
 }
 
-#products { padding: 2rem 5vw; } /* overwriting main.css */
+#products { padding: 1rem 5vw; justify-content: start; } /* overwriting main.css */
 #products #productsDescriptor {
     font-family: 'Dela Gothic One', cursive;
     font-size: 3rem;

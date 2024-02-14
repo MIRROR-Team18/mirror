@@ -11,6 +11,10 @@
     <main>
         <aside>
             <div class="asideContent">
+                <div class="searchGroup">
+                    <label class="sr-only" for="search">SEARCH</label>
+                    <input type="text" id="search" placeholder="Search for a product...">
+                </div>
                 <div id="forProductType" class="filterGroup">
                     <div class="title">
                         <h2>TYPE</h2>
