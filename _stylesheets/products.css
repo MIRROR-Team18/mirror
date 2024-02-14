@@ -21,6 +21,10 @@ aside .asideContent {
     margin: 1rem;
 }
 
+#search {
+    width: 100%;
+}
+
 .filterGroup {
     display: flex;
     flex-flow: column nowrap;

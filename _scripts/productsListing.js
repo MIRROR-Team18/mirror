@@ -14,6 +14,11 @@ window.addEventListener("load", () => {
         if (!a.id) return;
         a.addEventListener("click", updateMode)
     })
+
+    const searchBar = document.querySelector("#search");
+    searchBar.addEventListener("input", () => {
+        search(searchBar.value.toLowerCase());
+    });
 });
 
 /**
@@ -76,4 +81,15 @@ function filter(parameter) {
             break;
         }
     }
+}
+
+/**
+ * Filter the products by their name
+ * @param parameter (string) - What to filter by
+ */
+function search(parameter) {
+    document.querySelectorAll(".product").forEach(product => {
+        if (product.dataset.productName.toLowerCase().includes(parameter)) product.style.display = "flex";
+        else product.style.display = "none";
+    });
 }
