@@ -38,7 +38,7 @@ if (isset($_POST['product_id'])) {
         <h1><?= $product->name ?></h1>
         <!-- Product description here -->
         <p><?= $product->description ?></p>
-        
+
         <div class="product-sizes">
             <span>SIZES</span>
             <?php
@@ -52,11 +52,11 @@ if (isset($_POST['product_id'])) {
             ?>
             <p id="stockIndicator"></p>
         </div>
-        
+
         <div class="product-price">
             <span>Click on a size...</span>
         </div>
-        
+
         <button class="add-to-cart">Add to Cart</button>
     </div>
 </main>
