@@ -1,14 +1,14 @@
 <?php
-    require_once '../_components/database.php';
-    $db = new Database();
+require_once '../_components/database.php';
+$db = new Database();
 
-    if (isset($_POST['product_id'])) {
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!isset($_SESSION['basket'])) $_SESSION['basket'] = array();
+if (isset($_POST['product_id'])) {
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    if (!isset($_SESSION['basket'])) $_SESSION['basket'] = array();
 
-        $product = $db->getProduct($_POST['product_id']);
-        $_SESSION['basket'][] = $product;
-    }
+    $product = $db->getProduct($_POST['product_id']);
+    $_SESSION['basket'][] = $product;
+}
 ?>
 
 <!DOCTYPE html>
@@ -24,34 +24,38 @@
 <?php include '../_components/header.php'; ?>
 
 <main class="container">
-	<?php
-	// This will get product ID from URL
+    <?php
     if (!isset($_GET['id'])) {
         header("Location: /products");
         exit();
     }
-	$product_id = $_GET['id'];
+    $product_id = $_GET['id'];
 
-	// This will fetch product from the database
-	$product = $db->getProduct($product_id);
+    $product = $db->getProduct($product_id);
 
-	if (!is_null($product)) {
-		echo "<h1>" . $product->name . "</h1>";
-		echo "<p>" . $product->type . "</p>";
-		echo "<p>Price: $2.00</p>";
+    if (!is_null($product)) {
+        echo "<h1>" . $product->name . "</h1>";
+        echo "<p>" . $product->type . "</p>";
+        echo "<p>Price: $2.00</p>";
 
-		echo "<form action='' method='post'>";
-		echo "<input type='hidden' name='product_id' value='" . $product_id . "'>";
-		echo "<input type='submit' value='Add to Cart'>";
-		echo "</form>";
+        // Display the image if the product has a valid image URL
+        if (!empty($product->image_url)) {
+            echo "<img src='" . $product->image_url . "' alt='" . $product->name . "' class='product-image'>";
+        } else {
+            echo "No image available";
+        }
 
-
-	} else {
-		echo "Product not found";
-	}
-	?>
+        echo "<form action='' method='post'>";
+        echo "<input type='hidden' name='product_id' value='" . $product_id . "'>";
+        echo "<input type='submit' value='Add to Cart'>";
+        echo "</form>";
+    } else {
+        echo "Product not found";
+    }
+    ?>
 </main>
 
 <?php include '../_components/footer.php'; ?>
 </body>
 </html>
+
