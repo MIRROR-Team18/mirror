@@ -31,11 +31,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     window.onload = function() {
         navigateToPage();
     }
-</script>
+     </script>
             <?php 
         }
     } else {
-        echo "<script> alert('OTP is not valid. Please try again.');</script>";
+        echo "<script> alert('The OTP is not valid. Please try again.');</script>";
     }
 }
 ?>
@@ -60,5 +60,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit">Verify OTP</button>
         </form>
     </div>
+    <?php include "_components/footer.php"; ?>
 </body>
 </html>
