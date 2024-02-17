@@ -115,7 +115,12 @@ footer {
     z-index: 100;
 }
 
-footer .col:first-child {
+footer.short {
+    padding: 1rem 10vw;
+    text-align: center;
+}
+
+footer:not(.short) .col:first-child {
     text-align: left;
     justify-content: center;
 }
