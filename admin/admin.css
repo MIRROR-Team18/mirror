@@ -1,0 +1,16 @@
+/* The admin page should all entirely use the same theming, hence why I want to keep it to one file
+ * But if that changes, this will be split into an admin/_stylesheets/ folder */
+section:nth-of-type(1) {
+    background: var(--blue-3);
+}
+section:nth-of-type(2) {
+    background: var(--blue-2);
+}
+section:nth-of-type(3) {
+    background: var(--blue-1);
+}
+
+section h1 {
+    font-family: 'Dela Gothic One', cursive;
+    font-size: 3rem;
+}
