@@ -20,6 +20,24 @@
     --green: #2DF695;
 }
 
+.sr-only {
+    border: 0 !important;
+    clip: rect(1px, 1px, 1px, 1px) !important;
+    clip-path: inset(50%) !important;
+    height: 1px !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    position: absolute !important;
+    width: 1px !important;
+    white-space: nowrap !important;
+}
+
+body {
+    background: var(--blue-1);
+    color: var(--white);
+}
+
 .row {
     display: flex;
     flex-flow: row wrap;
@@ -41,6 +59,7 @@ nav {
     background: var(--black);
     display: flex;
     justify-content: space-between;
+    z-index: 100;
 }
 
 nav .left, nav .right {
@@ -93,6 +112,7 @@ footer {
     flex-flow: row wrap;
 
     text-align: right;
+    z-index: 100;
 }
 
 footer .col:first-child {
@@ -165,4 +185,12 @@ button, .button {
     width: 25%;
     margin: auto;
     text-decoration: none;
+}
+
+input {
+    background: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: .25rem .5rem;
+    font-size: 1.2rem;
 }

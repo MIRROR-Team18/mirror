@@ -1,28 +1,28 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <?php include '../_components/default.php'; ?>
     <title>Products - MIRЯOR</title>
-	<link rel="stylesheet" href="../_stylesheets/main.css">
     <link rel="stylesheet" href="../_stylesheets/products.css">
     <script src="../_scripts/productsListing.js" defer async></script>
 </head>
 <body>
     <?php include '../_components/header.php'; ?>
-    <header>
-        <h1>PRODUCTS</h1>
-        <p>we have products. see them.</p>
-    </header>
     <main>
-        <section id="productsGrid">
-            <div class="left">
+        <aside>
+            <div class="asideContent">
+                <div class="searchGroup">
+                    <label class="sr-only" for="search">SEARCH</label>
+                    <input type="text" id="search" placeholder="Search for a product...">
+                </div>
                 <div id="forProductType" class="filterGroup">
                     <div class="title">
-                        <h2>Type</h2>
-                        <a href="#" id="productType_any" class="selected">Any of...</a>&nbsp;|&nbsp;<a href="#" id="productType_only">Only...</a>
+                        <h2>TYPE</h2>
+                        <span>
+                            <a href="#" id="productType_any" class="selected">Any of...</a>
+                            &nbsp;|&nbsp;
+                            <a href="#" id="productType_only">Only...</a>
+                        </span>
                     </div>
                     <div class="inputLabelGroup">
                         <input type="checkbox" name="tops" id="tops">
@@ -46,7 +46,10 @@
                     </div>
                 </div>
             </div>
-            <div class="right">
+        </aside>
+        <section id="products">
+            <h1 id="productsDescriptor">PRODUCTS</h1>
+            <div id="productsGrid">
                 <?php
                 require_once '../_components/database.php';
                 $db = new Database();
@@ -72,7 +75,7 @@
                         }
 
                     ?>
-                        <div class="product" id="<?= $product->productID ?>" data-product-type="<?= $product->type ?>" onclick="window.location.href='./product.php?id=<?= $product->productID ?>'">
+                        <div class="product" id="<?= $product->productID ?>" data-product-type="<?= $product->type ?>" data-product-name="<?= $product->name ?>" onclick="window.location.href='./product.php?id=<?= $product->productID ?>'">
                             <img src="<?= $photo ?>" alt="<?= $product->productID . "_image" ?>">
                             <h1><?= $product->name ?></h1>
                             <h2><?= $price ?></h2>
