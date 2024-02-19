@@ -87,12 +87,14 @@ class Product {
 	public string $productID;
 	public string $name;
 	public string $type;
+	public string $gender;
 	public array $sizes;
 
-	public function __construct(string $productID, string $name, string $type, array $sizes = null) {
+	public function __construct(string $productID, string $name, string $type, string $gender, array $sizes = null) {
 		$this->productID = $productID;
 		$this->name = $name;
 		$this->type = $type;
+		$this->gender = $gender;
 		$this->sizes = $sizes ?? array();
 	}
 }
@@ -124,15 +126,15 @@ class Database {
 				lastName VARCHAR(100) NOT NULL,
 				password VARCHAR(256) NOT NULL,
 				admin INT(1) NOT NULL DEFAULT 0
-			)",
+			);",
 				"CREATE TABLE IF NOT EXISTS gender_def (
     			id INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 				name VARCHAR(32) NOT NULL
-			)",
+			);",
 				"CREATE TABLE IF NOT EXISTS type_def (
     			id INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 				name VARCHAR(32) NOT NULL
-			)",
+			);",
 				"CREATE TABLE IF NOT EXISTS products (
 				id VARCHAR(32) NOT NULL PRIMARY KEY,
 				name VARCHAR(64) NOT NULL,
@@ -140,11 +142,11 @@ class Database {
 				gender INT(2) NOT NULL,
 				FOREIGN KEY (type) REFERENCES type_def(id),
 				FOREIGN KEY (gender) REFERENCES gender_def(id)
-			)",
+			);",
 				"CREATE TABLE IF NOT EXISTS size_def (
     			id INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 				name VARCHAR(32) NOT NULL
-			)",
+			);",
 				"CREATE TABLE IF NOT EXISTS product_sizes (
 				productID VARCHAR(32) NOT NULL,
 				sizeID INT(2) NOT NULL,
@@ -152,14 +154,14 @@ class Database {
 				PRIMARY KEY (productID, sizeID),
 				FOREIGN KEY (productID) REFERENCES products(id),
 				FOREIGN KEY (sizeID) REFERENCES size_def(id)
-			)",
+			);",
 				"CREATE TABLE IF NOT EXISTS orders (
 				id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 				userID VARCHAR(8) NOT NULL,
 				status ENUM('processing', 'dispatched') NOT NULL,
 				paidAmount DECIMAL(9,2) NOT NULL,
 				FOREIGN KEY (userID) REFERENCES users(id)
-			)",
+			);",
 				"CREATE TABLE IF NOT EXISTS products_in_orders (
 				orderID INT(8) NOT NULL,
 				productID VARCHAR(32) NOT NULL,
@@ -167,8 +169,7 @@ class Database {
 				quantity INT(2) NOT NULL,
 				FOREIGN KEY (orderID) REFERENCES orders(id),
 				FOREIGN KEY (productID, sizeID) REFERENCES product_sizes(productID, sizeID)
-			)",
-				// TODO: Verify the two below work as intended.
+			);",
 				"CREATE TABLE IF NOT EXISTS reviews (
 				id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 				name VARCHAR(100) NOT NULL,
@@ -178,7 +179,7 @@ class Database {
 				type ENUM('product', 'site') NOT NULL,
 				productID VARCHAR(32) NULL,
 				CONSTRAINT fk_type_product FOREIGN KEY (productID) REFERENCES products(id) ON DELETE CASCADE ON UPDATE CASCADE
-			)",
+			);",
 				"CREATE TABLE IF NOT EXISTS enquiries (
 				id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 				type ENUM('contact', 'refund') NOT NULL,
@@ -187,7 +188,7 @@ class Database {
 				userID VARCHAR(8) NULL,
 				message TEXT NOT NULL,
 				FOREIGN KEY (userID) REFERENCES users(id)
-			)",
+			);",
 				"INSERT INTO gender_def (name) VALUES ('male'), ('female'), ('unisex')",
 				"INSERT INTO type_def (name) VALUES ('tops'), ('bottoms'), ('socks'), ('shoes'), ('accessories')",
 				"INSERT INTO products (id, name, type, gender) VALUES
@@ -306,7 +307,7 @@ class Database {
 		$products = array();
 		foreach ($productResults as $productResult) {
             $sizes = $this->getSizesOfProduct($productResult['id']);
-			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $sizes);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $sizes);
 		}
 
 		return $products;
@@ -315,7 +316,7 @@ class Database {
 	/**
 	 * Returns an array of products, sorted by the latest 100 orders. Consider changing this to time based when we add that information to the db.
 	 * @param int $limit The maximum number of products to return. -1 for no limit.
-	 * @param bool $invert If true, the order is inverted (least popular first)
+	 * @param bool $invert If true, the order is inverted (the least popular first)
 	 * @return array An array of products, sorted by popularity.
 	 */
 	public function getProductsByPopularity(int $limit = -1, bool $invert = false): array {
@@ -327,7 +328,7 @@ class Database {
 		$products = array();
 		foreach ($productResults as $productResult) {
 			$sizes = $this->getSizesOfProduct($productResult['id']);
-			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $sizes);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $sizes);
 		}
 
 		return $products;
@@ -348,7 +349,7 @@ class Database {
 		$products = array();
 		foreach ($productResults as $productResult) {
 			$sizes = $this->getSizesOfProduct($productResult['id']);
-			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $sizes);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $sizes);
 		}
 
 		return $products;
@@ -367,7 +368,7 @@ class Database {
 		if (!$productResult) return null;
 
 		$sizes = $this->getSizesOfProduct($productResult['id']);
-		return new Product($productResult['id'], $productResult['name'], $productResult['type'], $sizes);
+		return new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $sizes);
 	}
 
 	/**
@@ -381,8 +382,8 @@ class Database {
 			$stmt->execute([$product->productID, $size->sizeID, $size->price]);
 		}
 
-		$stmt = $this->conn->prepare("INSERT INTO products (id, name, type) VALUES (?, ?, ?)");
-		$stmt->execute([$product->productID, $product->name, $product->type]);
+		$stmt = $this->conn->prepare("INSERT INTO products (id, name, type, gender) VALUES (?, ?, ?, ?)");
+		$stmt->execute([$product->productID, $product->name, $product->type, $product->gender]);
 
 		return true;
 	}
@@ -480,7 +481,7 @@ class Database {
 	 * @note This function should update to use a class instead!
 	 */
 	public function getOrderByID(string $orderID): mixed {
-		$stmt = $this->conn->prepare("SELECT * FROM orders WHERE orderID = ?");
+		$stmt = $this->conn->prepare("SELECT * FROM orders WHERE id = ?");
 		$stmt->execute([$orderID]);
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
@@ -514,8 +515,8 @@ class Database {
 			if ($review['rating'] == $rating && $review['comment'] == $comment) return false; // Duplicate entry, do not enter
 		}
 
-		$stmt = $this->conn->prepare("INSERT INTO reviews (name, rating, comment, date) VALUES (?, ?, ?, ?)");
-		$stmt->execute([$name, $rating, $comment, date("Y-m-d")]);
+		$stmt = $this->conn->prepare("INSERT INTO reviews (name, rating, comment, date, type) VALUES (?, ?, ?, ?, ?)");
+		$stmt->execute([$name, $rating, $comment, date("Y-m-d"), "site"]);
 
 		return true;
 	}
