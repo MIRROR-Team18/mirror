@@ -140,6 +140,8 @@ class Database {
 				name VARCHAR(64) NOT NULL,
 				type INT(2) NOT NULL,
 				gender INT(2) NOT NULL,
+				timeCreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				timeModified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 				FOREIGN KEY (type) REFERENCES type_def(id),
 				FOREIGN KEY (gender) REFERENCES gender_def(id)
 			);",
@@ -160,6 +162,8 @@ class Database {
 				userID VARCHAR(8) NOT NULL,
 				status ENUM('processing', 'dispatched') NOT NULL,
 				paidAmount DECIMAL(9,2) NOT NULL,
+				timeCreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				timeModified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 				FOREIGN KEY (userID) REFERENCES users(id)
 			);",
 				"CREATE TABLE IF NOT EXISTS products_in_orders (
@@ -320,7 +324,7 @@ class Database {
 	 * @return array An array of products, sorted by popularity.
 	 */
 	public function getProductsByPopularity(int $limit = -1, bool $invert = false): array {
-		$stmt = $this->conn->prepare("SELECT products.id, name, type, COUNT(products_in_orders.productID) as popularity FROM products_in_orders RIGHT OUTER JOIN products ON products_in_orders.productID = products.id GROUP BY id ORDER BY popularity DESC LIMIT ?;");
+		$stmt = $this->conn->prepare("SELECT products.id, name, type, gender, COUNT(products_in_orders.productID) as popularity FROM products_in_orders RIGHT OUTER JOIN products ON products_in_orders.productID = products.id GROUP BY id ORDER BY popularity DESC LIMIT ?;");
 		$stmt->execute([$limit === -1 ? 1000 : $limit]); // Pretty sure 1000 is max MySQL supports anyway
 		// Below is a duplicated code fragment. Consider moving parts to a private function interpolateSizes()
 		$productResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
