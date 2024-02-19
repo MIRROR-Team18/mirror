@@ -103,9 +103,116 @@ class Database {
 	public function __construct() {
         try {
             $this->conn = Connection::getConnection();
+			$this->init();
         } catch (Exception $e) {
             exit("Could not create database connection! " . $e->getMessage());
         }
+	}
+
+	/**
+	 * Ensures the database has been set up correctly. Call after constructor. Aim is to deprecate init_table.sql.
+	 * @return void
+	 * @throws Exception If there is a problem in setting up the database.
+	 */
+	private function init(): void {
+		try {
+			$queries = array( // I'm splitting each query into a separate string to make it easier to read.
+				"CREATE TABLE IF NOT EXISTS users (
+    			id VARCHAR(8) NOT NULL PRIMARY KEY,
+				email VARCHAR(320) NOT NULL,
+				firstName VARCHAR(100) NOT NULL,
+				lastName VARCHAR(100) NOT NULL,
+				password VARCHAR(256) NOT NULL,
+				admin INT(1) NOT NULL DEFAULT 0
+			)",
+				"CREATE TABLE IF NOT EXISTS gender_def (
+    			id INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+				name VARCHAR(32) NOT NULL
+			)",
+				"CREATE TABLE IF NOT EXISTS type_def (
+    			id INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+				name VARCHAR(32) NOT NULL
+			)",
+				"CREATE TABLE IF NOT EXISTS products (
+				id VARCHAR(32) NOT NULL PRIMARY KEY,
+				name VARCHAR(64) NOT NULL,
+				type INT(2) NOT NULL,
+				gender INT(2) NOT NULL,
+				FOREIGN KEY (type) REFERENCES type_def(id),
+				FOREIGN KEY (gender) REFERENCES gender_def(id)
+			)",
+				"CREATE TABLE IF NOT EXISTS size_def (
+    			id INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+				name VARCHAR(32) NOT NULL
+			)",
+				"CREATE TABLE IF NOT EXISTS product_sizes (
+				productID VARCHAR(32) NOT NULL,
+				sizeID INT(2) NOT NULL,
+				price DECIMAL(6,2) NOT NULL,
+				PRIMARY KEY (productID, sizeID),
+				FOREIGN KEY (productID) REFERENCES products(id),
+				FOREIGN KEY (sizeID) REFERENCES size_def(id)
+			)",
+				"CREATE TABLE IF NOT EXISTS orders (
+				id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+				userID VARCHAR(8) NOT NULL,
+				status ENUM('processing', 'dispatched') NOT NULL,
+				paidAmount DECIMAL(9,2) NOT NULL,
+				FOREIGN KEY (userID) REFERENCES users(id)
+			)",
+				"CREATE TABLE IF NOT EXISTS products_in_orders (
+				orderID INT(8) NOT NULL,
+				productID VARCHAR(32) NOT NULL,
+				sizeID INT(2) NOT NULL,
+				quantity INT(2) NOT NULL,
+				FOREIGN KEY (orderID) REFERENCES orders(id),
+				FOREIGN KEY (productID, sizeID) REFERENCES product_sizes(productID, sizeID)
+			)",
+				// TODO: Verify the two below work as intended.
+				"CREATE TABLE IF NOT EXISTS reviews (
+				id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+				name VARCHAR(100) NOT NULL,
+				rating INT(1) NOT NULL,
+				comment TEXT NOT NULL,
+				date DATE NOT NULL,
+				type ENUM('product', 'site') NOT NULL,
+				productID VARCHAR(32) NULL,
+				CONSTRAINT fk_type_product FOREIGN KEY (productID) REFERENCES products(id) ON DELETE CASCADE ON UPDATE CASCADE
+			)",
+				"CREATE TABLE IF NOT EXISTS enquiries (
+				id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+				type ENUM('contact', 'refund') NOT NULL,
+				nameProvided VARCHAR(100) NOT NULL,
+				emailProvided VARCHAR(320) NOT NULL,
+				userID VARCHAR(8) NULL,
+				message TEXT NOT NULL,
+				FOREIGN KEY (userID) REFERENCES users(id)
+			)",
+				"INSERT INTO gender_def (name) VALUES ('male'), ('female'), ('unisex')",
+				"INSERT INTO type_def (name) VALUES ('tops'), ('bottoms'), ('socks'), ('shoes'), ('accessories')",
+				"INSERT INTO products (id, name, type, gender) VALUES
+                ('bag-bag', 'Bag Bag', 5, 3),
+    			('black-socks', 'Plain Black Socks', 3, 3),
+    			('conversation-high-shoes', 'Conversation High-Top Shoes', 4, 3),
+    			('hardtail-shoes-men', 'Hardtail Mens Shoes', 4, 1),
+    			('headfirst-jeans', 'Headfirst Jeans', 2, 3),
+    			('highrise-tee-unisex', 'Highrise Unisex Top', 1, 3),
+    			('mirror-cap', 'MIRЯOR Cap', 5, 3),
+    			('pole-recycle-trousers', 'Recycleable Pole Trousers', 2, 3),
+    			('shephard-tee-men', 'Shephard Mens Top', 1, 1),
+    			('white-socks', 'Plain White Socks', 3, 3);                                 
+			",
+			);
+
+			$stmt = $this->conn->prepare("SHOW TABLES");
+			$stmt->execute();
+			$tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
+			if (count($tables) > 0) return; // If there are tables, we assume the database is set up.
+
+			foreach ($queries as $query) $this->conn->exec($query);
+		} catch (Exception $e) {
+			throw new Exception("Failed to set up database: " . $e->getMessage());
+		}
 	}
 
 	private function generateUserID(): string {
@@ -114,7 +221,7 @@ class Database {
 			// Generate random 16-digit number and make it a string
 			$randomNumber = strval(random_int(10000000, 99999999));
 			// Check a user does not exist with that ID.
-			$stmt = $this->conn->prepare("SELECT * FROM users WHERE userID = ?");
+			$stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
 			$stmt->execute([$randomNumber]);
 			$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		} while ($results);
@@ -123,7 +230,7 @@ class Database {
 	}
 
 	public function getUser(int $id): User | null {
-		$stmt = $this->conn->prepare("SELECT * FROM users WHERE userID = ?");
+		$stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
 		$stmt->execute([$id]);
 		$result = $stmt->fetch(PDO::FETCH_ASSOC);
 		return $result ? new User($result['userID'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']) : null;
@@ -145,7 +252,7 @@ class Database {
 		// Hash password, generate ID, then insert into database.
 		$hashPassword = password_hash($password, PASSWORD_DEFAULT);
 		$id = $this->generateUserID();
-		$stmt = $this->conn->prepare("INSERT INTO users (userID, email, firstName, lastName, password) VALUES (?, ?, ?, ?, ?)");
+		$stmt = $this->conn->prepare("INSERT INTO users (id, email, firstName, lastName, password) VALUES (?, ?, ?, ?, ?)");
 		$stmt->execute([$id, $email, $firstName, $lastName, $hashPassword]);
 
 		return new User($id, $email, $firstName, $lastName, 0);
@@ -165,7 +272,7 @@ class Database {
 
 		if (!$result || !password_verify($password, $result['password'])) {
 			throw new Exception("Incorrect email or password!"); // We use the same error to prevent brute force attacks
-		} else return new User($result['userID'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']);
+		} else return new User($result['id'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']);
 	}
 
     /**
@@ -175,7 +282,7 @@ class Database {
      * @see getProduct()
      */
     private function getSizesOfProduct(string $productID): array {
-        $stmt = $this->conn->prepare("SELECT * FROM product_sizes INNER JOIN sizes ON product_sizes.sizeID = sizes.sizeID WHERE productID = ?;");
+        $stmt = $this->conn->prepare("SELECT * FROM product_sizes INNER JOIN size_def ON product_sizes.sizeID = size_def.id WHERE productID = ?;");
         $stmt->execute([$productID]);
         $sizeResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -198,8 +305,8 @@ class Database {
 
 		$products = array();
 		foreach ($productResults as $productResult) {
-            $sizes = $this->getSizesOfProduct($productResult['productID']);
-			$products[] = new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
+            $sizes = $this->getSizesOfProduct($productResult['id']);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $sizes);
 		}
 
 		return $products;
@@ -212,15 +319,15 @@ class Database {
 	 * @return array An array of products, sorted by popularity.
 	 */
 	public function getProductsByPopularity(int $limit = -1, bool $invert = false): array {
-		$stmt = $this->conn->prepare("SELECT products.productID, name, type, COUNT(products_in_orders.productID) as popularity FROM products_in_orders RIGHT OUTER JOIN products ON products_in_orders.productID = products.productID GROUP BY productID ORDER BY popularity DESC LIMIT ?;");
+		$stmt = $this->conn->prepare("SELECT products.id, name, type, COUNT(products_in_orders.productID) as popularity FROM products_in_orders RIGHT OUTER JOIN products ON products_in_orders.productID = products.id GROUP BY id ORDER BY popularity DESC LIMIT ?;");
 		$stmt->execute([$limit === -1 ? 1000 : $limit]); // Pretty sure 1000 is max MySQL supports anyway
 		// Below is a duplicated code fragment. Consider moving parts to a private function interpolateSizes()
 		$productResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		$products = array();
 		foreach ($productResults as $productResult) {
-			$sizes = $this->getSizesOfProduct($productResult['productID']);
-			$products[] = new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
+			$sizes = $this->getSizesOfProduct($productResult['id']);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $sizes);
 		}
 
 		return $products;
@@ -234,14 +341,14 @@ class Database {
 	 */
 	public function getProductsByRecency(int $limit = -1, bool $invert = false): array {
 		// Yes, this is completely ineffective as of right now, but it's a placeholder for when we add time to the database.
-		$stmt = $this->conn->prepare("SELECT * FROM products ORDER BY productID DESC LIMIT ?");
+		$stmt = $this->conn->prepare("SELECT * FROM products ORDER BY id DESC LIMIT ?");
 		$stmt->execute([$limit === -1 ? 1000 : $limit]);
 		$productResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		$products = array();
 		foreach ($productResults as $productResult) {
-			$sizes = $this->getSizesOfProduct($productResult['productID']);
-			$products[] = new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
+			$sizes = $this->getSizesOfProduct($productResult['id']);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $sizes);
 		}
 
 		return $products;
@@ -253,14 +360,14 @@ class Database {
 	 * @return Product | null
 	 */
 	public function getProduct(string $productID): Product | null{
-		$stmt = $this->conn->prepare("SELECT * FROM products WHERE productID = ?");
+		$stmt = $this->conn->prepare("SELECT * FROM products WHERE id = ?");
 		$stmt->execute([$productID]);
 		$productResult = $stmt->fetch(PDO::FETCH_ASSOC);
 
 		if (!$productResult) return null;
 
-		$sizes = $this->getSizesOfProduct($productResult['productID']);
-		return new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
+		$sizes = $this->getSizesOfProduct($productResult['id']);
+		return new Product($productResult['id'], $productResult['name'], $productResult['type'], $sizes);
 	}
 
 	/**
@@ -274,7 +381,7 @@ class Database {
 			$stmt->execute([$product->productID, $size->sizeID, $size->price]);
 		}
 
-		$stmt = $this->conn->prepare("INSERT INTO products (productID, name, type) VALUES (?, ?, ?)");
+		$stmt = $this->conn->prepare("INSERT INTO products (id, name, type) VALUES (?, ?, ?)");
 		$stmt->execute([$product->productID, $product->name, $product->type]);
 
 		return true;
@@ -309,7 +416,7 @@ class Database {
 	 */
 	public function createRefundRequest(string $userID, string $reason): bool {
 		// Check that this isn't a duplicate entry (caused by network errors, user resubmitting by accident, etc.)
-		$check = $this->conn->prepare("SELECT * FROM enquiries WHERE userID = ?");
+		$check = $this->conn->prepare("SELECT * FROM enquiries WHERE id = ?");
 		$check->execute([$userID]);
 		$results = $check->fetchAll(PDO::FETCH_ASSOC);
 
