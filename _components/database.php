@@ -542,6 +542,17 @@ class Database {
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
+
+	/**
+	 * Returns an array of all the gender options in the gender_def table.
+	 * @return array All the genders available in the database.
+
+	 */
+	public function getGenders(): array {
+		$stmt = $this->conn->prepare("SELECT * FROM gender_def");
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
 }
 
 class Tester {

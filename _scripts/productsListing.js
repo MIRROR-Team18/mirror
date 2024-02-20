@@ -80,6 +80,33 @@ function filter(parameter) {
 
             break;
         }
+        case "forProductGender": {
+            const mode = document.querySelector(".filterGroup#forProductGender .title a.selected").id.split("_")[1];
+            const inputs = document.querySelectorAll(".filterGroup#forProductGender .inputLabelGroup input");
+            const filterRule = {};
+            let allFalse = true;
+
+            inputs.forEach(input => {
+                filterRule[input.id] = input.checked;
+                if (input.checked) allFalse = false;
+            });
+
+            if (allFalse) { } // Do nothing
+            else if (mode === "any") { // Product must have any filterRule value true, iterate through products
+                document.querySelectorAll(".product").forEach(product => {
+                    if (!filterRule[product.dataset.productGender]) product.style.display = "none";
+                })
+            } else if (mode === "only") { // Product must have all filterRule values which are true, iterate through filter rule
+                for (const [value, active] of Object.entries(filterRule)) {
+                    if (!active) continue;
+                    document.querySelectorAll(".product").forEach(product => {
+                        if (product.dataset.productGender !== value) product.style.display = "none";
+                    });
+                }
+            } else console.error(`Invalid mode when filtering ${parameter}: ${mode}!`);
+
+            break;
+        }
     }
 }
 

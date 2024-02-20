@@ -40,6 +40,29 @@
 					}
 					?>
                 </div>
+                <div id="forProductGender" class="filterGroup">
+                    <div class="title">
+                        <h2>GENDER</h2>
+                        <span>
+                            <a href="#" id="productGender_any" class="selected">Any of...</a>
+                            &nbsp;|&nbsp;
+                            <a href="#" id="productGender_only">Only...</a>
+                        </span>
+                    </div>
+					<?php
+					$productGenders = $db->getGenders();
+
+					foreach ($productGenders as $gender) {
+						$genderName = $gender['name'];
+						echo <<<HTML
+                            <div class="inputLabelGroup">
+                                <input type="checkbox" name="$genderName" id="$genderName">
+                                <label for="$genderName">$genderName</label>
+                            </div>
+                            HTML;
+					}
+					?>
+                </div>
             </div>
         </aside>
         <section id="products">
@@ -66,7 +89,12 @@
                         }
 
                     ?>
-                        <div class="product" id="<?= $product->productID ?>" data-product-type="<?= $product->type ?>" data-product-name="<?= $product->name ?>" onclick="window.location.href='./product.php?id=<?= $product->productID ?>'">
+                        <div class="product" id="<?= $product->productID ?>"
+                             data-product-gender="<?= $product->gender ?>"
+                             data-product-type="<?= $product->type ?>"
+                             data-product-name="<?= $product->name ?>"
+                             onclick="window.location.href='./product.php?id=<?= $product->productID ?>'"
+                        >
                             <img src="<?= $photo ?>" alt="<?= $product->productID . "_image" ?>">
                             <h1><?= $product->name ?></h1>
                             <h2><?= $price ?></h2>
