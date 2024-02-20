@@ -62,7 +62,6 @@ function filter() {
         if (allFalse) { } // Do nothing for this rule
         else if (mode === "any") { // Product must have any filterRule value true, iterate through products
             document.querySelectorAll(".product").forEach(product => {
-                console.log(product.dataset[forWhat]);
                 if (!filterRule[product.dataset[forWhat]]) product.style.display = "none";
             })
         } else if (mode === "only") { // Product must have all filterRule values which are true, iterate through filter rule

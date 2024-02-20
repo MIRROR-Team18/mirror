@@ -22,3 +22,25 @@ section h1 {
 .product h1 {
     font-family: 'Zen Kaku Gothic New', sans-serif;
 }
+
+.asideContent {
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+}
+
+aside button {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.col {
+    margin: .5rem 1rem;
+    flex: 1;
+}
+
+form h2 {
+    font-family: 'Dela Gothic One', cursive;
+    font-size: 2rem;
+}
