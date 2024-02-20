@@ -126,6 +126,15 @@ CREATE TABLE `reviews` (
     date date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+INSERT INTO `reviews` (`reviewID`, `name`, `rating`, `comment`, `date`) VALUES
+(2, 'John Doe', 4, 'Great product! I love how it exceeded my expectations. The quality is exceptional, and it arrived sooner than I expected.', '2023-11-10'),
+(3, 'Jane Smith', 5, 'Excellent service! The customer support team was very helpful in addressing my queries. The product itself is of top-notch quality. Will definitely recommend to others.', '2023-11-15'),
+(4, 'Alice', 3, 'Good experience. The product was decent, but there is room for improvement. Delivery was prompt, and the packaging was secure.', '2023-11-05'),
+(5, 'Bob', 5, 'Impressive quality. I was pleasantly surprised by the high quality of the product. It has added great value to my daily routine.', '2023-11-20'),
+(6, 'Eve', 4, 'I\'m happy with my purchase. The product is durable and meets my expectations. Delivery was on time, and the packaging was secure.', '2023-11-25'),
+(7, 'Charlie', 2, 'Not satisfied with the product quality. It didn\'t meet my expectations, and I encountered issues shortly after purchase. Customer support was slow to respond.', '2023-11-08'),
+(8, 'Grace', 5, 'Amazing product! It exceeded my expectations, and the customer service was exceptional. I highly recommend it to others.', '2023-10-30');
+
 --
 -- Indexes for dumped tables
 --

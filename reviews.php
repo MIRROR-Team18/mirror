@@ -33,36 +33,75 @@
     <main class="container">
         <div class="sort-options">
             <label for="sort-select">Sort By:</label>
-            <select id="sort-select" onchange="redirectToReviews(this.value)">
-                <option value="overall">Overall Rating</option>
-                <option value="lowest">Lowest Rating</option>
-                <option value="highest">Highest Rating</option>
-                <option value="newest">Newest Review</option>
-                <option value="oldest">Oldest Review</option>
-            </select>
+            <form method= "POST" action= "">
+                <select id="sort-select" name="ordered" onchange="this.form.submit()">
+                    <option value="overall">Overall Rating</option>
+                    <option value="lowest">Lowest Rating</option>
+                    <option value="highest">Highest Rating</option>
+                    <option value="newest">Newest Review</option>
+                    <option value="oldest">Oldest Review</option>
+                </select>
+            </form>
         </div>
         <div id="reviews-list"></div>
 
         <div class="reviews-container">
 
         <?php
-            $allReviews = $db->getAllReviews();
+
+            if(isset($_POST["ordered"])) {
+                $sorted=$_POST["ordered"];
+
+                if ($sorted == "highest") {
+                    $newlysorted = $db->sortbyHighest();
+                    foreach ($newlysorted as $row) {
+                        print_r($row['name']);
+                    }
+                }
+                else if ($sorted == "lowest") {
+                    $newlysorted = $db->sortbyLowest();
+                    foreach ($newlysorted as $row) {
+                        print_r($row['name']);
+                    }
+                }
+                else if ($sorted == "newest") {
+                    $newlysorted = $db->sortbyNewest();
+                    foreach ($newlysorted as $row) {
+                        print_r($row['name']);
+                    }
+                }
+                else {
+                    $newlysorted = $db->sortbyOldest();
+                    foreach ($newlysorted as $row) {
+                        print_r($row['name']);
+                    }
+                }
+                        
+
+        }
+            $allReviews = (isset($newlysorted)) ? ($newlysorted) : $db->getAllReviews();
+
             $pathToPhotos = "./_images/reviews/";
             $images = array_slice(scandir($pathToPhotos), 2); // Get all images from folder, remove first two ("." and "..")
 
-            foreach ($allReviews as $review) {
-                $photoSelected =$pathToPhotos . $images[random_int(0, sizeof($images) - 1)];
+            
+                foreach ($allReviews as $review) {
+                    $photoSelected =$pathToPhotos . $images[random_int(0, sizeof($images) - 1)];
+                    if (isset($newlysorted)) {
+                        echo '    placeholder    ';
+                    }
+    
+                    echo <<<HTML
+                    <div class="review">
+                        <img src="{$photoSelected}" alt="{$review['name']}_photo}" class="person-image" />
+                        <p><strong>{$review['name']}/</strong></p>
+                        <p>Rating: {$review['rating']}/5 </p>
+                        <p>Comment: {$review['comment']}</p>
+                        <p>Date: {$review['date']}</p>
+                    </div>
+                    HTML;
+                }
 
-                echo <<<EOT
-                <div class="review">
-                    <img src="{$photoSelected}" alt="{$review['name']}_photo" class="person-image">
-                    <p><strong>{$review['name']}</strong></p>
-                    <p>Rating: {$review['rating']}/5 </p>
-                    <p>Comment: {$review['comment']}</p>
-                    <p>Date: {$review['date']}</p>
-                </div>
-                EOT;
-            }
     	?>
 
         <!-- Add a Review Button -->

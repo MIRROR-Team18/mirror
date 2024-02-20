@@ -412,6 +412,24 @@ class Database {
 
 		return true;
 	}
+
+	public function sortbyHighest(){
+		$check = $this->conn->query("SELECT * FROM reviews order by rating DESC");
+		return $check->fetchAll();
+
+	} 
+	public function sortbyLowest(){
+		$check = $this->conn->query("SELECT * FROM reviews order by rating ASC");
+		return $check->fetchAll();
+	}
+	public function sortbyNewest(){
+		$check = $this->conn->query("SELECT * FROM reviews order by date DESC");
+		return $check->fetchAll();
+	}
+	public function sortbyOldest(){
+		$check = $this->conn->query("SELECT * FROM reviews order by date ASC");
+		return $check->fetchAll();
+	}       
 }
 
 class Tester {
