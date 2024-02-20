@@ -24,26 +24,21 @@
                             <a href="#" id="productType_only">Only...</a>
                         </span>
                     </div>
-                    <div class="inputLabelGroup">
-                        <input type="checkbox" name="tops" id="tops">
-                        <label for="tops">Tops</label>
-                    </div>
-                    <div class="inputLabelGroup">
-                        <input type="checkbox" name="bottoms" id="bottoms">
-                        <label for="bottoms">Bottoms</label>
-                    </div>
-                    <div class="inputLabelGroup">
-                        <input type="checkbox" name="socks" id="socks">
-                        <label for="socks">Socks</label>
-                    </div>
-                    <div class="inputLabelGroup">
-                        <input type="checkbox" name="shoes" id="shoes">
-                        <label for="shoes">Shoes</label>
-                    </div>
-                    <div class="inputLabelGroup">
-                        <input type="checkbox" name="accessories" id="accessories">
-                        <label for="accessories">Accessories</label>
-                    </div>
+					<?php
+					require_once '../_components/database.php';
+					$db = new Database();
+					$productTypes = $db->getTypes();
+
+					foreach ($productTypes as $type) {
+						$typeName = $type['name'];
+						echo <<<HTML
+                            <div class="inputLabelGroup">
+                                <input type="checkbox" name="$typeName" id="$typeName">
+                                <label for="$typeName">$typeName</label>
+                            </div>
+                            HTML;
+					}
+					?>
                 </div>
             </div>
         </aside>
@@ -51,15 +46,11 @@
             <h1 id="productsDescriptor">PRODUCTS</h1>
             <div id="productsGrid">
                 <?php
-                require_once '../_components/database.php';
-                $db = new Database();
                 try {
 					$products = $db->getAllProducts();
 
 					foreach ($products as $product) {
-                        $pathForPhoto = "../_images/products/" . $product->productID . "/";
-                        $photo = file_exists($pathForPhoto) ? $pathForPhoto . scandir($pathForPhoto)[2] : "https://picsum.photos/512"; // [0] is ".", [1] is ".."
-
+                        $photo = Database::findProductImageUrl($product->productID);
                         $price = "Unknown...";
 
                         if (sizeof($product->sizes) > 0) {

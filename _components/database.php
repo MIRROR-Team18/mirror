@@ -22,11 +22,14 @@ class Connection {
 	public static function getConnection(): PDO {
 		if (!isset(self::$dbConnection)) {
 			try {
+				// ! I probably should find another solution to this.
                 if (file_exists("../vendor/autoload.php")) {
                     require_once '../vendor/autoload.php'; // Loading the .env module.
                 } else if (file_exists("./vendor/autoload.php")) {
                     require_once './vendor/autoload.php'; // Loading the .env module but if it's in the wrong place for some reason
-                } else {
+                } else if (file_exists("../../vendor/autoload.php")) {
+					require_once '../../vendor/autoload.php'; // Loading the .env module but now admin stuff makes this a lot worse
+				} else {
                     throw new Exception("Cannot locate autoload file for dotenv! Did you run 'composer install'?.");
                 }
 
@@ -220,6 +223,11 @@ class Database {
 		}
 	}
 
+	public static function findProductImageUrl(string $productID): string {
+		$pathForPhoto = "/../_images/products/" . $productID . "/";
+		return file_exists(__DIR__ . $pathForPhoto) ? $pathForPhoto . scandir(__DIR__ . $pathForPhoto)[2] : "https://picsum.photos/512"; // [0] is ".", [1] is ".."
+	}
+
 	private function generateUserID(): string {
 		// Keep generating a random number until we find one that doesn't exist.
 		do {
@@ -304,7 +312,7 @@ class Database {
 	 * @return Product[] An array of all the products.
 	 */
 	public function getAllProducts(): array {
-		$stmt = $this->conn->prepare("SELECT * FROM products");
+		$stmt = $this->conn->prepare("SELECT products.id, products.name, type_def.name AS type, gender_def.name AS gender FROM products INNER JOIN type_def ON products.type = type_def.id INNER JOIN gender_def ON products.gender = gender_def.id;");
 		$stmt->execute();
 		$productResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -524,6 +532,16 @@ class Database {
 
 		return true;
 	}
+
+	/**
+	 * Returns an array of all the types in the type_def table.
+	 * @return array All the types of products available in the database.
+	 */
+	public function getTypes(): array {
+		$stmt = $this->conn->prepare("SELECT * FROM type_def");
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
 }
 
 class Tester {
@@ -541,9 +559,7 @@ class Tester {
 	}
 
 	public static function main(): void {
-		$db = new Database();
-		$prod = $db->getAllProducts();
-		self::debug_to_console($prod[0]->productID);
+		self::debug_to_console(__DIR__);
 	}
 }
 

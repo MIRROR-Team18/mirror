@@ -9,16 +9,16 @@
 <body>
 	<?php include './_components/header.php'; ?>
 	<main>
-		<section>
+		<section class="blue-3">
 			<h1>WELCOME BACK</h1>
 		</section>
-		<section id="attention">
+		<section id="attention" class="blue-2">
 			<h2>these might need your attention:</h2>
 			<div id="items">
 				<!-- Code needed to load low stock items -->
 			</div>
 		</section>
-		<section id="orders">
+		<section id="orders" class="blue-1">
 			<h2>otherwise, this is how the site is going:</h2>
 			<div id="graphRow">
 				<div id="graph">
