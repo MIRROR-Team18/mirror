@@ -20,7 +20,7 @@
                     <label class="sr-only" for="search">SEARCH</label>
                     <input type="text" id="search" placeholder="Search for a product...">
                 </div>
-                <div id="forProductType" class="filterGroup">
+                <div class="filterGroup" data-for="type">
                     <div class="title">
                         <h2>TYPE</h2>
                         <span>
@@ -45,7 +45,7 @@
                         }
                     ?>
                 </div>
-                <div id="forProductGender" class="filterGroup">
+                <div class="filterGroup" data-for="gender">
                     <div class="title">
                         <h2>GENDER</h2>
                         <span>
@@ -80,9 +80,9 @@
 						$photo = Database::findProductImageUrl($product->productID);
 						?>
                         <div class="product" id="<?= $product->productID ?>"
-                             data-product-gender="<?= $product->gender ?>"
-                             data-product-type="<?= $product->type ?>"
-                             data-product-name="<?= $product->name ?>"
+                             data-gender="<?= $product->gender ?>"
+                             data-type="<?= $product->type ?>"
+                             data-name="<?= $product->name ?>"
                              onclick="window.location.href='./product.php?id=<?= $product->productID ?>'"
                         >
                             <img src="<?= $photo ?>" alt="<?= $product->productID . "_image" ?>">
