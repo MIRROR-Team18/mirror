@@ -94,13 +94,15 @@ class Product {
 	public string $type;
 	public string $gender;
 	public array $sizes;
+	public string $description;
 
-	public function __construct(string $productID, string $name, string $type, string $gender, array $sizes = null) {
+	public function __construct(string $productID, string $name, string $type, string $gender, string|null $description, array $sizes = null) {
 		$this->productID = $productID;
 		$this->name = $name;
 		$this->type = $type;
 		$this->gender = $gender;
 		$this->sizes = $sizes ?? array();
+		$this->description = $description ?? '';
 	}
 }
 
@@ -145,6 +147,7 @@ class Database {
 				name VARCHAR(64) NOT NULL,
 				type INT(2) NOT NULL,
 				gender INT(2) NOT NULL,
+				description TEXT NULL DEFAULT NULL,
 				timeCreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				timeModified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 				FOREIGN KEY (type) REFERENCES type_def(id),
@@ -326,14 +329,14 @@ class Database {
 	 * @return Product[] An array of all the products.
 	 */
 	public function getAllProducts(): array {
-		$stmt = $this->conn->prepare("SELECT products.id, products.name, type_def.name AS type, gender_def.name AS gender FROM products INNER JOIN type_def ON products.type = type_def.id INNER JOIN gender_def ON products.gender = gender_def.id;");
+		$stmt = $this->conn->prepare("SELECT products.id, products.name, products.description, type_def.name AS type, gender_def.name AS gender FROM products INNER JOIN type_def ON products.type = type_def.id INNER JOIN gender_def ON products.gender = gender_def.id;");
 		$stmt->execute();
 		$productResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		$products = array();
 		foreach ($productResults as $productResult) {
             $sizes = $this->getSizesOfProduct($productResult['id']);
-			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $sizes);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $sizes);
 		}
 
 		return $products;
@@ -346,7 +349,7 @@ class Database {
 	 * @return array An array of products, sorted by popularity.
 	 */
 	public function getProductsByPopularity(int $limit = -1, bool $invert = false): array {
-		$stmt = $this->conn->prepare("SELECT products.id, name, type, gender, COUNT(products_in_orders.productID) as popularity FROM products_in_orders RIGHT OUTER JOIN products ON products_in_orders.productID = products.id GROUP BY id ORDER BY popularity DESC LIMIT ?;");
+		$stmt = $this->conn->prepare("SELECT products.id, name, description, type, gender, COUNT(products_in_orders.productID) as popularity FROM products_in_orders RIGHT OUTER JOIN products ON products_in_orders.productID = products.id GROUP BY id ORDER BY popularity DESC LIMIT ?;");
 		$stmt->execute([$limit === -1 ? 1000 : $limit]); // Pretty sure 1000 is max MySQL supports anyway
 		// Below is a duplicated code fragment. Consider moving parts to a private function interpolateSizes()
 		$productResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -354,7 +357,7 @@ class Database {
 		$products = array();
 		foreach ($productResults as $productResult) {
 			$sizes = $this->getSizesOfProduct($productResult['id']);
-			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $sizes);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $sizes);
 		}
 
 		return $products;
@@ -375,7 +378,7 @@ class Database {
 		$products = array();
 		foreach ($productResults as $productResult) {
 			$sizes = $this->getSizesOfProduct($productResult['id']);
-			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $sizes);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $sizes);
 		}
 
 		return $products;
@@ -394,7 +397,7 @@ class Database {
 		if (!$productResult) return null;
 
 		$sizes = $this->getSizesOfProduct($productResult['id']);
-		return new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $sizes);
+		return new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $sizes);
 	}
 
 	/**

@@ -16,24 +16,33 @@
 		<?php
 			require_once '../../_components/database.php';
 			$db = new Database();
+
+            // Are we modifying a product?
+            $product = null;
+            if (isset($_GET['id'])) {
+                $product = $db->getProduct($_GET['id']);
+                if ($product == null) {
+					exit("<p style='text-align: center;'>The ID provided in the URL doesn't return a product. Halting to prevent accidental damage.</p>");
+				}
+            }
 		?>
 		<section class="blue-1">
 			<form id="upsertForm" action="./upsert.php" method="post" enctype="multipart/form-data">
 				<div class="row">
 					<div class="col">
 						<label for="id">ID</label>
-						<input type="text" id="id" name="id" placeholder="A shortened name usually works well" required>
+						<input type="text" id="id" name="id" placeholder="A shortened name usually works well" value="<?= $product->productID ?? '' ?>" required>
 						<p>This shouldn't be changed unless there's a good reason to.</p>
 					</div>
 					<div class="col">
 						<label for="name">Name</label>
-						<input type="text" id="name" name="name" placeholder="What did the supplier tell you it was called?" required>
+						<input type="text" id="name" name="name" placeholder="What did the supplier tell you it was called?" value="<?= $product->name ?? '' ?>" required>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col">
 						<label for="description">Description</label>
-						<textarea id="description" rows="4" name="description" placeholder="What's so special about this product?"></textarea>
+						<textarea id="description" rows="4" name="description" placeholder="What's so special about this product?"><?= $product->description ?></textarea>
 					</div>
 				</div>
 				<div class="row">
