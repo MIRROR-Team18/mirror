@@ -104,7 +104,7 @@
                                         <div class="row">
                                             <input type="checkbox" class="priceBox" name="$sizeName" id="$sizeName" value="$sizeName">
                                             <label for="$sizeName">$sizeName</label>
-                                            <label for="price_$sizeName"></label>
+                                            <label for="price_$sizeName" class="sr-only">Price for $sizeName</label>
                                             <input class="priceInput" name="price_$sizeName" id="price_$sizeName" type="number" min="0" step="any">
                                         </div>
                                         HTML;
@@ -113,6 +113,27 @@
                             </div>
                         </div>
 					</div>
+                    <div class="col">
+                        <h2>FINAL BITS</h2>
+                        <div class="row">
+                            <input type="checkbox" name="sustainable" id="sustainable">
+                            <label for="sustainable">Sustainable?<i class="fa-solid fa-leaf"></i></label>
+                        </div>
+                        <div class="buttonGrid">
+                            <button class="fullWidth">
+                                <i class="fa-solid fa-chart-line"></i> Stock
+                            </button>
+                            <button class="fullWidth">
+                                <i class="fa-solid fa-bell"></i> Alerts
+                            </button>
+                            <button class="fullWidth">
+                                <i class="fa-solid fa-save"></i> Save
+                            </button>
+                            <button class="fullWidth">
+                                <i class="fa-solid fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
 				</div>
 			</form>
 		</section>
