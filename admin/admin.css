@@ -44,3 +44,8 @@ form h2 {
     font-family: 'Dela Gothic One', cursive;
     font-size: 2rem;
 }
+
+input.priceInput {
+    width: 40%;
+    margin: .1rem 1rem .1rem auto;
+}

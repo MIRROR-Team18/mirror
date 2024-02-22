@@ -201,6 +201,19 @@ input, textarea {
     font-size: 1.2rem;
 }
 
+input:disabled, textarea:disabled {
+    background: var(--disabled);
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 /* The next section is simply radios and checkboxes styling. */
 /* For your own sanity, I'd recommend against touching it */
 [type="radio"], [type="checkbox"] {

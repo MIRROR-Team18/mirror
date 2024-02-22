@@ -5,6 +5,7 @@
 	<?php include '../../_components/default.php'; ?>
 	<title>Upsert Product - MIRЯOR</title>
 	<link rel="stylesheet" href="../admin.css">
+    <script src="../_scripts/upsert.js" defer async></script>
 </head>
 <body>
 	<?php include '../_components/header.php'; ?>
@@ -82,8 +83,10 @@
                                         // Check if selected!
                                         echo <<<HTML
                                         <div class="row">
-                                            <input type="checkbox" name="sizes" id="$sizeName" value="$sizeName">
+                                            <input type="checkbox" class="priceBox" name="sizes" id="$sizeName" value="$sizeName">
                                             <label for="$sizeName">$sizeName</label>
+                                            <label for="price_$sizeName"></label>
+                                            <input class="priceInput" name="price_$sizeName" id="price_$sizeName" type="number" min="0" step="any">
                                         </div>
                                         HTML;
                                     }
@@ -99,8 +102,10 @@
                                         // Check if selected!
                                         echo <<<HTML
                                         <div class="row">
-                                            <input type="checkbox" name="sizes" id="$sizeName" value="$sizeName">
+                                            <input type="checkbox" class="priceBox" name="$sizeName" id="$sizeName" value="$sizeName">
                                             <label for="$sizeName">$sizeName</label>
+                                            <label for="price_$sizeName"></label>
+                                            <input class="priceInput" name="price_$sizeName" id="price_$sizeName" type="number" min="0" step="any">
                                         </div>
                                         HTML;
                                     }
