@@ -54,27 +54,15 @@
 
                 if ($sorted == "highest") {
                     $newlysorted = $db->sortbyHighest();
-                    foreach ($newlysorted as $row) {
-                        print_r($row['name']);
-                    }
                 }
                 else if ($sorted == "lowest") {
                     $newlysorted = $db->sortbyLowest();
-                    foreach ($newlysorted as $row) {
-                        print_r($row['name']);
-                    }
                 }
                 else if ($sorted == "newest") {
                     $newlysorted = $db->sortbyNewest();
-                    foreach ($newlysorted as $row) {
-                        print_r($row['name']);
-                    }
                 }
                 else {
                     $newlysorted = $db->sortbyOldest();
-                    foreach ($newlysorted as $row) {
-                        print_r($row['name']);
-                    }
                 }
                         
 
@@ -87,9 +75,6 @@
             
                 foreach ($allReviews as $review) {
                     $photoSelected =$pathToPhotos . $images[random_int(0, sizeof($images) - 1)];
-                    if (isset($newlysorted)) {
-                        echo '    placeholder    ';
-                    }
     
                     echo <<<HTML
                     <div class="review">
