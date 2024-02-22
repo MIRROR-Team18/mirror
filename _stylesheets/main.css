@@ -200,6 +200,6 @@ input, textarea {
     font-size: 1.2rem;
 }
 
-input[type="radio"] {
+input[type="radio"], input[type="checkbox"] {
     margin: auto .5rem;
 }

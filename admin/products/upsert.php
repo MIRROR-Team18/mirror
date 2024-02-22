@@ -70,7 +70,43 @@
 					</div>
 					<div class="col" style="flex:2;">
 						<h2>SIZE</h2>
-
+                        <div class="row">
+                            <div class="col">
+                                <?php $productSizes = $db->getSizes(); ?>
+                                <h3>Adult</h3>
+                                <?php
+                                    $adultSizes = array_filter($productSizes, function($size) { return !$size->isKids; });
+                                    // Note that we're using Size classes here.
+                                    foreach ($adultSizes as $size) {
+                                        $sizeName = $size->name;
+                                        // Check if selected!
+                                        echo <<<HTML
+                                        <div class="row">
+                                            <input type="checkbox" name="size[]" id="$sizeName" value="$sizeName">
+                                            <label for="$sizeName">$sizeName</label>
+                                        </div>
+                                        HTML;
+                                    }
+                                ?>
+                            </div>
+                            <div class="col">
+                                <h3>Child</h3>
+                                <?php
+                                    $childSizes = array_filter($productSizes, function($size) { return $size->isKids; });
+                                    // Note that we're using Size classes here.
+                                    foreach ($childSizes as $size) {
+                                        $sizeName = $size->name;
+                                        // Check if selected!
+                                        echo <<<HTML
+                                        <div class="row">
+                                            <input type="checkbox" name="size[]" id="$sizeName" value="$sizeName">
+                                            <label for="$sizeName">$sizeName</label>
+                                        </div>
+                                        HTML;
+                                    }
+                                ?>
+                            </div>
+                        </div>
 					</div>
 				</div>
 			</form>

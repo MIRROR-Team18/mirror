@@ -74,11 +74,13 @@ class User {
 class Size {
 	public string $sizeID;
 	public string $name;
+	public bool $isKids;
 	public float $price;
 
-	public function __construct(string $sizeID, string $name, float $price) {
+	public function __construct(string $sizeID, string $name, int $isKids, float $price) {
 		$this->sizeID = $sizeID;
 		$this->name = $name;
+		$this->isKids = $isKids === 1;
 		$this->price = $price;
 	}
 }
@@ -546,12 +548,28 @@ class Database {
 	/**
 	 * Returns an array of all the gender options in the gender_def table.
 	 * @return array All the genders available in the database.
-
 	 */
 	public function getGenders(): array {
 		$stmt = $this->conn->prepare("SELECT * FROM gender_def");
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	/**
+ 	 * Returns an array of all the sizes available in the size_def table.
+ 	 * @return Size[] All the sizes available in the database.
+	 * @see getSizesOfProduct() if you're looking at product_sizes.
+ 	 */
+	public function getSizes(): array {
+		$stmt = $this->conn->prepare("SELECT * FROM size_def");
+		$stmt->execute();
+		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		$sizes = array();
+		foreach ($result as $size) {
+			$sizes[] = new Size($size['id'], $size['name'], $size['isKids'], 0);
+		}
+		return $sizes;
 	}
 }
 
