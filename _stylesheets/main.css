@@ -15,7 +15,8 @@
     --blue-3: #242E52;
     --blue-4: #4C649F;
     --blue-5: #5975B8;
-    --disabled: #CED0D6;
+    --disabled: #6E6E6E;
+    --off-white: #CED0D6;
     --white: #F4EEF6;
     --green: #2DF695;
 }
@@ -200,6 +201,60 @@ input, textarea {
     font-size: 1.2rem;
 }
 
-input[type="radio"], input[type="checkbox"] {
-    margin: auto .5rem;
+/* The next section is simply radios and checkboxes styling. */
+/* For your own sanity, I'd recommend against touching it */
+[type="radio"], [type="checkbox"] {
+    display: none;
+}
+
+[type="radio"] + label::before, [type="checkbox"] + label::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 8px;
+    width: 20px;
+    height: 20px;
+    outline: 2px solid var(--off-white);
+    background: var(--blue-1);
+    transition: all .5s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+[type="radio"] + label:hover::before, [type="checkbox"] + label:hover::before  {
+    outline: 2px solid var(--white);
+    background: var(--blue-2);
+}
+
+[type="radio"] + label::before {
+    border-radius: 50%;
+}
+
+[type="radio"] + label, [type="checkbox"] + label {
+    position: relative;
+    padding-left: 32px;
+    display: inline-block;
+    line-height: 2.1rem;
+    color: var(--white);
+    cursor: pointer;
+}
+
+[type="radio"] + label::after, [type="checkbox"] + label::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 12px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--off-white);
+    transition: all .25s cubic-bezier(0.33, 1, 0.68, 1);
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+[type="radio"] + label::after {
+    border-radius: 50%;
+}
+
+[type="radio"]:checked + label::after, [type="checkbox"]:checked + label::after {
+    opacity: 1;
+    transform: scale(1);
 }

@@ -82,7 +82,7 @@
                                         // Check if selected!
                                         echo <<<HTML
                                         <div class="row">
-                                            <input type="checkbox" name="size[]" id="$sizeName" value="$sizeName">
+                                            <input type="checkbox" name="sizes" id="$sizeName" value="$sizeName">
                                             <label for="$sizeName">$sizeName</label>
                                         </div>
                                         HTML;
@@ -99,7 +99,7 @@
                                         // Check if selected!
                                         echo <<<HTML
                                         <div class="row">
-                                            <input type="checkbox" name="size[]" id="$sizeName" value="$sizeName">
+                                            <input type="checkbox" name="sizes" id="$sizeName" value="$sizeName">
                                             <label for="$sizeName">$sizeName</label>
                                         </div>
                                         HTML;
