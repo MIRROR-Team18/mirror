@@ -152,7 +152,8 @@ class Database {
 			);",
 				"CREATE TABLE IF NOT EXISTS size_def (
     			id INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-				name VARCHAR(32) NOT NULL
+				name VARCHAR(32) NOT NULL,
+				isKids INT(1) NOT NULL DEFAULT 0
 			);",
 				"CREATE TABLE IF NOT EXISTS product_sizes (
 				productID VARCHAR(32) NOT NULL,
@@ -179,6 +180,11 @@ class Database {
 				FOREIGN KEY (orderID) REFERENCES orders(id),
 				FOREIGN KEY (productID, sizeID) REFERENCES product_sizes(productID, sizeID)
 			);",
+				"CREATE TABLE IF NOT EXISTS user_images (
+    			id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    			filename VARCHAR(64) NOT NULL,
+    			approved INT(1) NOT NULL DEFAULT 0
+			);",
 				"CREATE TABLE IF NOT EXISTS reviews (
 				id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 				name VARCHAR(100) NOT NULL,
@@ -187,7 +193,9 @@ class Database {
 				date DATE NOT NULL,
 				type ENUM('product', 'site') NOT NULL,
 				productID VARCHAR(32) NULL,
-				CONSTRAINT fk_type_product FOREIGN KEY (productID) REFERENCES products(id) ON DELETE CASCADE ON UPDATE CASCADE
+				imageID INT(8) NULL,
+				CONSTRAINT fk_type_product FOREIGN KEY (productID) REFERENCES products(id) ON DELETE CASCADE ON UPDATE CASCADE,
+				CONSTRAINT fk_review_image FOREIGN KEY (imageID) REFERENCES user_images(id) ON DELETE SET NULL ON UPDATE CASCADE
 			);",
 				"CREATE TABLE IF NOT EXISTS enquiries (
 				id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -211,6 +219,10 @@ class Database {
     			('pole-recycle-trousers', 'Recycleable Pole Trousers', 2, 3),
     			('shephard-tee-men', 'Shephard Mens Top', 1, 1),
     			('white-socks', 'Plain White Socks', 3, 3);                                 
+			",
+				"INSERT INTO size_def (name, isKids) VALUES
+                ('XS', 0), ('S', 0), ('M', 0), ('L', 0), ('XL', 0), ('XXL', 0),
+				('3-5 Years', 1), ('5-7 Years', 1), ('7-9 Years', 1), ('9-11 Years', 1), ('11-13 Years', 1)
 			",
 			);
 
