@@ -36,7 +36,7 @@ If you would like to run the website on your machine, please follow the followin
 5. Create a `.env` file in the folder, fill it out with the details of your database.
 6. Start Apache and MySQL from the XAMPP Control Panel.
 7. Open phpMyAdmin by clicking on the `Admin` button next to MySQL.
-8. Create a database (we called ours `mirror`, but it is up to you!), and then import the database file that's in this repo, [this one](init_table.sql "init_table.sql").
+8. Create a database (we called ours `mirror`, but it is up to you!). The tables will be created automatically.
 9. You can now navigate to `localhost/<folder name>`, and the website will be up and running!
 
 _Do not forget to import the database and create the .env file!_
