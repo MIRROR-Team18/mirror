@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIRAOR - Thank You</title>
+  <style>
+    /* General styles */
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #f4eef6; /* Text color set to #F4EEF6 */
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #242e52 50%, #1c1a3a 50%); /* #242E52 (upper half) and #1C1A3A (lower half) gradient */
+    }
+
+    /* Header styles */
+    nav {
+      background-color: #000;
+      color: #fff;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav .left {
+      flex: 1;
+    }
+    
+    nav .right {
+      display: flex;
+    }
+    
+    nav .right a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 1rem;
+    }
+    
+    nav .right a:first-child {
+      margin-left: 0;
+    }
+
+    /* Footer styles */
+    footer {
+      background-color: #000;
+      color: #fff;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+    
+    footer .col {
+      flex: 1;
+      margin-right: 1rem;
+    }
+    
+    footer .col:last-child {
+      margin-right: 0;
+    }
+    
+    footer h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    
+    footer p {
+      margin: 0;
+      font-style: italic;
+    }
+    
+    footer a {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      margin-bottom: 0.5rem;
+    }
+    
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Upper half styles */
+    .upper-half {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .upper-half h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .upper-half p {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Button styles */
+    .btn {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #242e52;
+      color: #fff;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #1c1a3a;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="left">
+      <a href="/"><img src="/_images/logo_square.svg" alt=""></a>
+    </div>
+    <div class="right">
+      <a href="/about.php">About Us</a>
+      <a href="/basket.php">Basket</a>
+      <a href="/login.php">Log In</a>
+      <a href="/admin.php">Admin</a>
+      <a href="/logout.php">Log Out</a>
+
+      <!-- Add other navigation links as needed -->
+    </div>
+  </nav>
+  <main class="content">
+    <div class="upper-half">
+      <h1>Thank You!</h1>
+      <p>Your message has been received. We will get back to you as soon as possible.</p>
+    </div>
+  </main>
+  <footer>
+    <div class="col">
+      <h1>MIRЯOR</h1>
+    </div>
+    <div class="col">
+      <p><i>See our range:</i></p>
+      <a href="/products/">Men</a>
+      <a href="/products/">Women</a>
+      <a href="/products/">Kids</a>
+    </div>
+    <div class="col">
+      <p><i>Need something else?</i></p>
+      <a href="/contact.php">Help</a>
+      <a href="/reviews.php">Reviews</a>
+      <a href="/account/manage.php">Manage Account</a>
+      <a href="/account/refund.php">Refund Request</a>
+    </div>
+  </footer>
+</body>
+</html>

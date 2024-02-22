@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIRAOR - Contact Us</title>
+  <style>
+    /* General styles */
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #f4eef6; /* Text color set to #F4EEF6 */
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #242e52 50%, #1c1a3a 50%); /* #242E52 (upper half) and #1C1A3A (lower half) gradient */
+    }
+    
+    /* Header styles */
+    nav {
+      background-color: #000;
+      color: #fff;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    nav .left {
+      flex: 1;
+    }
+    
+    nav .right {
+      display: flex;
+    }
+    
+    nav .right a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 1rem;
+    }
+    
+    nav .right a:first-child {
+      margin-left: 0;
+    }
+
+    /* Footer styles */
+    footer {
+      background-color: #000;
+      color: #fff;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    footer .col {
+      flex: 1;
+      margin-right: 1rem;
+    }
+    
+    footer .col:last-child {
+      margin-right: 0;
+    }
+    
+    footer h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    
+    footer p {
+      margin: 0;
+      font-style: italic;
+    }
+    
+    footer a {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      margin-bottom: 0.5rem;
+    }
+    
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Upper half styles */
+    .upper-half {
+      padding: 2rem;
+      text-align: left;
+    }
+
+    .upper-half h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Lower half styles */
+    .lower-half {
+      padding: 2rem;
+      background-color: #1c1a3a;
+      text-align: right;
+    }
+
+    .contact-form-container {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .contact-form {
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      display: block;
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    .contact-form textarea {
+      resize: vertical;
+    }
+
+    .contact-form button {
+      display: block;
+      width: 100%;
+      padding: 0.5rem 1rem;
+      background-color: #242e52;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="left">
+      <a href="/"><img src="/_images/logo_square.svg" alt=""></a>
+    </div>
+    <div class="right">
+      <a href="/about.php">About Us</a>
+      <a href="/basket.php">Basket</a>
+      <?php if (isset($_SESSION['userID'])): ?>
+          <a href="/logout.php">Logout</a>
+          <?php if (isset($_SESSION["isAdmin"]) && $_SESSION['isAdmin'] === true): ?>
+              <a href="/admin.php">Admin</a>
+          <?php endif; ?>
+      <?php else: ?>
+          <a href="/login.php">Login</a>
+      <?php endif; ?>
+    </div>
+  </nav>
+  <main class="content">
+    <div class="upper-half">
+      <h1>WHAT'S UP?</h1>
+      <p>If you need to contact us about anything, whether it's about a product, shipping, or something else, feel free to contact us!</p>
+      <p>Phone: 01892755555</p>
+      <p>Email: support@mirror.com</p>
+      <p>Address: 71 This Is Real Street, Real City A11 2BB</p>
+      <p>Or you can fill out our Contact Form below.</p>
+    </div>
+    <div class="lower-half">
+      <div class="contact-form-container">
+        <h2>Contact Form</h2>
+        <p>Please fill in all details</p>
+        <form class="contact-form" action="submit_contact_form.php" method="post" onsubmit="return submitForm()">
+          <input type="text" name="name" placeholder="Your Name" required>
+          <input type="email" name="email" placeholder="Your Email" required>
+          <input type="text" name="order_number" placeholder="Order Number (if applicable)">
+          <input type="text" name="product_number" placeholder="Product Number (if applicable)">
+          <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div class="col">
+      <h1>MIRЯOR</h1>
+    </div>
+    <div class="col">
+      <p><i>See our range:</i></p>
+      <a href="/products/">Men</a>
+      <a href="/products/">Women</a>
+      <a href="/products/">Kids</a>
+    </div>
+    <div class="col">
+      <p><i>Need something else?</i></p>
+      <a href="/contact.php">Help</a>
+      <a href="/reviews.php">Reviews</a>
+      <a href="/account/manage.php">Manage Account</a>
+      <a href="/account/refund.php">Refund Request</a>
+    </div>
+  </footer>
+  <script>
+    function submitForm() {
+      // Redirect to thankyou.html after form submission
+      window.location.href = "thankyou.html";
+      // Prevent default form submission
+      return false;
+    }
+  </script>
+</body>
+</html>
