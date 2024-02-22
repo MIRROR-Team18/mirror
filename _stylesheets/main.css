@@ -15,9 +15,28 @@
     --blue-3: #242E52;
     --blue-4: #4C649F;
     --blue-5: #5975B8;
-    --disabled: #CED0D6;
+    --disabled: #6E6E6E;
+    --off-white: #CED0D6;
     --white: #F4EEF6;
     --green: #2DF695;
+}
+
+.sr-only {
+    border: 0 !important;
+    clip: rect(1px, 1px, 1px, 1px) !important;
+    clip-path: inset(50%) !important;
+    height: 1px !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    position: absolute !important;
+    width: 1px !important;
+    white-space: nowrap !important;
+}
+
+body {
+    background: var(--blue-1);
+    color: var(--white);
 }
 
 .row {
@@ -41,6 +60,7 @@ nav {
     background: var(--black);
     display: flex;
     justify-content: space-between;
+    z-index: 100;
 }
 
 nav .left, nav .right {
@@ -93,9 +113,15 @@ footer {
     flex-flow: row wrap;
 
     text-align: right;
+    z-index: 100;
 }
 
-footer .col:first-child {
+footer.short {
+    padding: 1rem 10vw;
+    text-align: center;
+}
+
+footer:not(.short) .col:first-child {
     text-align: left;
     justify-content: center;
 }
@@ -165,4 +191,83 @@ button, .button {
     width: 25%;
     margin: auto;
     text-decoration: none;
+}
+
+input, textarea {
+    background: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: .25rem .5rem;
+    font-size: 1.2rem;
+}
+
+input:disabled, textarea:disabled {
+    background: var(--disabled);
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* The next section is simply radios and checkboxes styling. */
+/* For your own sanity, I'd recommend against touching it */
+[type="radio"], [type="checkbox"] {
+    display: none;
+}
+
+[type="radio"] + label::before, [type="checkbox"] + label::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 8px;
+    width: 20px;
+    height: 20px;
+    outline: 2px solid var(--off-white);
+    background: var(--blue-1);
+    transition: all .5s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+[type="radio"] + label:hover::before, [type="checkbox"] + label:hover::before  {
+    outline: 2px solid var(--white);
+    background: var(--blue-2);
+}
+
+[type="radio"] + label::before {
+    border-radius: 50%;
+}
+
+[type="radio"] + label, [type="checkbox"] + label {
+    position: relative;
+    padding-left: 32px;
+    display: inline-block;
+    line-height: 2.1rem;
+    color: var(--white);
+    cursor: pointer;
+}
+
+[type="radio"] + label::after, [type="checkbox"] + label::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 12px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--off-white);
+    transition: all .25s cubic-bezier(0.33, 1, 0.68, 1);
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+[type="radio"] + label::after {
+    border-radius: 50%;
+}
+
+[type="radio"]:checked + label::after, [type="checkbox"]:checked + label::after {
+    opacity: 1;
+    transform: scale(1);
 }
