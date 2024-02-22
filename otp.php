@@ -7,8 +7,8 @@ require_once('./_components/database.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_otp = $_POST['otp'];
-    $stored_otp = $_SESSION['temp_user']['otp'];
-    $user_id = $_SESSION['temp_user']['id'];
+    $stored_otp = $_SESSION['user']['otp'];
+    $user_id = $_SESSION['user']['id'];
 
     $sql = "SELECT * FROM users WHERE id='$user_id' AND otp='$user_otp'";
     $query = mysqli_query($database.php, $sql);
@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $otp_expiry = strtotime($data['otp_expiry']);
         if ($otp_expiry >= time()) {
             $_SESSION['user_id'] = $data['id'];
-            unset($_SESSION['temp_user']);
+            unset($_SESSION['user']);
             header("Location: index.php");
             exit();
         } else {
@@ -51,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 </head>
 <body>
+<?php include '_components/header.php'; ?>
     <div id="container">
         <h1>Two-Step Verification</h1>
         <p>Enter the 5 Digit OTP Code that has been sent <br> to your email address: <?php echo $_SESSION['email']; ?></p>
