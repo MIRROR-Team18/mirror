@@ -321,7 +321,7 @@ class Database {
 
         $sizes = array();
         foreach ($sizeResults as $sizeResult) {
-            $sizes[] = new Size($sizeResult['sizeID'], $sizeResult['name'], $sizeResult['isKids'], $sizeResult['price']);
+            $sizes[$sizeResult['sizeID']] = new Size($sizeResult['sizeID'], $sizeResult['name'], $sizeResult['isKids'], $sizeResult['price']);
         }
 
         return $sizes;

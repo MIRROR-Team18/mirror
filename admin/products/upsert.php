@@ -52,10 +52,10 @@
 							$productGenders = $db->getGenders();
 							foreach ($productGenders as $gender) {
 								$genderName = $gender['name'];
-								// Check if selected!
+								$productIsThisGender = $gender['id'] == $product->gender ? 'checked' : '';
 								echo <<<HTML
 								<div class="row">
-									<input type="radio" name="gender" id="$genderName" value="$genderName">
+									<input type="radio" name="gender" id="$genderName" value="$genderName" $productIsThisGender >
 									<label for="$genderName">$genderName</label>
 								</div>
 								HTML;
@@ -68,10 +68,10 @@
 							$productTypes = $db->getTypes();
 							foreach ($productTypes as $type) {
 								$typeName = $type['name'];
-								// Check if selected!
+								$productIsThisType = $type['id'] == $product->type ? 'checked' : '';
 								echo <<<HTML
 								<div class="row">
-									<input type="radio" name="type" id="$typeName" value="$typeName">
+									<input type="radio" name="type" id="$typeName" value="$typeName" $productIsThisType >
 									<label for="$typeName">$typeName</label>
 								</div>
 								HTML;
@@ -81,21 +81,28 @@
 					<div class="col" style="flex:2;">
 						<h2>SIZE</h2>
                         <div class="row">
+							<?php
+                                $allSizes = $db->getSizes(); // Get all sizes possible from the database
+                                $currencyFormatter = new NumberFormatter('en_GB', NumberFormatter::CURRENCY); // Create a currency formatter for GBP
+                            ?>
                             <div class="col">
-                                <?php $productSizes = $db->getSizes(); ?>
                                 <h3>Adult</h3>
                                 <?php
-                                    $adultSizes = array_filter($productSizes, function($size) { return !$size->isKids; });
+                                    $adultSizes = array_filter($allSizes, function($size) { return !$size->isKids; });
                                     // Note that we're using Size classes here.
                                     foreach ($adultSizes as $size) {
                                         $sizeName = $size->name;
-                                        // Check if selected!
+                                        // Size[] uses keys of sizeID, so we can check if the product has this size by checking if the key exists.
+                                        $productHasThisSize = isset($product->sizes[$size->sizeID]) ? 'checked' : '';
+                                        $priceOfSize = $productHasThisSize
+                                            ? $currencyFormatter->formatCurrency($product->sizes[$size->sizeID]->price, "GBP")
+                                            : '';
                                         echo <<<HTML
                                         <div class="row">
-                                            <input type="checkbox" class="priceBox" name="sizes" id="$sizeName" value="$sizeName">
+                                            <input type="checkbox" class="priceBox" name="size_$sizeName" id="$sizeName" value="$sizeName" $productHasThisSize >
                                             <label for="$sizeName">$sizeName</label>
                                             <label for="price_$sizeName"></label>
-                                            <input class="priceInput" name="price_$sizeName" id="price_$sizeName" type="number" min="0" step="any">
+                                            <input class="priceInput" name="price_$sizeName" id="price_$sizeName" type="text" value="$priceOfSize">
                                         </div>
                                         HTML;
                                     }
@@ -104,17 +111,21 @@
                             <div class="col">
                                 <h3>Child</h3>
                                 <?php
-                                    $childSizes = array_filter($productSizes, function($size) { return $size->isKids; });
+                                    $childSizes = array_filter($allSizes, function($size) { return $size->isKids; });
                                     // Note that we're using Size classes here.
                                     foreach ($childSizes as $size) {
                                         $sizeName = $size->name;
-                                        // Check if selected!
+                                        // Size[] uses keys of sizeID, so we can check if the product has this size by checking if the key exists.
+										$productHasThisSize = isset($product->sizes[$size->sizeID]) ? 'checked' : '';
+										$priceOfSize = $productHasThisSize
+                                            ? $currencyFormatter->formatCurrency($product->sizes[$size->sizeID]->price, "GBP")
+                                            : '';
                                         echo <<<HTML
                                         <div class="row">
-                                            <input type="checkbox" class="priceBox" name="$sizeName" id="$sizeName" value="$sizeName">
+                                            <input type="checkbox" class="priceBox" name="size_$sizeName" id="$sizeName" value="$sizeName" $productHasThisSize >
                                             <label for="$sizeName">$sizeName</label>
                                             <label for="price_$sizeName" class="sr-only">Price for $sizeName</label>
-                                            <input class="priceInput" name="price_$sizeName" id="price_$sizeName" type="number" min="0" step="any">
+                                            <input class="priceInput" name="price_$sizeName" id="price_$sizeName" type="text" value="$priceOfSize">
                                         </div>
                                         HTML;
                                     }
