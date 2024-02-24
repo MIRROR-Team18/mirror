@@ -53,25 +53,25 @@
                 $sorted=$_POST["ordered"];
 
                 if ($sorted == "highest") {
-                    $newlysorted = $db->sortbyHighest();
+                    $newlysorted = $db->sortByHighest();
                     foreach ($newlysorted as $row) {
                         print_r($row['name']);
                     }
                 }
                 else if ($sorted == "lowest") {
-                    $newlysorted = $db->sortbyLowest();
+                    $newlysorted = $db->sortByLowest();
                     foreach ($newlysorted as $row) {
                         print_r($row['name']);
                     }
                 }
                 else if ($sorted == "newest") {
-                    $newlysorted = $db->sortbyNewest();
+                    $newlysorted = $db->sortByNewest();
                     foreach ($newlysorted as $row) {
                         print_r($row['name']);
                     }
                 }
                 else {
-                    $newlysorted = $db->sortbyOldest();
+                    $newlysorted = $db->sortByOldest();
                     foreach ($newlysorted as $row) {
                         print_r($row['name']);
                     }

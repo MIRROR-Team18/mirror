@@ -93,16 +93,18 @@ class Product {
 	public string $name;
 	public string $type;
 	public string $gender;
-	public array $sizes;
 	public string $description;
+	public bool $isSustainable;
+	public array $sizes;
 
-	public function __construct(string $productID, string $name, string $type, string $gender, string|null $description, array $sizes = null) {
+	public function __construct(string $productID, string $name, string $type, string $gender, string|null $description, int $isSustainable, array $sizes = null) {
 		$this->productID = $productID;
 		$this->name = $name;
 		$this->type = $type;
 		$this->gender = $gender;
-		$this->sizes = $sizes ?? array();
 		$this->description = $description ?? '';
+		$this->isSustainable = $isSustainable === 1;
+		$this->sizes = $sizes ?? array();
 	}
 }
 
@@ -148,6 +150,7 @@ class Database {
 				type INT(2) NOT NULL,
 				gender INT(2) NOT NULL,
 				description TEXT NULL DEFAULT NULL,
+				isSustainable INT(1) NOT NULL DEFAULT 0,
 				timeCreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				timeModified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 				FOREIGN KEY (type) REFERENCES type_def(id),
@@ -336,7 +339,7 @@ class Database {
 		$products = array();
 		foreach ($productResults as $productResult) {
             $sizes = $this->getSizesOfProduct($productResult['id']);
-			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $sizes);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $productResults['isSustainable'], $sizes);
 		}
 
 		return $products;
@@ -357,7 +360,7 @@ class Database {
 		$products = array();
 		foreach ($productResults as $productResult) {
 			$sizes = $this->getSizesOfProduct($productResult['id']);
-			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $sizes);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $productResult['isSustainable'], $sizes);
 		}
 
 		return $products;
@@ -378,7 +381,7 @@ class Database {
 		$products = array();
 		foreach ($productResults as $productResult) {
 			$sizes = $this->getSizesOfProduct($productResult['id']);
-			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $sizes);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $productResult['isSustainable'], $sizes);
 		}
 
 		return $products;
@@ -397,7 +400,7 @@ class Database {
 		if (!$productResult) return null;
 
 		$sizes = $this->getSizesOfProduct($productResult['id']);
-		return new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $sizes);
+		return new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $productResult['isSustainable'], $sizes);
 	}
 
 	/**
@@ -587,20 +590,20 @@ class Database {
 		return $sizes;
 	}
   
-	public function sortbyHighest(){
+	public function sortByHighest(): array {
 		$check = $this->conn->query("SELECT * FROM reviews order by rating DESC");
 		return $check->fetchAll();
 	} 
-	public function sortbyLowest(){
-		$check = $this->conn->query("SELECT * FROM reviews order by rating ASC");
+	public function sortByLowest(): array {
+		$check = $this->conn->query("SELECT * FROM reviews order by rating");
 		return $check->fetchAll();
 	}
-	public function sortbyNewest(){
+	public function sortByNewest(): array {
 		$check = $this->conn->query("SELECT * FROM reviews order by date DESC");
 		return $check->fetchAll();
 	}
-	public function sortbyOldest(){
-		$check = $this->conn->query("SELECT * FROM reviews order by date ASC");
+	public function sortByOldest(): array {
+		$check = $this->conn->query("SELECT * FROM reviews order by date");
 		return $check->fetchAll();
 	}       
 }
