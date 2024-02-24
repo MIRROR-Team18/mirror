@@ -10,7 +10,7 @@ window.addEventListener("load", () => {
     });
 
     document.querySelectorAll('.priceInput').forEach(input => {
-        input.addEventListener('change', (ev) => {
+        input.addEventListener('change', () => {
 			// We're onchange here because we want to format the input after the user has finished typing.
 			// Doing so oninput causes the number to be formatted as the user types, which makes it unusable.
 			input.value = pounds.format(input.value.replace(/[^0-9.]/g, ''));

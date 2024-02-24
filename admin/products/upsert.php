@@ -42,7 +42,7 @@
 				<div class="row">
 					<div class="col">
 						<label for="description">Description</label>
-						<textarea id="description" rows="4" name="description" placeholder="What's so special about this product?"><?= $product->description ?></textarea>
+						<textarea id="description" rows="4" name="description" placeholder="What's so special about this product?"><?= $product->description ?? '' ?></textarea>
 					</div>
 				</div>
 				<div class="row">
@@ -52,7 +52,7 @@
 							$productGenders = $db->getGenders();
 							foreach ($productGenders as $gender) {
 								$genderName = $gender['name'];
-								$productIsThisGender = $gender['id'] == $product->gender ? 'checked' : '';
+								$productIsThisGender = isset($product->gender) && $gender['id'] == $product->gender ? 'checked' : '';
 								echo <<<HTML
 								<div class="row">
 									<input type="radio" name="gender" id="$genderName" value="$genderName" $productIsThisGender >
@@ -68,7 +68,7 @@
 							$productTypes = $db->getTypes();
 							foreach ($productTypes as $type) {
 								$typeName = $type['name'];
-								$productIsThisType = $type['id'] == $product->type ? 'checked' : '';
+								$productIsThisType = isset($product->type) && $type['id'] == $product->type ? 'checked' : '';
 								echo <<<HTML
 								<div class="row">
 									<input type="radio" name="type" id="$typeName" value="$typeName" $productIsThisType >
