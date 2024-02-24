@@ -332,14 +332,14 @@ class Database {
 	 * @return Product[] An array of all the products.
 	 */
 	public function getAllProducts(): array {
-		$stmt = $this->conn->prepare("SELECT products.id, products.name, products.description, type_def.name AS type, gender_def.name AS gender FROM products INNER JOIN type_def ON products.type = type_def.id INNER JOIN gender_def ON products.gender = gender_def.id;");
+		$stmt = $this->conn->prepare("SELECT products.id, products.name, products.description, products.isSustainable, type_def.name AS type, gender_def.name AS gender FROM products INNER JOIN type_def ON products.type = type_def.id INNER JOIN gender_def ON products.gender = gender_def.id;");
 		$stmt->execute();
 		$productResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		$products = array();
 		foreach ($productResults as $productResult) {
             $sizes = $this->getSizesOfProduct($productResult['id']);
-			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $productResults['isSustainable'], $sizes);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $productResult['isSustainable'], $sizes);
 		}
 
 		return $products;
@@ -352,7 +352,7 @@ class Database {
 	 * @return array An array of products, sorted by popularity.
 	 */
 	public function getProductsByPopularity(int $limit = -1, bool $invert = false): array {
-		$stmt = $this->conn->prepare("SELECT products.id, name, description, type, gender, COUNT(products_in_orders.productID) as popularity FROM products_in_orders RIGHT OUTER JOIN products ON products_in_orders.productID = products.id GROUP BY id ORDER BY popularity DESC LIMIT ?;");
+		$stmt = $this->conn->prepare("SELECT products.id, name, description, type, gender, isSustainable, COUNT(products_in_orders.productID) as popularity FROM products_in_orders RIGHT OUTER JOIN products ON products_in_orders.productID = products.id GROUP BY id ORDER BY popularity DESC LIMIT ?;");
 		$stmt->execute([$limit === -1 ? 1000 : $limit]); // Pretty sure 1000 is max MySQL supports anyway
 		// Below is a duplicated code fragment. Consider moving parts to a private function interpolateSizes()
 		$productResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
