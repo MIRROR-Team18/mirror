@@ -420,6 +420,54 @@ class Database {
 		return true;
 	}
 
+	/**
+	 * Updates a product with the provided product
+	 * @param Product $product
+	 * @return bool Returns true if product updated successfully.
+	 * @throws Exception If there is a problem in updating a product.
+	 */
+	public function updateProduct(Product $product): bool {
+		// First, delete all the sizes for the product. It's just easier this way
+		$stmt = $this->conn->prepare("DELETE FROM product_sizes WHERE productID = ?");
+		$stmt->execute([$product->productID]);
+
+		// Then, re-add all the sizes for the product.
+		foreach ($product->sizes as $size) {
+			$stmt = $this->conn->prepare("INSERT INTO product_sizes (productID, sizeID, price) VALUES (?, ?, ?)");
+			$stmt->execute([$product->productID, $size->sizeID, $size->price]);
+		}
+
+		// Get the ID of the type and gender from the product class (as they are strings)
+		$stmt = $this->conn->prepare("SELECT id FROM type_def WHERE name = ?");
+		$stmt->execute([$product->type]);
+		$typeID = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
+
+		$stmt = $this->conn->prepare("SELECT id FROM gender_def WHERE name = ?");
+		$stmt->execute([$product->gender]);
+		$genderID = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
+
+		// Change isSustainable to 1 or 0
+		$isSustainable = $product->isSustainable ? 1 : 0;
+
+		// And finally, update the product.
+		$stmt = $this->conn->prepare("UPDATE products SET name = ?, type = ?, gender = ?, description = ?, isSustainable = ? WHERE id = ?");
+		$stmt->execute([$product->name, $typeID, $genderID, $product->description, $isSustainable, $product->productID]);
+
+		return true;
+	}
+
+	/**
+	 * Changes the ID of a product.
+	 * @param string $oldID
+	 * @param string $newID
+	 * @return bool Returns true if productID updated successfully.
+	 */
+	public function changeProductID(string $oldID, string $newID): bool {
+		$stmt = $this->conn->prepare("UPDATE products SET id = ? WHERE id = ?");
+		$stmt->execute([$newID, $oldID]);
+		return true;
+	}
+
     /**
      * Creates an enquiry made from the contact us form.
      * @return boolean If enquiry was added successfully

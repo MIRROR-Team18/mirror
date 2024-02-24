@@ -1,4 +1,63 @@
-<?php require_once("../_components/adminCheck.php"); ?>
+<?php
+    require_once("../_components/adminCheck.php");
+    require_once '../../_components/database.php';
+    $db = new Database();
+
+    if (isset($_POST['id'])) {
+        // We're updating a product
+        // TODO: SANITISE INPUTS!!!
+        var_dump($_POST);
+        if ($_POST['mode'] == "update") {
+			$product = $db->getProduct($_GET['id']);
+			if ($product == null) {
+				exit("<p style='text-align: center;'>The ID provided in the URL doesn't return a product.</p>");
+			}
+            if ($_GET['id'] != $_POST['id']) {
+                // Check if the ID exists already
+                $existingProduct = $db->getProduct($_POST['id']);
+                if ($existingProduct != null) {
+                    exit("<p style='text-align: center;'>The ID provided already exists.</p>");
+                }
+                $db->changeProductID($_GET['id'], $_POST['id']);
+				$product->productID = $_POST['id'];
+            }
+			$product->name = $_POST['name'];
+			$product->description = $_POST['description'];
+            $product->isSustainable = isset($_POST['sustainable']) && $_POST['sustainable'] == "on";
+            $product->gender = $_POST['gender'];
+            $product->type = $_POST['type'];
+
+            // Update the sizes
+            /** @var Size[] $productSizes */
+            $productSizes = array();
+            $sizesInRequest = array_filter($_POST, function($key) { return str_starts_with($key, 'size_'); }, ARRAY_FILTER_USE_KEY);
+            foreach ($sizesInRequest as $sizeEntry => $value) {
+                $sizeID = explode('_', $sizeEntry)[1];
+                $price = $_POST['price_' . $sizeID];
+                // I don't like this usage of the Size class.
+                $productSizes[$sizeID] = new Size($sizeID, "", 0, str_replace('£', '', $price));
+            }
+            $product->sizes = $productSizes;
+
+            echo "<br>";
+            var_dump($product);
+
+            try {
+                $success = $db->updateProduct($product);
+                if ($success) header("Location: ./");
+                else exit("<p style='text-align: center;'>An unspecified error occurred while updating the product. Please try again.</p>");
+            } catch (Exception $e) {
+                echo $e->getMessage();
+                exit("<p style='text-align: center;'>An error occurred while updating the product. Please try again.</p>");
+            }
+
+		} else if ($_POST['mode'] == "insert") {
+
+		} else {
+            exit("<p style='text-align: center;'>The mode provided in the form is invalid.</p>");
+        }
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,9 +73,6 @@
 			<h1>PRODUCT INFORMATION</h1>
 		</section>
 		<?php
-			require_once '../../_components/database.php';
-			$db = new Database();
-
             // Are we modifying a product?
             $product = null;
             if (isset($_GET['id'])) {
@@ -27,12 +83,18 @@
             }
 		?>
 		<section class="blue-1">
-			<form id="upsertForm" action="./upsert.php" method="post" enctype="multipart/form-data">
+			<form id="upsertForm" action="./upsert.php<?= isset($product->productID) ? '?id=' . $product->productID : '' ?>" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="mode" value="<?= isset($product->productID) ? "update" : "insert" ?>">
 				<div class="row">
 					<div class="col">
 						<label for="id">ID</label>
 						<input type="text" id="id" name="id" placeholder="A shortened name usually works well" value="<?= $product->productID ?? '' ?>" required>
-						<p>This shouldn't be changed unless there's a good reason to.</p>
+                        <p>
+                            <?= isset($product->productID)
+                                ? "This shouldn't be changed unless there's a good reason to."
+                                : "Choose wisely, as this will be used in the URL. It can be changed later but it shouldn't."
+                            ?>
+                        </p>
 					</div>
 					<div class="col">
 						<label for="name">Name</label>
@@ -92,6 +154,7 @@
                                     // Note that we're using Size classes here.
                                     foreach ($adultSizes as $size) {
                                         $sizeName = $size->name;
+                                        $sizeID = $size->sizeID;
                                         // Size[] uses keys of sizeID, so we can check if the product has this size by checking if the key exists.
                                         $productHasThisSize = isset($product->sizes[$size->sizeID]) ? 'checked' : '';
                                         $priceOfSize = $productHasThisSize
@@ -99,10 +162,10 @@
                                             : '';
                                         echo <<<HTML
                                         <div class="row">
-                                            <input type="checkbox" class="priceBox" name="size_$sizeName" id="$sizeName" value="$sizeName" $productHasThisSize >
+                                            <input type="checkbox" class="priceBox" name="size_$sizeID" id="$sizeName" $productHasThisSize >
                                             <label for="$sizeName">$sizeName</label>
                                             <label for="price_$sizeName"></label>
-                                            <input class="priceInput" name="price_$sizeName" id="price_$sizeName" type="text" value="$priceOfSize">
+                                            <input class="priceInput" name="price_$sizeID" id="price_$sizeName" type="text" value="$priceOfSize">
                                         </div>
                                         HTML;
                                     }
@@ -115,6 +178,7 @@
                                     // Note that we're using Size classes here.
                                     foreach ($childSizes as $size) {
                                         $sizeName = $size->name;
+                                        $sizeID = $size->sizeID;
                                         // Size[] uses keys of sizeID, so we can check if the product has this size by checking if the key exists.
 										$productHasThisSize = isset($product->sizes[$size->sizeID]) ? 'checked' : '';
 										$priceOfSize = $productHasThisSize
@@ -122,10 +186,10 @@
                                             : '';
                                         echo <<<HTML
                                         <div class="row">
-                                            <input type="checkbox" class="priceBox" name="size_$sizeName" id="$sizeName" value="$sizeName" $productHasThisSize >
+                                            <input type="checkbox" class="priceBox" name="size_$sizeID" id="$sizeName" $productHasThisSize >
                                             <label for="$sizeName">$sizeName</label>
                                             <label for="price_$sizeName" class="sr-only">Price for $sizeName</label>
-                                            <input class="priceInput" name="price_$sizeName" id="price_$sizeName" type="text" value="$priceOfSize">
+                                            <input class="priceInput" name="price_$sizeID" id="price_$sizeName" type="text" value="$priceOfSize">
                                         </div>
                                         HTML;
                                     }
@@ -136,7 +200,7 @@
                     <div class="col">
                         <h2>FINAL BITS</h2>
                         <div class="row">
-                            <input type="checkbox" name="sustainable" id="sustainable">
+                            <input type="checkbox" name="sustainable" id="sustainable" <?= isset($product->isSustainable) && $product->isSustainable ? 'checked' : '' ?>>
                             <label for="sustainable">Sustainable?<i class="fa-solid fa-leaf"></i></label>
                         </div>
                         <div class="buttonGrid">
