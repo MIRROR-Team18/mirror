@@ -178,7 +178,11 @@
             }
 		?>
 		<section class="blue-1">
-			<form id="upsertForm" action="./upsert.php<?= isset($product->productID) ? '?id=' . $product->productID : '' ?>" method="post" enctype="multipart/form-data">
+			<form id="upsertForm"
+                  action="./upsert.php<?= isset($product->productID) ? '?id=' . $product->productID : '' ?>"
+                  method="post" enctype="multipart/form-data"
+                  onsubmit="return confirm('Are you sure you want to save?');"
+            >
                 <input type="hidden" name="mode" value="<?= isset($product->productID) ? "update" : "insert" ?>">
 				<div class="row">
 					<div class="col">
@@ -326,16 +330,16 @@
                             <label for="sustainable">Sustainable?<i class="fa-solid fa-leaf"></i></label>
                         </div>
                         <div class="buttonGrid">
-                            <button class="fullWidth">
+                            <button class="fullWidth" type="button">
                                 <i class="fa-solid fa-chart-line"></i> Stock
                             </button>
-                            <button class="fullWidth">
+                            <button class="fullWidth" type="button">
                                 <i class="fa-solid fa-bell"></i> Alerts
                             </button>
                             <button class="fullWidth">
                                 <i class="fa-solid fa-save"></i> Save
                             </button>
-                            <button class="fullWidth">
+                            <button class="fullWidth" type="button">
                                 <i class="fa-solid fa-trash"></i> Delete
                             </button>
                         </div>

@@ -65,8 +65,10 @@ function deleteImage(event) {
     const parent = event.target.parentElement.parentElement;
     const deletedInput = document.querySelector("#deletedImages");
 
-    const name = parent.querySelector("img").dataset.name;
-    deletedInput.value = deletedInput.value + name + ";";
+    if (confirm("Are you sure you want to delete this image?")) {
+        const name = parent.querySelector("img").dataset.name;
+        deletedInput.value = deletedInput.value + name + ";";
 
-    parent.remove();
+        parent.remove();
+    }
 }

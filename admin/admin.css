@@ -109,6 +109,10 @@ input.priceInput {
     opacity: 1;
 }
 
+#imageUpload .col .overlay i:hover {
+    cursor: pointer;
+}
+
 #imageUploadInput .fa-solid {
     font-size: 3rem;
 }
