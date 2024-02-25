@@ -243,9 +243,19 @@ class Database {
 		}
 	}
 
-	public static function findProductImageUrl(string $productID): string {
+	public static function findPrimaryProductImageUrl(string $productID): string {
 		$pathForPhoto = "/../_images/products/" . $productID . "/";
 		return file_exists(__DIR__ . $pathForPhoto) ? $pathForPhoto . scandir(__DIR__ . $pathForPhoto)[2] : "https://picsum.photos/512"; // [0] is ".", [1] is ".."
+	}
+	public static function findAllProductImageUrls(string $productID): array {
+		$pathForPhoto = "/../_images/products/" . $productID . "/";
+		$images = scandir(__DIR__ . $pathForPhoto);
+		$images = array_filter($images, function ($image) {
+			return $image !== "." && $image !== "..";
+		});
+		return array_map(function ($image) use ($pathForPhoto) {
+			return $pathForPhoto . $image;
+		}, $images);
 	}
 
 	private function generateUserID(): string {

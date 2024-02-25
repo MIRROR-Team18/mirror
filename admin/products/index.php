@@ -83,7 +83,7 @@
 					$products = $db->getAllProducts();
 
 					foreach ($products as $product) {
-						$photo = Database::findProductImageUrl($product->productID);
+						$photo = Database::findPrimaryProductImageUrl($product->productID);
 						?>
                         <div class="product" id="<?= $product->productID ?>"
                              data-gender="<?= $product->gender ?>"

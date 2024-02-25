@@ -219,6 +219,10 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
+label:hover {
+    cursor: pointer;
+}
+
 /* The next section is simply radios and checkboxes styling. */
 /* For your own sanity, I'd recommend against touching it */
 [type="radio"], [type="checkbox"] {

@@ -22,6 +22,55 @@
     }
 
     /**
+     * Saves the images from the POST request to the server
+     * @param array $files The unmodified _FILES array
+     * @param Product $product Product to save images for
+     * @param string $deleted An array of deleted images
+     * @return void
+     */
+    function saveImages(array $files, Product $product, string $deleted): void {
+        $images = $files['images'];
+        $path = '../../_images/products/' . $product->productID . '/';
+
+        // We have to use a deleted value approach because the images array is not accessible in the HTML form
+        // And since we're deleting things from the server already, we might as well do it this way.
+        if ($deleted != "") {
+			$deletedImages = explode(";", $deleted); // Split the string into an array
+            foreach ($deletedImages as $deletedImage) { // Loop over the array
+                if ($deletedImage == "") continue;
+                if (in_array($deletedImage, $images['name'])) {
+                    // Get the key/index, and remove it from the array
+                    $key = array_search($deletedImage, $images['name']);
+                    unset($images['name'][$key]);
+                    // Don't have to delete from the rest of the arrays since we use name to loop over them
+                } else {
+                    // Remove it from the server
+                    $imagePath = $path . $deletedImage;
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
+                }
+			}
+        }
+
+
+        if (scandir($path) === false) {
+            // directory doesn't exist
+            mkdir($path);
+        }
+
+        for ($i = 0; $i < count($images['name']); $i++) {
+            $imagePath = $path . $images['name'][$i];
+            if ($images['error'][$i] == 0) {
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+                move_uploaded_file($images['tmp_name'][$i], $imagePath);
+            }
+        }
+    }
+
+    /**
      * It looked messy doing it repeatedly, so I made a function to generate the exit string.
      * @param string $message The message to display
      * @return string The HTML string to display
@@ -61,9 +110,11 @@
             $product->type = $_POST['type'];
             $product->sizes = getSizesFromRequest($_POST);
 
+			if (isset($_FILES['images'])) saveImages($_FILES, $product, $_POST['deletedImages'] ?? '');
+
             try {
                 $success = $db->updateProduct($product);
-                if ($success) header("Location: ./");
+				if ($success) exit("OK!"); // header("Location: ./");
                 else exit(generateExitStr("An unspecified error occurred while updating the product. Please try again."));
             } catch (Exception $e) {
                 echo $e->getMessage();
@@ -87,9 +138,11 @@
             $productSizes = getSizesFromRequest($_POST);
             $product = new Product($_POST['id'], htmlspecialchars($_POST['name']), $_POST['type'], $_POST['gender'], htmlspecialchars($_POST['description']), $isSustainable, $productSizes);
 
+			if (isset($_FILES['images'])) saveImages($_FILES, $product, $_POST['deletedImages'] ?? '');
+
             try {
                 $success = $db->createProduct($product);
-                if ($success) header("Location: ./");
+                if ($success) exit("OK!"); // header("Location: ./");
                 else exit(generateExitStr("An unspecified error occurred while inserting the product. Please try again."));
             } catch (Exception $e) {
                 echo $e->getMessage();
@@ -149,6 +202,33 @@
 						<textarea id="description" rows="4" name="description" placeholder="What's so special about this product?"><?= $product->description ?? '' ?></textarea>
 					</div>
 				</div>
+                <h2 id="imageHeader">IMAGES</h2>
+                <div class="row" id="imageUpload">
+                    <?php
+                        $images = Database::findAllProductImageUrls($product->productID);
+                        foreach ($images as $image) {
+                            // Get last element - name of the image
+                            $explodedPath = explode('/', $image);
+							$choppedName = end($explodedPath);
+                            echo <<<HTML
+                            <div class="col">
+                                <div class="overlay">
+                                    <i class="fa-solid fa-trash" onclick="deleteImage(event)"></i>
+                                </div>
+                                <img src="$image" alt="Product image" data-name="$choppedName">
+                            </div>
+                            HTML;
+                        }
+                    ?>
+                    <div class="col" id="imageUploadInput">
+                        <label for="imageInput">
+                            <i class="fa-solid fa-plus"></i>
+                            <br>Upload Image
+                        </label>
+                        <input class="sr-only" type="file" id="imageInput" name="images[]" accept="image/*" onchange="showImagePreview()" multiple>
+                        <input type="hidden" name="deletedImages" id="deletedImages">
+                    </div>
+                </div class="row">
 				<div class="row">
 					<div class="col">
 						<h2>GENDER</h2>

@@ -73,7 +73,7 @@
 					$products = $db->getAllProducts();
 
 					foreach ($products as $product) {
-                        $photo = Database::findProductImageUrl($product->productID);
+                        $photo = Database::findPrimaryProductImageUrl($product->productID);
                         $price = "Unknown...";
 
                         if (sizeof($product->sizes) > 0) {

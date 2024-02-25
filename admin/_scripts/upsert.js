@@ -19,11 +19,54 @@ window.addEventListener("load", () => {
     });
 });
 
-/*
+/**
  * Syncs the price input with the price box
- * @param {HTMLElement} target - The target element from the event
+ * @param {HTMLInputElement} target - The target element from the event
  */
 function syncPrice(target) {
     const respectiveInput = target.parentElement.querySelector(".priceInput");
     respectiveInput.disabled = !target.checked;
+}
+
+/**
+ * Updates the image preview with images
+ */
+function showImagePreview() {
+    const row = document.querySelector('#imageUpload');
+    const inputCol = document.querySelector('#imageUploadInput');
+    const inputElement = document.querySelector("#imageInput");
+
+    for (let i = 0; i < inputElement.files.length; i++) {
+        const col = document.createElement('div');
+        col.classList.add('col', 'new');
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(inputElement.files[i]);
+        img.alt = "Image preview";
+        img.dataset.name = inputElement.files[i].name;
+
+        const overlay = document.createElement('div');
+        overlay.classList.add('overlay');
+        const deleteIcon = document.createElement('i');
+        deleteIcon.classList.add('fa-solid', 'fa-trash');
+        deleteIcon.addEventListener('click', deleteImage);
+        overlay.append(deleteIcon);
+
+        col.append(overlay);
+        col.append(img);
+        row.insertBefore(col, inputCol);
+    }
+}
+
+/**
+ * Deletes an image from the section, new and old.
+ * @param {Event} event - The event that triggered this function
+ */
+function deleteImage(event) {
+    const parent = event.target.parentElement.parentElement;
+    const deletedInput = document.querySelector("#deletedImages");
+
+    const name = parent.querySelector("img").dataset.name;
+    deletedInput.value = deletedInput.value + name + ";";
+
+    parent.remove();
 }
