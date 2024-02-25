@@ -114,7 +114,7 @@
 
             try {
                 $success = $db->updateProduct($product);
-				if ($success) exit("OK!"); // header("Location: ./");
+				if ($success) header("Location: ./");
                 else exit(generateExitStr("An unspecified error occurred while updating the product. Please try again."));
             } catch (Exception $e) {
                 echo $e->getMessage();
@@ -142,7 +142,7 @@
 
             try {
                 $success = $db->createProduct($product);
-                if ($success) exit("OK!"); // header("Location: ./");
+                if ($success) header("Location: ./");
                 else exit(generateExitStr("An unspecified error occurred while inserting the product. Please try again."));
             } catch (Exception $e) {
                 echo $e->getMessage();
