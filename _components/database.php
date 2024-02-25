@@ -408,14 +408,25 @@ class Database {
 	 * @param Product $product
 	 * @return bool Returns true if product added successfully.
 	 */
-	public function createProduct(Product $product): bool {
+	public function createProduct(Product $product): bool {// Get the ID of the type and gender from the product class (as they are strings)
+		$stmt = $this->conn->prepare("SELECT id FROM type_def WHERE name = ?");
+		$stmt->execute([$product->type]);
+		$typeID = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
+
+		$stmt = $this->conn->prepare("SELECT id FROM gender_def WHERE name = ?");
+		$stmt->execute([$product->gender]);
+		$genderID = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
+
+		// Change isSustainable to 1 or 0
+		$isSustainable = $product->isSustainable ? 1 : 0;
+
+		$stmt = $this->conn->prepare("INSERT INTO products (id, name, description, type, gender, isSustainable) VALUES (?, ?, ?, ?, ?, ?)");
+		$stmt->execute([$product->productID, $product->name, $product->description, $typeID, $genderID, $isSustainable]);
+
 		foreach ($product->sizes as $size) {
 			$stmt = $this->conn->prepare("INSERT INTO product_sizes (productID, sizeID, price) VALUES (?, ?, ?)");
 			$stmt->execute([$product->productID, $size->sizeID, $size->price]);
 		}
-
-		$stmt = $this->conn->prepare("INSERT INTO products (id, name, type, gender) VALUES (?, ?, ?, ?)");
-		$stmt->execute([$product->productID, $product->name, $product->type, $product->gender]);
 
 		return true;
 	}
@@ -466,6 +477,22 @@ class Database {
 		$stmt = $this->conn->prepare("UPDATE products SET id = ? WHERE id = ?");
 		$stmt->execute([$newID, $oldID]);
 		return true;
+	}
+
+	/**
+	 * Check if provided productID doesn't already exist, and is valid.
+	 * @param string $productID ProductID to validate
+	 * @return bool Returns true if valid
+	 */
+	public function validateProductID(string $productID): bool {
+		// First we want to check if the productID only contains alphabetical characters and dashes.
+		if (!preg_match("/^[a-zA-Z-]+$/", $productID)) return false;
+
+		// Then we want to check if the productID already exists.
+		$stmt = $this->conn->prepare("SELECT * FROM products WHERE id = ?");
+		$stmt->execute([$productID]);
+		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return count($results) === 0;
 	}
 
     /**

@@ -3,58 +3,100 @@
     require_once '../../_components/database.php';
     $db = new Database();
 
+    /**
+     * Gets an array of sizes from the provided request
+     * @param $post array The unmodified POST request
+     * @return Size[] An array of sizes
+     */
+    function getSizesFromRequest(array $post): array {
+        /** @var Size[] $sizes */
+        $sizes = array();
+        $sizesInRequest = array_filter($post, function($key) { return str_starts_with($key, 'size_'); }, ARRAY_FILTER_USE_KEY);
+		foreach ($sizesInRequest as $sizeEntry => $value) {
+			$sizeID = explode('_', $sizeEntry)[1];
+			$price = $_POST['price_' . $sizeID];
+			// I don't like this usage of the Size class.
+			$sizes[$sizeID] = new Size($sizeID, "", 0, str_replace('£', '', $price));
+		}
+        return $sizes;
+    }
+
+    /**
+     * It looked messy doing it repeatedly, so I made a function to generate the exit string.
+     * @param string $message The message to display
+     * @return string The HTML string to display
+     */
+    function generateExitStr(string $message): string {
+        return "<p style='text-align: center;'>$message</p>";
+    }
+
     if (isset($_POST['id'])) {
-        // We're updating a product
-        // TODO: SANITISE INPUTS!!!
-        var_dump($_POST);
+        // We're updating or inserting a product
         if ($_POST['mode'] == "update") {
 			$product = $db->getProduct($_GET['id']);
 			if ($product == null) {
-				exit("<p style='text-align: center;'>The ID provided in the URL doesn't return a product.</p>");
+				exit(generateExitStr("The ID provided in the URL doesn't return a product."));
 			}
             if ($_GET['id'] != $_POST['id']) {
-                // Check if the ID exists already
-                $existingProduct = $db->getProduct($_POST['id']);
-                if ($existingProduct != null) {
-                    exit("<p style='text-align: center;'>The ID provided already exists.</p>");
+                // Validate new ID
+                if ($db->validateProductID($_POST['id'])) {
+                    exit(generateExitStr("The ID provided is invalid, or already exists."));
                 }
                 $db->changeProductID($_GET['id'], $_POST['id']);
 				$product->productID = $_POST['id'];
             }
-			$product->name = $_POST['name'];
-			$product->description = $_POST['description'];
+			if (!isset($_POST['name']) || $_POST['name'] == "") {
+				exit(generateExitStr("No name provided."));
+			}
+			if (!isset($_POST['gender'])) {
+				exit(generateExitStr("No gender provided."));
+			}
+			if (!isset($_POST['type'])) {
+				exit(generateExitStr("No type provided."));
+			}
+			$product->name = htmlspecialchars($_POST['name']);
+			$product->description = htmlspecialchars($_POST['description']);
             $product->isSustainable = isset($_POST['sustainable']) && $_POST['sustainable'] == "on";
             $product->gender = $_POST['gender'];
             $product->type = $_POST['type'];
-
-            // Update the sizes
-            /** @var Size[] $productSizes */
-            $productSizes = array();
-            $sizesInRequest = array_filter($_POST, function($key) { return str_starts_with($key, 'size_'); }, ARRAY_FILTER_USE_KEY);
-            foreach ($sizesInRequest as $sizeEntry => $value) {
-                $sizeID = explode('_', $sizeEntry)[1];
-                $price = $_POST['price_' . $sizeID];
-                // I don't like this usage of the Size class.
-                $productSizes[$sizeID] = new Size($sizeID, "", 0, str_replace('£', '', $price));
-            }
-            $product->sizes = $productSizes;
-
-            echo "<br>";
-            var_dump($product);
+            $product->sizes = getSizesFromRequest($_POST);
 
             try {
                 $success = $db->updateProduct($product);
                 if ($success) header("Location: ./");
-                else exit("<p style='text-align: center;'>An unspecified error occurred while updating the product. Please try again.</p>");
+                else exit(generateExitStr("An unspecified error occurred while updating the product. Please try again."));
             } catch (Exception $e) {
                 echo $e->getMessage();
-                exit("<p style='text-align: center;'>An error occurred while updating the product. Please try again.</p>");
+                exit(generateExitStr("An error occurred while updating the product. Please try again."));
             }
 
 		} else if ($_POST['mode'] == "insert") {
+            if (!$db->validateProductID($_POST['id'])) {
+                exit(generateExitStr("The ID provided is invalid, or already exists."));
+            }
+            if (!isset($_POST['name']) || $_POST['name'] == "") {
+                exit(generateExitStr("No name provided."));
+            }
+            if (!isset($_POST['gender'])) {
+                exit(generateExitStr("No gender provided."));
+            }
+            if (!isset($_POST['type'])) {
+                exit(generateExitStr("No type provided."));
+            }
+            $isSustainable = (isset($_POST['sustainable']) && $_POST['sustainable'] == "on") ? 1 : 0;
+            $productSizes = getSizesFromRequest($_POST);
+            $product = new Product($_POST['id'], htmlspecialchars($_POST['name']), $_POST['type'], $_POST['gender'], htmlspecialchars($_POST['description']), $isSustainable, $productSizes);
 
+            try {
+                $success = $db->createProduct($product);
+                if ($success) header("Location: ./");
+                else exit(generateExitStr("An unspecified error occurred while inserting the product. Please try again."));
+            } catch (Exception $e) {
+                echo $e->getMessage();
+                exit(generateExitStr("An error occurred while inserting the product. Please try again."));
+            }
 		} else {
-            exit("<p style='text-align: center;'>The mode provided in the form is invalid.</p>");
+            exit(generateExitStr("The mode provided in the form is invalid."));
         }
     }
 ?>
@@ -78,7 +120,7 @@
             if (isset($_GET['id'])) {
                 $product = $db->getProduct($_GET['id']);
                 if ($product == null) {
-					exit("<p style='text-align: center;'>The ID provided in the URL doesn't return a product. Halting to prevent accidental damage.</p>");
+					exit(generateExitStr("ID provided in the URL doesn't return a product. Halting to prevent accidental damage."));
 				}
             }
 		?>
