@@ -10,11 +10,14 @@ window.addEventListener("load", () => {
     });
 
     document.querySelectorAll('.priceInput').forEach(input => {
+        // We're onchange here because we want to format the input after the user has finished typing.
+        // Doing so oninput causes the number to be formatted as the user types, which makes it unusable.
         input.addEventListener('change', () => {
-			// We're onchange here because we want to format the input after the user has finished typing.
-			// Doing so oninput causes the number to be formatted as the user types, which makes it unusable.
-			input.value = pounds.format(input.value.replace(/[^0-9.]/g, ''));
-			if (input.value === '£NaN') input.value = ''; // If the user breaks it, clear the input.
+            // Make value numbers only, convert it to a float and ensure it's not over 10000 (database constraint)
+            const safeVal = input.value.replace(/[^0-9.]/g, '');
+            const valAsNumber = parseFloat(safeVal) >= 10000 ? 0 : parseFloat(safeVal);
+			input.value = pounds.format(valAsNumber);
+			if (input.value === '£NaN') input.value = '£0.00'; // If the user breaks it, clear the input.
         });
     });
 });

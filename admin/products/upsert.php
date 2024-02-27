@@ -14,9 +14,10 @@
         $sizesInRequest = array_filter($post, function($key) { return str_starts_with($key, 'size_'); }, ARRAY_FILTER_USE_KEY);
 		foreach ($sizesInRequest as $sizeEntry => $value) {
 			$sizeID = explode('_', $sizeEntry)[1];
-			$price = $_POST['price_' . $sizeID];
-			// I don't like this usage of the Size class.
-			$sizes[$sizeID] = new Size($sizeID, "", 0, str_replace('£', '', $price));
+			$price = (float) str_replace(['£', ','], '', $_POST['price_' . $sizeID]);
+            if ($price >= 10000 || $price <= 0) exit(generateExitStr("Price invalid for sizeID ". $sizeID));
+ 			// I don't like this usage of the Size class.
+			$sizes[$sizeID] = new Size($sizeID, "", 0, $price);
 		}
         return $sizes;
     }
@@ -209,12 +210,13 @@
                 <h2 id="imageHeader">IMAGES</h2>
                 <div class="row" id="imageUpload">
                     <?php
-                        $images = Database::findAllProductImageUrls($product->productID);
-                        foreach ($images as $image) {
-                            // Get last element - name of the image
-                            $explodedPath = explode('/', $image);
+                    if (isset($product->productID)) {
+						$images = Database::findAllProductImageUrls($product->productID);
+						foreach ($images as $image) {
+							// Get last element - name of the image
+							$explodedPath = explode('/', $image);
 							$choppedName = end($explodedPath);
-                            echo <<<HTML
+							echo <<<HTML
                             <div class="col">
                                 <div class="overlay">
                                     <i class="fa-solid fa-trash" onclick="deleteImage(event)"></i>
@@ -222,7 +224,8 @@
                                 <img src="$image" alt="Product image" data-name="$choppedName">
                             </div>
                             HTML;
-                        }
+						}
+                    }
                     ?>
                     <div class="col" id="imageUploadInput">
                         <label for="imageInput">
@@ -233,6 +236,7 @@
                         <input type="hidden" name="deletedImages" id="deletedImages">
                     </div>
                 </div class="row">
+                <p>Images are ordered alphabetically, and the first photo is the primary photo. Please consider this before uploading images.</p>
 				<div class="row">
 					<div class="col">
 						<h2>GENDER</h2>
