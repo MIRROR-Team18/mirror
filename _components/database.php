@@ -22,16 +22,12 @@ class Connection {
 	public static function getConnection(): PDO {
 		if (!isset(self::$dbConnection)) {
 			try {
-				// ! I probably should find another solution to this.
-                if (file_exists("../vendor/autoload.php")) {
-                    require_once '../vendor/autoload.php'; // Loading the .env module.
-                } else if (file_exists("./vendor/autoload.php")) {
-                    require_once './vendor/autoload.php'; // Loading the .env module but if it's in the wrong place for some reason
-                } else if (file_exists("../../vendor/autoload.php")) {
-					require_once '../../vendor/autoload.php'; // Loading the .env module but now admin stuff makes this a lot worse
+				$autoloadPath = __DIR__ . "\\..\\vendor\\autoload.php";
+				if (file_exists($autoloadPath)) {
+					require_once $autoloadPath;
 				} else {
-                    throw new Exception("Cannot locate autoload file for dotenv! Did you run 'composer install'?.");
-                }
+					throw new Exception("Cannot locate autoload file for dotenv! Did you run 'composer install'?.");
+				}
 
 				$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../");
 				$dotenv->load();
