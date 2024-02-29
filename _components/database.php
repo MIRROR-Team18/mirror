@@ -22,13 +22,12 @@ class Connection {
 	public static function getConnection(): PDO {
 		if (!isset(self::$dbConnection)) {
 			try {
-                if (file_exists("../vendor/autoload.php")) {
-                    require_once '../vendor/autoload.php'; // Loading the .env module.
-                } else if (file_exists("./vendor/autoload.php")) {
-                    require_once './vendor/autoload.php'; // Loading the .env module but if it's in the wrong place for some reason
-                } else {
-                    throw new Exception("Cannot locate autoload file for dotenv! Did you run 'composer install'?.");
-                }
+				$autoloadPath = __DIR__ . "\\..\\vendor\\autoload.php";
+				if (file_exists($autoloadPath)) {
+					require_once $autoloadPath;
+				} else {
+					throw new Exception("Cannot locate autoload file for dotenv! Did you run 'composer install'?.");
+				}
 
 				$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../");
 				$dotenv->load();
@@ -71,11 +70,13 @@ class User {
 class Size {
 	public string $sizeID;
 	public string $name;
+	public bool $isKids;
 	public float $price;
 
-	public function __construct(string $sizeID, string $name, float $price) {
+	public function __construct(string $sizeID, string $name, int $isKids, float $price) {
 		$this->sizeID = $sizeID;
 		$this->name = $name;
+		$this->isKids = $isKids === 1;
 		$this->price = $price;
 	}
 }
@@ -87,12 +88,18 @@ class Product {
 	public string $productID;
 	public string $name;
 	public string $type;
+	public string $gender;
+	public string $description;
+	public bool $isSustainable;
 	public array $sizes;
 
-	public function __construct(string $productID, string $name, string $type, array $sizes = null) {
+	public function __construct(string $productID, string $name, string $type, string $gender, string|null $description, int $isSustainable, array $sizes = null) {
 		$this->productID = $productID;
 		$this->name = $name;
 		$this->type = $type;
+		$this->gender = $gender;
+		$this->description = $description ?? '';
+		$this->isSustainable = $isSustainable === 1;
 		$this->sizes = $sizes ?? array();
 	}
 }
@@ -103,9 +110,151 @@ class Database {
 	public function __construct() {
         try {
             $this->conn = Connection::getConnection();
+			$this->init();
         } catch (Exception $e) {
             exit("Could not create database connection! " . $e->getMessage());
         }
+	}
+
+	/**
+	 * Ensures the database has been set up correctly. Call after constructor. Aim is to deprecate init_table.sql.
+	 * @return void
+	 * @throws Exception If there is a problem in setting up the database.
+	 */
+	private function init(): void {
+		try {
+			$queries = array( // I'm splitting each query into a separate string to make it easier to read.
+				"CREATE TABLE IF NOT EXISTS users (
+    			id VARCHAR(8) NOT NULL PRIMARY KEY,
+				email VARCHAR(320) NOT NULL,
+				firstName VARCHAR(100) NOT NULL,
+				lastName VARCHAR(100) NOT NULL,
+				password VARCHAR(256) NOT NULL,
+				admin INT(1) NOT NULL DEFAULT 0
+			);",
+				"CREATE TABLE IF NOT EXISTS gender_def (
+    			id INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+				name VARCHAR(32) NOT NULL
+			);",
+				"CREATE TABLE IF NOT EXISTS type_def (
+    			id INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+				name VARCHAR(32) NOT NULL
+			);",
+				"CREATE TABLE IF NOT EXISTS products (
+				id VARCHAR(32) NOT NULL PRIMARY KEY,
+				name VARCHAR(64) NOT NULL,
+				type INT(2) NOT NULL,
+				gender INT(2) NOT NULL,
+				description TEXT NULL DEFAULT NULL,
+				isSustainable INT(1) NOT NULL DEFAULT 0,
+				timeCreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				timeModified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				FOREIGN KEY (type) REFERENCES type_def(id),
+				FOREIGN KEY (gender) REFERENCES gender_def(id)
+			);",
+				"CREATE TABLE IF NOT EXISTS size_def (
+    			id INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+				name VARCHAR(32) NOT NULL,
+				isKids INT(1) NOT NULL DEFAULT 0
+			);",
+				"CREATE TABLE IF NOT EXISTS product_sizes (
+				productID VARCHAR(32) NOT NULL,
+				sizeID INT(2) NOT NULL,
+				price DECIMAL(6,2) NOT NULL,
+				PRIMARY KEY (productID, sizeID),
+				FOREIGN KEY (productID) REFERENCES products(id),
+				FOREIGN KEY (sizeID) REFERENCES size_def(id)
+			);",
+				"CREATE TABLE IF NOT EXISTS orders (
+				id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+				userID VARCHAR(8) NOT NULL,
+				status ENUM('processing', 'dispatched') NOT NULL,
+				paidAmount DECIMAL(9,2) NOT NULL,
+				timeCreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				timeModified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				FOREIGN KEY (userID) REFERENCES users(id)
+			);",
+				"CREATE TABLE IF NOT EXISTS products_in_orders (
+				orderID INT(8) NOT NULL,
+				productID VARCHAR(32) NOT NULL,
+				sizeID INT(2) NOT NULL,
+				quantity INT(2) NOT NULL,
+				FOREIGN KEY (orderID) REFERENCES orders(id),
+				FOREIGN KEY (productID, sizeID) REFERENCES product_sizes(productID, sizeID)
+			);",
+				"CREATE TABLE IF NOT EXISTS user_images (
+    			id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    			filename VARCHAR(64) NOT NULL,
+    			approved INT(1) NOT NULL DEFAULT 0
+			);",
+				"CREATE TABLE IF NOT EXISTS reviews (
+				id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+				name VARCHAR(100) NOT NULL,
+				rating INT(1) NOT NULL,
+				comment TEXT NOT NULL,
+				date DATE NOT NULL,
+				type ENUM('product', 'site') NOT NULL,
+				productID VARCHAR(32) NULL,
+				imageID INT(8) NULL,
+				CONSTRAINT fk_type_product FOREIGN KEY (productID) REFERENCES products(id) ON DELETE CASCADE ON UPDATE CASCADE,
+				CONSTRAINT fk_review_image FOREIGN KEY (imageID) REFERENCES user_images(id) ON DELETE SET NULL ON UPDATE CASCADE
+			);",
+				"CREATE TABLE IF NOT EXISTS enquiries (
+				id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+				type ENUM('contact', 'refund') NOT NULL,
+				nameProvided VARCHAR(100) NOT NULL,
+				emailProvided VARCHAR(320) NOT NULL,
+				userID VARCHAR(8) NULL,
+				message TEXT NOT NULL,
+				FOREIGN KEY (userID) REFERENCES users(id)
+			);",
+				"INSERT INTO gender_def (name) VALUES ('male'), ('female'), ('unisex')",
+				"INSERT INTO type_def (name) VALUES ('tops'), ('bottoms'), ('socks'), ('shoes'), ('accessories')",
+				"INSERT INTO products (id, name, type, gender) VALUES
+                ('bag-bag', 'Bag Bag', 5, 3),
+    			('black-socks', 'Plain Black Socks', 3, 3),
+    			('conversation-high-shoes', 'Conversation High-Top Shoes', 4, 3),
+    			('hardtail-shoes-men', 'Hardtail Mens Shoes', 4, 1),
+    			('headfirst-jeans', 'Headfirst Jeans', 2, 3),
+    			('highrise-tee-unisex', 'Highrise Unisex Top', 1, 3),
+    			('mirror-cap', 'MIRЯOR Cap', 5, 3),
+    			('pole-recycle-trousers', 'Recycleable Pole Trousers', 2, 3),
+    			('shephard-tee-men', 'Shephard Mens Top', 1, 1),
+    			('white-socks', 'Plain White Socks', 3, 3);                                 
+			",
+				"INSERT INTO size_def (name, isKids) VALUES
+                ('XS', 0), ('S', 0), ('M', 0), ('L', 0), ('XL', 0), ('XXL', 0),
+				('3-5 Years', 1), ('5-7 Years', 1), ('7-9 Years', 1), ('9-11 Years', 1), ('11-13 Years', 1)
+			",
+			);
+
+			$stmt = $this->conn->prepare("SHOW TABLES");
+			$stmt->execute();
+			$tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
+			if (count($tables) > 0) return; // If there are tables, we assume the database is set up.
+
+			foreach ($queries as $query) $this->conn->exec($query);
+		} catch (Exception $e) {
+			throw new Exception("Failed to set up database: " . $e->getMessage());
+		}
+	}
+
+	public static function findPrimaryProductImageUrl(string $productID): string {
+		$pathForPhoto = "/../_images/products/" . $productID . "/";
+		return file_exists(__DIR__ . $pathForPhoto) && count(scandir(__DIR__ . $pathForPhoto)) > 2 ? $pathForPhoto . scandir(__DIR__ . $pathForPhoto)[2] : "https://picsum.photos/512"; // [0] is ".", [1] is ".."
+	}
+	public static function findAllProductImageUrls(string $productID): array {
+		$pathForPhoto = "/../_images/products/" . $productID . "/";
+		if (!is_dir(__DIR__ . $pathForPhoto)) return array();
+
+		$images = scandir(__DIR__ . $pathForPhoto);
+		$images = array_filter($images, function ($image) {
+			return $image !== "." && $image !== "..";
+		});
+
+		return array_map(function ($image) use ($pathForPhoto) {
+			return $pathForPhoto . $image;
+		}, $images);
 	}
 
 	private function generateUserID(): string {
@@ -114,7 +263,7 @@ class Database {
 			// Generate random 16-digit number and make it a string
 			$randomNumber = strval(random_int(10000000, 99999999));
 			// Check a user does not exist with that ID.
-			$stmt = $this->conn->prepare("SELECT * FROM users WHERE userID = ?");
+			$stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
 			$stmt->execute([$randomNumber]);
 			$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		} while ($results);
@@ -123,7 +272,7 @@ class Database {
 	}
 
 	public function getUser(int $id): User | null {
-		$stmt = $this->conn->prepare("SELECT * FROM users WHERE userID = ?");
+		$stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
 		$stmt->execute([$id]);
 		$result = $stmt->fetch(PDO::FETCH_ASSOC);
 		return $result ? new User($result['userID'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']) : null;
@@ -145,7 +294,7 @@ class Database {
 		// Hash password, generate ID, then insert into database.
 		$hashPassword = password_hash($password, PASSWORD_DEFAULT);
 		$id = $this->generateUserID();
-		$stmt = $this->conn->prepare("INSERT INTO users (userID, email, firstName, lastName, password) VALUES (?, ?, ?, ?, ?)");
+		$stmt = $this->conn->prepare("INSERT INTO users (id, email, firstName, lastName, password) VALUES (?, ?, ?, ?, ?)");
 		$stmt->execute([$id, $email, $firstName, $lastName, $hashPassword]);
 
 		return new User($id, $email, $firstName, $lastName, 0);
@@ -165,7 +314,7 @@ class Database {
 
 		if (!$result || !password_verify($password, $result['password'])) {
 			throw new Exception("Incorrect email or password!"); // We use the same error to prevent brute force attacks
-		} else return new User($result['userID'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']);
+		} else return new User($result['id'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']);
 	}
 
     /**
@@ -175,13 +324,13 @@ class Database {
      * @see getProduct()
      */
     private function getSizesOfProduct(string $productID): array {
-        $stmt = $this->conn->prepare("SELECT * FROM product_sizes INNER JOIN sizes ON product_sizes.sizeID = sizes.sizeID WHERE productID = ?;");
+        $stmt = $this->conn->prepare("SELECT * FROM product_sizes INNER JOIN size_def ON product_sizes.sizeID = size_def.id WHERE productID = ?;");
         $stmt->execute([$productID]);
         $sizeResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $sizes = array();
         foreach ($sizeResults as $sizeResult) {
-            $sizes[] = new Size($sizeResult['sizeID'], $sizeResult['name'], $sizeResult['price']);
+            $sizes[$sizeResult['sizeID']] = new Size($sizeResult['sizeID'], $sizeResult['name'], $sizeResult['isKids'], $sizeResult['price']);
         }
 
         return $sizes;
@@ -192,14 +341,14 @@ class Database {
 	 * @return Product[] An array of all the products.
 	 */
 	public function getAllProducts(): array {
-		$stmt = $this->conn->prepare("SELECT * FROM products");
+		$stmt = $this->conn->prepare("SELECT products.id, products.name, products.description, products.isSustainable, type_def.name AS type, gender_def.name AS gender FROM products INNER JOIN type_def ON products.type = type_def.id INNER JOIN gender_def ON products.gender = gender_def.id;");
 		$stmt->execute();
 		$productResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		$products = array();
 		foreach ($productResults as $productResult) {
-            $sizes = $this->getSizesOfProduct($productResult['productID']);
-			$products[] = new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
+            $sizes = $this->getSizesOfProduct($productResult['id']);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $productResult['isSustainable'], $sizes);
 		}
 
 		return $products;
@@ -208,19 +357,19 @@ class Database {
 	/**
 	 * Returns an array of products, sorted by the latest 100 orders. Consider changing this to time based when we add that information to the db.
 	 * @param int $limit The maximum number of products to return. -1 for no limit.
-	 * @param bool $invert If true, the order is inverted (least popular first)
+	 * @param bool $invert If true, the order is inverted (the least popular first)
 	 * @return array An array of products, sorted by popularity.
 	 */
 	public function getProductsByPopularity(int $limit = -1, bool $invert = false): array {
-		$stmt = $this->conn->prepare("SELECT products.productID, name, type, COUNT(products_in_orders.productID) as popularity FROM products_in_orders RIGHT OUTER JOIN products ON products_in_orders.productID = products.productID GROUP BY productID ORDER BY popularity DESC LIMIT ?;");
+		$stmt = $this->conn->prepare("SELECT products.id, name, description, type, gender, isSustainable, COUNT(products_in_orders.productID) as popularity FROM products_in_orders RIGHT OUTER JOIN products ON products_in_orders.productID = products.id GROUP BY id ORDER BY popularity DESC LIMIT ?;");
 		$stmt->execute([$limit === -1 ? 1000 : $limit]); // Pretty sure 1000 is max MySQL supports anyway
 		// Below is a duplicated code fragment. Consider moving parts to a private function interpolateSizes()
 		$productResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		$products = array();
 		foreach ($productResults as $productResult) {
-			$sizes = $this->getSizesOfProduct($productResult['productID']);
-			$products[] = new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
+			$sizes = $this->getSizesOfProduct($productResult['id']);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $productResult['isSustainable'], $sizes);
 		}
 
 		return $products;
@@ -234,14 +383,14 @@ class Database {
 	 */
 	public function getProductsByRecency(int $limit = -1, bool $invert = false): array {
 		// Yes, this is completely ineffective as of right now, but it's a placeholder for when we add time to the database.
-		$stmt = $this->conn->prepare("SELECT * FROM products ORDER BY productID DESC LIMIT ?");
+		$stmt = $this->conn->prepare("SELECT * FROM products ORDER BY id DESC LIMIT ?");
 		$stmt->execute([$limit === -1 ? 1000 : $limit]);
 		$productResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		$products = array();
 		foreach ($productResults as $productResult) {
-			$sizes = $this->getSizesOfProduct($productResult['productID']);
-			$products[] = new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
+			$sizes = $this->getSizesOfProduct($productResult['id']);
+			$products[] = new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $productResult['isSustainable'], $sizes);
 		}
 
 		return $products;
@@ -253,14 +402,14 @@ class Database {
 	 * @return Product | null
 	 */
 	public function getProduct(string $productID): Product | null{
-		$stmt = $this->conn->prepare("SELECT * FROM products WHERE productID = ?");
+		$stmt = $this->conn->prepare("SELECT * FROM products WHERE id = ?");
 		$stmt->execute([$productID]);
 		$productResult = $stmt->fetch(PDO::FETCH_ASSOC);
 
 		if (!$productResult) return null;
 
-		$sizes = $this->getSizesOfProduct($productResult['productID']);
-		return new Product($productResult['productID'], $productResult['name'], $productResult['type'], $sizes);
+		$sizes = $this->getSizesOfProduct($productResult['id']);
+		return new Product($productResult['id'], $productResult['name'], $productResult['type'], $productResult['gender'], $productResult['description'], $productResult['isSustainable'], $sizes);
 	}
 
 	/**
@@ -268,16 +417,123 @@ class Database {
 	 * @param Product $product
 	 * @return bool Returns true if product added successfully.
 	 */
-	public function createProduct(Product $product): bool {
+	public function createProduct(Product $product): bool {// Get the ID of the type and gender from the product class (as they are strings)
+		$stmt = $this->conn->prepare("SELECT id FROM type_def WHERE name = ?");
+		$stmt->execute([$product->type]);
+		$typeID = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
+
+		$stmt = $this->conn->prepare("SELECT id FROM gender_def WHERE name = ?");
+		$stmt->execute([$product->gender]);
+		$genderID = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
+
+		// Change isSustainable to 1 or 0
+		$isSustainable = $product->isSustainable ? 1 : 0;
+
+		$stmt = $this->conn->prepare("INSERT INTO products (id, name, description, type, gender, isSustainable) VALUES (?, ?, ?, ?, ?, ?)");
+		$stmt->execute([$product->productID, $product->name, $product->description, $typeID, $genderID, $isSustainable]);
+
 		foreach ($product->sizes as $size) {
 			$stmt = $this->conn->prepare("INSERT INTO product_sizes (productID, sizeID, price) VALUES (?, ?, ?)");
 			$stmt->execute([$product->productID, $size->sizeID, $size->price]);
 		}
 
-		$stmt = $this->conn->prepare("INSERT INTO products (productID, name, type) VALUES (?, ?, ?)");
-		$stmt->execute([$product->productID, $product->name, $product->type]);
+		return true;
+	}
+
+	/**
+	 * Updates a product with the provided product
+	 * @param Product $product
+	 * @return bool Returns true if product updated successfully.
+	 * @throws Exception If there is a problem in updating a product.
+	 */
+	public function updateProduct(Product $product): bool {
+		// First, delete all the sizes for the product. It's just easier this way
+		$stmt = $this->conn->prepare("DELETE FROM product_sizes WHERE productID = ?");
+		$stmt->execute([$product->productID]);
+
+		// Then, re-add all the sizes for the product.
+		foreach ($product->sizes as $size) {
+			$stmt = $this->conn->prepare("INSERT INTO product_sizes (productID, sizeID, price) VALUES (?, ?, ?)");
+			$stmt->execute([$product->productID, $size->sizeID, $size->price]);
+		}
+
+		// Get the ID of the type and gender from the product class (as they are strings)
+		$stmt = $this->conn->prepare("SELECT id FROM type_def WHERE name = ?");
+		$stmt->execute([$product->type]);
+		$typeID = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
+
+		$stmt = $this->conn->prepare("SELECT id FROM gender_def WHERE name = ?");
+		$stmt->execute([$product->gender]);
+		$genderID = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
+
+		// Change isSustainable to 1 or 0
+		$isSustainable = $product->isSustainable ? 1 : 0;
+
+		// And finally, update the product.
+		$stmt = $this->conn->prepare("UPDATE products SET name = ?, type = ?, gender = ?, description = ?, isSustainable = ? WHERE id = ?");
+		$stmt->execute([$product->name, $typeID, $genderID, $product->description, $isSustainable, $product->productID]);
 
 		return true;
+	}
+
+	/**
+	 * Deletes a product by the productID
+	 * @param string $id
+	 * @return bool Returns true if product was deleted successfully
+	 */
+	public function deleteProduct(string $id): bool {
+		// ProductIDs appear everywhere. If we don't delete the other fields, we'll be blocked from doing so.
+		// Check product exists
+		$stmt = $this->conn->prepare("SELECT * FROM products WHERE id = ?");
+		$stmt->execute([$id]);
+		$product = $stmt->fetch(PDO::FETCH_ASSOC);
+		if (!$product) return false;
+
+		// Replace IDs in products_in_orders to NULL
+		$stmt = $this->conn->prepare("UPDATE products_in_orders SET productID = NULL WHERE productID = ?");
+		$stmt->execute([$id]);
+
+		// Delete product_sizes
+		$stmt = $this->conn->prepare("DELETE FROM product_sizes WHERE productID = ?");
+		$stmt->execute([$id]);
+
+		// Delete reviews that refer to this productID
+		$stmt = $this->conn->prepare("DELETE FROM reviews WHERE productID = ?");
+		$stmt->execute([$id]);
+
+		// Then finally, delete the product.
+		$stmt = $this->conn->prepare("DELETE FROM products WHERE id = ?");
+		$stmt->execute([$id]);
+
+		return true;
+	}
+
+	/**
+	 * Changes the ID of a product.
+	 * @param string $oldID
+	 * @param string $newID
+	 * @return bool Returns true if productID updated successfully.
+	 */
+	public function changeProductID(string $oldID, string $newID): bool {
+		$stmt = $this->conn->prepare("UPDATE products SET id = ? WHERE id = ?");
+		$stmt->execute([$newID, $oldID]);
+		return true;
+	}
+
+	/**
+	 * Check if provided productID doesn't already exist, and is valid.
+	 * @param string $productID ProductID to validate
+	 * @return bool Returns true if valid
+	 */
+	public function validateProductID(string $productID): bool {
+		// First we want to check if the productID only contains alphabetical characters and dashes.
+		if (!preg_match("/^[a-zA-Z-]+$/", $productID)) return false;
+
+		// Then we want to check if the productID already exists.
+		$stmt = $this->conn->prepare("SELECT * FROM products WHERE id = ?");
+		$stmt->execute([$productID]);
+		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return count($results) === 0;
 	}
 
     /**
@@ -309,7 +565,7 @@ class Database {
 	 */
 	public function createRefundRequest(string $userID, string $reason): bool {
 		// Check that this isn't a duplicate entry (caused by network errors, user resubmitting by accident, etc.)
-		$check = $this->conn->prepare("SELECT * FROM enquiries WHERE userID = ?");
+		$check = $this->conn->prepare("SELECT * FROM enquiries WHERE id = ?");
 		$check->execute([$userID]);
 		$results = $check->fetchAll(PDO::FETCH_ASSOC);
 
@@ -373,7 +629,7 @@ class Database {
 	 * @note This function should update to use a class instead!
 	 */
 	public function getOrderByID(string $orderID): mixed {
-		$stmt = $this->conn->prepare("SELECT * FROM orders WHERE orderID = ?");
+		$stmt = $this->conn->prepare("SELECT * FROM orders WHERE id = ?");
 		$stmt->execute([$orderID]);
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
@@ -407,11 +663,65 @@ class Database {
 			if ($review['rating'] == $rating && $review['comment'] == $comment) return false; // Duplicate entry, do not enter
 		}
 
-		$stmt = $this->conn->prepare("INSERT INTO reviews (name, rating, comment, date) VALUES (?, ?, ?, ?)");
-		$stmt->execute([$name, $rating, $comment, date("Y-m-d")]);
+		$stmt = $this->conn->prepare("INSERT INTO reviews (name, rating, comment, date, type) VALUES (?, ?, ?, ?, ?)");
+		$stmt->execute([$name, $rating, $comment, date("Y-m-d"), "site"]);
 
 		return true;
 	}
+  
+	/**
+	 * Returns an array of all the types in the type_def table.
+	 * @return array All the types of products available in the database.
+	 */
+	public function getTypes(): array {
+		$stmt = $this->conn->prepare("SELECT * FROM type_def");
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	/**
+	 * Returns an array of all the gender options in the gender_def table.
+	 * @return array All the genders available in the database.
+	 */
+	public function getGenders(): array {
+		$stmt = $this->conn->prepare("SELECT * FROM gender_def");
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	/**
+ 	 * Returns an array of all the sizes available in the size_def table.
+ 	 * @return Size[] All the sizes available in the database.
+	 * @see getSizesOfProduct() if you're looking at product_sizes.
+ 	 */
+	public function getSizes(): array {
+		$stmt = $this->conn->prepare("SELECT * FROM size_def");
+		$stmt->execute();
+		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		$sizes = array();
+		foreach ($result as $size) {
+			$sizes[] = new Size($size['id'], $size['name'], $size['isKids'], 0);
+		}
+		return $sizes;
+	}
+  
+	public function sortByHighest(): array {
+		$check = $this->conn->query("SELECT * FROM reviews order by rating DESC");
+		return $check->fetchAll();
+	} 
+	public function sortByLowest(): array {
+		$check = $this->conn->query("SELECT * FROM reviews order by rating");
+		return $check->fetchAll();
+	}
+	public function sortByNewest(): array {
+		$check = $this->conn->query("SELECT * FROM reviews order by date DESC");
+		return $check->fetchAll();
+	}
+	public function sortByOldest(): array {
+		$check = $this->conn->query("SELECT * FROM reviews order by date");
+		return $check->fetchAll();
+	}       
 }
 
 class Tester {
@@ -429,9 +739,7 @@ class Tester {
 	}
 
 	public static function main(): void {
-		$db = new Database();
-		$prod = $db->getAllProducts();
-		self::debug_to_console($prod[0]->productID);
+		self::debug_to_console(__DIR__);
 	}
 }
 

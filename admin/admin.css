@@ -1,0 +1,118 @@
+/* The admin page should all entirely use the same theming, hence why I want to keep it to one file
+ * But if that changes, this will be split into an admin/_stylesheets/ folder */
+.blue-3 {
+    background: var(--blue-3);
+}
+.blue-2 {
+    background: var(--blue-2);
+}
+.blue-1 {
+    background: var(--blue-1);
+}
+
+section {
+    padding: 1rem 10vw;
+}
+
+section h1 {
+    font-family: 'Dela Gothic One', cursive;
+    font-size: 3rem;
+}
+
+.product h1 {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+}
+
+.asideContent {
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+}
+
+button.fullWidth {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.col {
+    margin: .5rem 1rem;
+    flex: 1;
+}
+
+form h2 {
+    font-family: 'Dela Gothic One', cursive;
+    font-size: 2rem;
+}
+
+input.priceInput {
+    width: 40%;
+    margin: .1rem 1rem .1rem auto;
+}
+
+.buttonGrid {
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: .25rem;
+}
+
+.buttonGrid button {
+    padding: .5rem 1rem;
+}
+
+#imageHeader {
+    padding: 0 1rem;
+}
+
+#imageUpload {
+    background: var(--blue-3);
+    border-radius: 20px;
+    padding: 1rem;
+}
+
+#imageUpload img {
+    height: 20vh;
+    width: fit-content;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+#imageUpload .col {
+    flex: unset;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+
+    display: grid;
+}
+
+#imageUpload .col .overlay, #imageUpload .col img {
+    grid-area: 1/1;
+}
+
+#imageUpload .col .overlay {
+    background: radial-gradient(circle at top right, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 75%);
+    border-radius: 20px;
+    opacity: 0;
+    z-index: 5;
+    transition: opacity .25s ease;
+
+    text-align: right;
+    padding: .5rem 1rem;
+}
+
+#imageUpload .col .overlay:hover {
+    opacity: 1;
+}
+
+#imageUpload .col .overlay i:hover {
+    cursor: pointer;
+}
+
+#imageUploadInput .fa-solid {
+    font-size: 3rem;
+}
