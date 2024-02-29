@@ -65,6 +65,18 @@ input.button {
 .main {
     margin-left: 20%;
     background: #0F1027;
+    text-align: center;
+    padding-top: 2.5%;
+    color: #FFFFFF;
+}
+.main h1 {
+    font-family: Dela Gothic One;
+    font-size: 4rem;
+    font-weight: bold;
+}
+.main p {
+    font-family: Zen Kaku Gothic New;
+    font-size: 2rem;
 }
 .sidenav {
     height: 80%;
@@ -97,6 +109,25 @@ input.button {
 footer {
     position: absolute;
     z-index: 1;
+}
+.grid {
+    background: #0F1027;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+}
+table {
+    margin-left: 2.5%;
+    border-collapse: collapse;
+    width: 95%;
+    background-color: #242E52;
+}
+tr:nth-child(odd) {
+    background-color: #1C1A3A;
+}
+.ordersNav {
+    margin-left: 2.5%;
+    width: 95%;
 }
 */
 /* new */
