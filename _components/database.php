@@ -626,7 +626,6 @@ class Database {
 	 * Gets an order by the provided orderID
 	 * @param string $orderID
 	 * @return mixed
-	 * @note This function should update to use a class instead!
 	 */
 	public function getOrderByID(string $orderID): mixed {
 		$stmt = $this->conn->prepare("SELECT * FROM orders WHERE id = ?");
@@ -635,9 +634,31 @@ class Database {
 	}
 
 	/**
+	 * Gets all orders.
+	 * @return array Array of all orders
+	 */
+	public function getAllOrders(): array {
+		$stmt = $this->conn->prepare("SELECT * FROM orders");
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	/**
+	 * Returns the amount of products in the order
+	 * @param string $orderID Which order to access
+	 * @return int Quantity of products in order
+	 */
+	public function getQuantityProductsInOrder(string $orderID): int {
+		$stmt = $this->conn->prepare("SELECT SUM(quantity) FROM products_in_orders WHERE orderID = ?");
+		$stmt->execute([$orderID]);
+		$result = $stmt->fetch(PDO::FETCH_ASSOC)['SUM(quantity)'];
+		if (!$result) return 0;
+		else return $result;
+	}
+
+	/**
 	 * Gets a list of all the reviews in the "reviews" table of the database.
 	 * @return array Array of all reviews
-	 * @note This function should update to use a class instead!
 	 */
 	public function getAllReviews(): array {
 		$stmt = $this->conn->prepare("SELECT * FROM reviews");

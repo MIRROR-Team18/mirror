@@ -116,3 +116,13 @@ input.priceInput {
 #imageUploadInput .fa-solid {
     font-size: 3rem;
 }
+
+#orders table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+td a {
+    text-decoration: none;
+    color: var(--white)
+}

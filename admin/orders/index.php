@@ -1,6 +1,7 @@
 <?php
 	require_once "../_components/adminCheck.php";
 	require_once "../../_components/database.php";
+    $db = new Database();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,6 +45,43 @@
                 </button>
             </div>
 		</aside>
+        <section id="orders" class="blue-1">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Items</th>
+                        <th>Addressee</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                    $orders = $db->getAllOrders();
+
+                    foreach ($orders as $order) {
+                        $quantity = $db->getQuantityProductsInOrder($order['id']);
+                        ?>
+                        <tr>
+                            <td><?= $order['id']; ?></td>
+                            <td><?= $quantity ?></td>
+                            <td><?= $order['address'] ?? 'None provided'; ?></td>
+                            <td>£<?= $order['paidAmount']; ?></td>
+                            <td>
+                                <a href="./upsert.php?id=<?php echo $order['id']; ?>">
+                                    <i class="fa-solid fa-pencil"></i>
+                                </a>
+                                <a href="./delete.php?id=<?php echo $order['id']; ?>">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php }
+                ?>
+                </tbody>
+            </table>
+        </section>
 	</main>
 </body>
 </html>
