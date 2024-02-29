@@ -477,6 +477,38 @@ class Database {
 	}
 
 	/**
+	 * Deletes a product by the productID
+	 * @param string $id
+	 * @return bool Returns true if product was deleted successfully
+	 */
+	public function deleteProduct(string $id): bool {
+		// ProductIDs appear everywhere. If we don't delete the other fields, we'll be blocked from doing so.
+		// Check product exists
+		$stmt = $this->conn->prepare("SELECT * FROM products WHERE id = ?");
+		$stmt->execute([$id]);
+		$product = $stmt->fetch(PDO::FETCH_ASSOC);
+		if (!$product) return false;
+
+		// Replace IDs in products_in_orders to NULL
+		$stmt = $this->conn->prepare("UPDATE products_in_orders SET productID = NULL WHERE productID = ?");
+		$stmt->execute([$id]);
+
+		// Delete product_sizes
+		$stmt = $this->conn->prepare("DELETE FROM product_sizes WHERE productID = ?");
+		$stmt->execute([$id]);
+
+		// Delete reviews that refer to this productID
+		$stmt = $this->conn->prepare("DELETE FROM reviews WHERE productID = ?");
+		$stmt->execute([$id]);
+
+		// Then finally, delete the product.
+		$stmt = $this->conn->prepare("DELETE FROM products WHERE id = ?");
+		$stmt->execute([$id]);
+
+		return true;
+	}
+
+	/**
 	 * Changes the ID of a product.
 	 * @param string $oldID
 	 * @param string $newID

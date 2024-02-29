@@ -75,3 +75,12 @@ function deleteImage(event) {
         parent.remove();
     }
 }
+
+/**
+ * Redirects the user to the delete page
+ */
+function deleteProduct() {
+    if (confirm("Are you sure you want to delete this product?\nConsider making it unavailable for purchase instead!!!")) {
+        window.location.href = window.location.href.replace("upsert", "delete");
+    }
+}

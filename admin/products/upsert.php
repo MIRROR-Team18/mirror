@@ -334,17 +334,25 @@
                             <label for="sustainable">Sustainable?<i class="fa-solid fa-leaf"></i></label>
                         </div>
                         <div class="buttonGrid">
+                            <?php
+                                if (isset($product->productID)):
+                            ?>
                             <button class="fullWidth" type="button">
                                 <i class="fa-solid fa-chart-line"></i> Stock
                             </button>
                             <button class="fullWidth" type="button">
                                 <i class="fa-solid fa-bell"></i> Alerts
                             </button>
+                            <button class="fullWidth" type="button" onclick="deleteProduct()">
+                                <i class="fa-solid fa-trash"></i> Delete
+                            </button>
+                            <?php else: ?>
+                            <button class="fullWidth" type="button" onclick="window.location.href = './'">
+                                <i class="fa-solid fa-trash"></i> Cancel
+                            </button>
+                            <?php endif ?>
                             <button class="fullWidth">
                                 <i class="fa-solid fa-save"></i> Save
-                            </button>
-                            <button class="fullWidth" type="button">
-                                <i class="fa-solid fa-trash"></i> Delete
                             </button>
                         </div>
                     </div>
