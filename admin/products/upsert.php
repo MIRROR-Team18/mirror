@@ -160,7 +160,7 @@
 	<?php include '../../_components/default.php'; ?>
 	<title>Upsert Product - MIRЯOR</title>
 	<link rel="stylesheet" href="../admin.css">
-    <script src="../_scripts/upsert.js" defer async></script>
+    <script src="../_scripts/productUpsert.js" defer async></script>
 </head>
 <body>
 	<?php include '../_components/header.php'; ?>

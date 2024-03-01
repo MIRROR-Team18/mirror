@@ -198,7 +198,7 @@ button, .button {
     text-decoration: none;
 }
 
-input, textarea {
+input, textarea, select {
     background: var(--white);
     border: none;
     border-radius: 8px;
@@ -206,8 +206,12 @@ input, textarea {
     font-size: 1.2rem;
 }
 
-input:disabled, textarea:disabled {
+input:disabled, textarea:disabled, select:disabled {
     background: var(--disabled);
+}
+
+input:read-only {
+    cursor: not-allowed;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -219,7 +223,7 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-label:hover {
+label:hover, select:hover {
     cursor: pointer;
 }
 

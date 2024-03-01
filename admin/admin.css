@@ -122,7 +122,17 @@ input.priceInput {
     border-collapse: collapse;
     text-align: center;
 }
+td {
+    text-align: center;
+}
 td a {
     text-decoration: none;
     color: var(--white)
+}
+td button {
+    padding: .1rem .5rem;
+    font-size: 1rem;
+}
+td input {
+    width: 100%;
 }

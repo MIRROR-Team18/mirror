@@ -41,7 +41,7 @@
                 </div>
                 <button class="fullWidth" onclick="window.location.href='./upsert.php'">
                     <i class="fa-solid fa-plus"></i>
-                    <span>Add Order</span>
+                    Add Order
                 </button>
             </div>
 		</aside>
@@ -83,5 +83,6 @@
             </table>
         </section>
 	</main>
+    <?php include '../../_components/shortFooter.php'; ?>
 </body>
 </html>
