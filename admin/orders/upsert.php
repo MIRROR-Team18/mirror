@@ -100,6 +100,19 @@
 								</tr>
 							</thead>
 							<tbody>
+								<tr style="display: none;">
+									<td>
+										<input type="text" name="products[id][]" value="" aria-label="Product ID" placeholder="Product ID...">
+									</td>
+									<td>
+                                        <input type="text" name="products[quantity][]" value="" aria-label="Quantity" placeholder="Quantity of Product...">
+                                    </td>
+									<td>
+                                        <input type="text" name="products[size][]" value="" aria-label="Size" placeholder="Size of Product...">
+                                    </td>
+									<td>£0.00</td>
+									<td><i class="fa-solid fa-trash"></i></td>
+								</tr>
 								<?php
 									// If we're updating, we need to get the products in the order.
 									if ($order != null) {
@@ -107,13 +120,19 @@
 										foreach ($products as $product) {
 											// It's in cases like this I really wish we had an ORM, but I still refuse to use Laravel.
 											?>
-											<tr>
-												<td><input type="text" name="products[id][]" value="<?= $product['id'] ?>"></td>
-												<td><input type="text" name="products[quantity][]" value="<?= $product['quantity'] ?>"></td>
-												<td><input type="text" name="products[size][]" value="<?= $product['size'] ?>"></td>
-												<td><?= "" // Price is to be calculated. ?>></td>
-												<td><i class="fa-solid fa-trash"></i></td>
-											</tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="text" name="products[id][]" value="<?= $product['id'] ?>" aria-label="Product ID" placeholder="Product ID...">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="products[quantity][]" value="<?= $product['quantity'] ?>" aria-label="Quantity" placeholder="Quantity of Product...">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="products[size][]" value="<?= $product['size'] ?>" aria-label="Size" placeholder="Size of Product...">
+                                                </td>
+                                                <td>£0.00</td>
+                                                <td><i class="fa-solid fa-trash"></i></td>
+                                            </tr>
 											<?php
 										}
 									}
