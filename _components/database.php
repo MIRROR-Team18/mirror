@@ -132,6 +132,16 @@ class Database {
 				password VARCHAR(256) NOT NULL,
 				admin INT(1) NOT NULL DEFAULT 0
 			);",
+				"CREATE TABLE IF NOT EXISTS addresses (
+    			id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    			name VARCHAR(128) NOT NULL,
+    			line1 VARCHAR(128) NOT NULL,
+    			line2 VARCHAR(128) NULL DEFAULT NULL,
+    			line3 VARCHAR(128) NULL DEFAULT NULL,
+    			city VARCHAR(64) NOT NULL,
+    			postcode VARCHAR(10) NOT NULL,
+    			country VARCHAR(64) NOT NULL
+			);",
 				"CREATE TABLE IF NOT EXISTS gender_def (
     			id INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 				name VARCHAR(32) NOT NULL
@@ -168,11 +178,13 @@ class Database {
 				"CREATE TABLE IF NOT EXISTS orders (
 				id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 				userID VARCHAR(8) NOT NULL,
+				addressID INT(8) NOT NULL,
 				status ENUM('processing', 'dispatched') NOT NULL,
 				paidAmount DECIMAL(9,2) NOT NULL,
 				timeCreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				timeModified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-				FOREIGN KEY (userID) REFERENCES users(id)
+				FOREIGN KEY (userID) REFERENCES users(id),
+				FOREIGN KEY (addressID) REFERENCES addresses(id)
 			);",
 				"CREATE TABLE IF NOT EXISTS products_in_orders (
 				orderID INT(8) NOT NULL,

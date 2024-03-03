@@ -3,6 +3,9 @@ const pounds = new Intl.NumberFormat('en-GB', {
 	currency: 'GBP',
 })
 
+/**
+ * Creates a row when clicking the "Add Row" button.
+ */
 function createRow() {
 	const tbody = document.querySelector('#productsTable tbody');
 	const final = tbody.lastElementChild;
@@ -13,6 +16,11 @@ function createRow() {
 	tbody.insertBefore(newRow, final);
 }
 
+/**
+ * Gets the sizes for the product selected and populates the size select with them.
+ * @param ev (Event) - The event that triggered this function
+ * @returns {void}
+ */
 async function getSizes(ev) {
 	const element = ev.target;
 	const productChosen = element.value;
@@ -59,6 +67,10 @@ async function getSizes(ev) {
 	calculatePrice({ target: quantityInput });
 }
 
+/**
+ * Calculate the price of the product based on the quantity and size selected.
+ * @param ev (Event) - The event that triggered this function. Finds parent's parent to make it work across all inputs.
+ */
 function calculatePrice(ev) {
 	const parent = ev.target.parentElement.parentElement;
 
@@ -72,6 +84,10 @@ function calculatePrice(ev) {
 	priceElement.textContent = pounds.format(quantity * price);
 }
 
+/**
+ * Delete the row that the delete button is in.
+ * @param ev (Event) - The event that triggered this function
+ */
 function deleteRow(ev) {
 	const row = ev.target.parentElement.parentElement;
 	row.remove();

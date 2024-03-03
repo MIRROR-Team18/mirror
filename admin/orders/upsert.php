@@ -4,6 +4,10 @@
 	$db = new Database();
 
 	// POST STUFF WILL GO HERE
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        var_dump($_POST);
+        exit();
+	}
 
 	/**
 	 * It looked messy doing it repeatedly, so I made a function to generate the exit string.
@@ -73,19 +77,19 @@
 						<h2>ADDRESS</h2>
 						<p>Whether this is the "from" or "to" address depends on direction above.</p>
 						<label for="addressName">Name</label>
-						<input type="text" id="addressName" name="addressName" placeholder="Company/Customer Name" value="<?= $order != null ? $order['addressName'] : '' ?>">
+						<input type="text" id="addressName" name="addressName" placeholder="Company/Customer Name" value="<?= $order != null ? $order['addressName'] : '' ?>" required >
 						<label for="addressLine1">Line 1</label>
-						<input type="text" id="addressLine1" name="addressLine1" placeholder="Address Line 1" value="<?= $order != null ? $order['addressLine1'] : '' ?>">
+						<input type="text" id="addressLine1" name="addressLine1" placeholder="Address Line 1" value="<?= $order != null ? $order['addressLine1'] : '' ?>" required >
 						<label for="addressLine2">Line 2</label>
 						<input type="text" id="addressLine2" name="addressLine2" placeholder="Address Line 2" value="<?= $order != null ? $order['addressLine2'] : '' ?>">
 						<label for="addressLine3">Line 3</label>
 						<input type="text" id="addressLine3" name="addressLine3" placeholder="Address Line 3" value="<?= $order != null ? $order['addressLine3'] : '' ?>">
 						<label for="addressCity">City</label>
-						<input type="text" id="addressCity" name="addressCity" placeholder="City" value="<?= $order != null ? $order['addressCity'] : '' ?>">
+						<input type="text" id="addressCity" name="addressCity" placeholder="City" value="<?= $order != null ? $order['addressCity'] : '' ?>" required >
 						<label for="addressPostcode">Postcode</label>
-						<input type="text" id="addressPostcode" name="addressPostcode" placeholder="Postcode or equivalent" value="<?= $order != null ? $order['addressPostcode'] : '' ?>">
+						<input type="text" id="addressPostcode" name="addressPostcode" placeholder="Postcode or equivalent" value="<?= $order != null ? $order['addressPostcode'] : '' ?>" required >
 						<label for="addressCountry">Country</label>
-						<input type="text" id="addressCountry" name="addressCountry" placeholder="Country" value="<?= $order != null ? $order['addressCountry'] : '' ?>">
+						<input type="text" id="addressCountry" name="addressCountry" placeholder="Country" value="<?= $order != null ? $order['addressCountry'] : '' ?>" required >
 					</div>
 					<div class="col">
 						<h2>PRODUCTS IN ORDER</h2>
@@ -130,6 +134,27 @@
 								</tr>
 							</tbody>
 						</table>
+                        <div class="buttonGrid">
+							<?php
+							if (isset($order)): ?>
+                                <button class="fullWidth" type="button">
+                                    <i class="fa-solid fa-chart-line"></i> Stock
+                                </button>
+                                <button class="fullWidth" type="button">
+                                    <i class="fa-solid fa-bell"></i> Alerts
+                                </button>
+                                <button class="fullWidth" type="button" onclick="deleteProduct()">
+                                    <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+							<?php else: ?>
+                                <button class="fullWidth" type="button" onclick="window.location.href = './'">
+                                    <i class="fa-solid fa-trash"></i> Cancel
+                                </button>
+							<?php endif ?>
+                            <button class="fullWidth">
+                                <i class="fa-solid fa-save"></i> Save
+                            </button>
+                        </div>
 					</div>
 				</div>
 			</form>
