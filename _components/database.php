@@ -607,6 +607,7 @@ class Database {
 	 * @param string $postcode Required, postcode of address (max 10 characters)
 	 * @param string $country Required, country of address (max 64 characters)
 	 * @return int The addressID of the address created or found.
+	 * @see getAddressDetails() For getting the details of an address. This will only return an ID
 	 */
 	public function createOrGetAddress(string $name, string $line1, string $line2, string $line3, string $city, string $postcode, string $country): int {
 		// Check for existing address
@@ -619,6 +620,17 @@ class Database {
 		$stmt = $this->conn->prepare("INSERT INTO addresses (name, line1, line2, line3, city, postcode, country) VALUES (?, ?, ?, ?, ?, ?, ?)");
 		$stmt->execute([$name, $line1, $line2, $line3, $city, $postcode, $country]);
 		return $this->conn->lastInsertId();
+	}
+
+	/**
+	 * Gets the details of an address by the provided addressID
+	 * @param int $addressID
+	 * @return array An array of the address details
+	 */
+	public function getAddressDetails(int $addressID): array {
+		$stmt = $this->conn->prepare("SELECT * FROM addresses WHERE id = ?");
+		$stmt->execute([$addressID]);
+		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
 	/**

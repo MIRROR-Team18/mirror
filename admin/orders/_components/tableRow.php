@@ -18,19 +18,19 @@
 		</select>
 	</td>
 	<td>
-		<select name="products[size][]" class="sizeSelect" aria-label="Size" disabled onchange="calculatePrice(event)">
+		<select name="products[size][]" class="sizeSelect" aria-label="Size" <?= isset($thisProduct['sizeID']) ? "" : "disabled" ?>> onchange="calculatePrice(event)">
 			<option value="" selected disabled hidden>Size...</option>
 			<?php
 				$priceSelected = 0;
 
 				if (isset($thisProduct['sizeID'])) {
-					$product = $db->getProduct($thisProduct['id']);
+					$product = $db->getProduct($thisProduct['productID']);
 
 					foreach ($product->sizes as $size) {
 						/** @var $size Size */
 						if ($size->sizeID == $thisProduct['sizeID']) $priceSelected = $size->price;
 						?>
-						<option value="<?= $size->sizeID ?>" data-price="<?= $size->price ?>" <?= $size->name == $thisProduct['sizeID'] ? 'selected' : '' ?>><?= $size->name ?></option>
+						<option value="<?= $size->sizeID ?>" data-price="<?= $size->price ?>" <?= $size->sizeID == $thisProduct['sizeID'] ? 'selected' : '' ?>><?= $size->name ?></option>
 						<?php
 					}
 				}
@@ -39,7 +39,8 @@
 	</td>
 	<td>
 		<input class="quantityInput" type="number" min="1" max="99" name="products[quantity][]"
-			   value="<?= $thisProduct['quantity'] ?? '1' ?>" aria-label="Quantity" placeholder="Quantity of Product..." disabled onchange="calculatePrice(event)">
+			   value="<?= $thisProduct['quantity'] ?? '1' ?>" aria-label="Quantity" placeholder="Quantity of Product..."
+               <?= isset($thisProduct['quantity']) ? "" : "disabled" ?> onchange="calculatePrice(event)">
 	</td>
 	<td class="price">£<?= isset($thisProduct['quantity']) ? $thisProduct['quantity'] * $priceSelected : '0.00' ?></td>
 	<td><i class="fa-solid fa-trash" onclick="deleteRow(event)"></i></td>
