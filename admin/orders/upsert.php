@@ -6,6 +6,76 @@
 	// POST STUFF WILL GO HERE
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         var_dump($_POST);
+
+        // Check fields are set
+        if (!isset($_POST['mode']) || $_POST['mode'] == ""
+            || !isset($_POST['status']) || $_POST['status'] == ""
+            || !isset($_POST['direction']) || $_POST['direction'] == ""
+            || !isset($_POST['addressName']) || $_POST['addressName'] == ""
+            || !isset($_POST['addressLine1']) || $_POST['addressLine1'] == ""
+            || !isset($_POST['addressCity']) || $_POST['addressCity'] == ""
+            || !isset($_POST['addressPostcode']) || $_POST['addressPostcode'] == ""
+            || !isset($_POST['addressCountry']) || $_POST['addressCountry'] == "") {
+            exit(generateExitStr("Not all fields are set."));
+        }
+
+        if ($_POST['mode'] == "update") {
+        	// Check if the order exists
+        	$order = $db->getOrderByID($_POST['id']);
+        	if ($order == null) {
+        		exit(generateExitStr("Order ID provided doesn't exist."));
+        	}
+        }
+
+        $productsSubmitted = $_POST['products'];
+        // Quantities have to be stored separately as they're not part of the product object, and this is how we handled the basket last term.
+        $products = [];
+        $quantityMap = [];
+        for ($i = 0; $i < count($productsSubmitted['id']); $i++) {
+            $id = $productsSubmitted['id'][$i];
+            $size = $productsSubmitted['size'][$i];
+            $quantity = $productsSubmitted['quantity'][$i];
+
+            // Validate product exists
+            $product = $db->getProduct($id);
+            if ($product == null) {
+                exit(generateExitStr("Product ID $id doesn't exist."));
+            }
+
+            // Check product size is valid
+            $sizeExists = null;
+            foreach ($product->sizes as $thisSize) {
+                if ($thisSize->sizeID == $size) {
+                    $sizeExists = $thisSize;
+                    break;
+                }
+            }
+            if (is_null($sizeExists)) {
+                exit(generateExitStr("Size ID $size doesn't exist for product ID $id."));
+            }
+
+            $sizes = array();
+            $sizes[] = $sizeExists;
+
+            $products[] = new Product($id, $product->name, $product->type, $product->gender, $product->description, $product->isSustainable, $sizes);
+            $quantityMap[$id] = $quantity;
+        }
+
+		$addressID = $db->createOrGetAddress($_POST['addressName'], $_POST['addressLine1'], $_POST['addressLine2'], $_POST['addressLine3'], $_POST['addressCity'], $_POST['addressPostcode'], $_POST['addressCountry']);
+
+        // updating or inserting
+        if ($_POST['mode'] == "update") {
+            // Update the order
+            $result = $db->updateOrder($_POST['id'], $products, $quantityMap, $addressID, $_POST['direction'], $_POST['status']);
+            if (!$result) exit(generateExitStr("Failed to update order."));
+            else header("Location: ./");
+        } else {
+            // Insert the order. The userID will be ours.
+            $result = $db->createOrder($_SESSION['userID'], $products, $quantityMap, $addressID, $_POST['direction'], $_POST['status']);
+            if (!$result) exit(generateExitStr("Failed to insert order."));
+            else header("Location: ./");
+        }
+
         exit();
 	}
 

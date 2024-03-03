@@ -179,6 +179,7 @@ class Database {
 				id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 				userID VARCHAR(8) NOT NULL,
 				addressID INT(8) NOT NULL,
+				direction ENUM('in', 'out') NOT NULL,
 				status ENUM('processing', 'dispatched') NOT NULL,
 				paidAmount DECIMAL(9,2) NOT NULL,
 				timeCreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -594,7 +595,30 @@ class Database {
 		$stmt->execute(["refund", $user->firstName . " " . $user->lastName, $user->email, $user->userID, $reason]);
 
 		return true; // As we were successful.
+	}
 
+	/**
+	 * Creates an address with the provided parameters, or returns the existing ID if an exact address already exists.
+	 * @param string $name Required, name on address (max 128 characters)
+	 * @param string $line1 Required, first line of address (max 128 characters)
+	 * @param string $line2 Optional, second line of address (max 128 characters)
+	 * @param string $line3 Optional, third line of address (max 128 characters)
+	 * @param string $city Required, city of address (max 64 characters)
+	 * @param string $postcode Required, postcode of address (max 10 characters)
+	 * @param string $country Required, country of address (max 64 characters)
+	 * @return int The addressID of the address created or found.
+	 */
+	public function createOrGetAddress(string $name, string $line1, string $line2, string $line3, string $city, string $postcode, string $country): int {
+		// Check for existing address
+		$stmt = $this->conn->prepare("SELECT id FROM addresses WHERE name = ? AND line1 = ? AND line2 = ? AND line3 = ? AND city = ? AND postcode = ? AND country = ?");
+		$stmt->execute([$name, $line1, $line2, $line3, $city, $postcode, $country]);
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		if ($result) return $result['id'];
+
+		// Doesn't exist, so we make a new one.
+		$stmt = $this->conn->prepare("INSERT INTO addresses (name, line1, line2, line3, city, postcode, country) VALUES (?, ?, ?, ?, ?, ?, ?)");
+		$stmt->execute([$name, $line1, $line2, $line3, $city, $postcode, $country]);
+		return $this->conn->lastInsertId();
 	}
 
 	/**
@@ -602,10 +626,13 @@ class Database {
 	 * @param string $userID
 	 * @param Product[] $basket
 	 * @param array $quantityMap A map/associative array of productID to quantity
+	 * @param int $addressID The addressID of the address that should already be in the database.
+	 * @param string $direction The direction of the order. Default is "out".
+	 * @param string $status The status of the order. Default is "processing".
 	 * @return string OrderID of the order created.
-
+	 * @see createOrGetAddress() For creating an address
 	 */
-	public function createOrder(string $userID, array $basket, array $quantityMap): string {
+	public function createOrder(string $userID, array $basket, array $quantityMap, int $addressID, string $direction = "out", string $status = "processing"): string {
 		// Create order
 		$totalPrice = 0;
 		$productsInOrdersQueue = array(); // Used to store the insertion of products into the products_in_orders table.
@@ -621,8 +648,8 @@ class Database {
 			$productsInOrdersQueue[] = [$item->productID, $item->sizes[0]->sizeID, $quantityMap[$item->productID]];
 		}
 
-		$stmt = $this->conn->prepare("INSERT INTO orders (userID, status, paidAmount) VALUES (?, ?, ?)");
-		$stmt->execute([$userID, "processing", $totalPrice]);
+		$stmt = $this->conn->prepare("INSERT INTO orders (userID, addressID, direction, status, paidAmount) VALUES (?, ?, ?, ?, ?)");
+		$stmt->execute([$userID, $addressID, $direction, $status, $totalPrice]);
 		$orderID = $this->conn->lastInsertId();
 
 		// Create products in orders
@@ -632,6 +659,47 @@ class Database {
 		}
 
 		return $orderID;
+	}
+
+	/**
+	 * Updates an order by replacing the products in the order, and updating the order itself.
+	 * @param string $orderID
+	 * @param array $basket
+	 * @param array $quantityMap
+	 * @param int $addressID
+	 * @param string $direction
+	 * @param string $status
+	 * @return bool Returns true if order updated successfully.
+	 * @see createOrGetAddress() For creating an address
+	 */
+	public function updateOrder(string $orderID, array $basket, array $quantityMap, int $addressID, string $direction, string $status): bool {
+		$totalPrice = 0;
+		$productsInOrdersQueue = array(); // Used to store the insertion of products into the products_in_orders table.
+
+		// In case it happens again
+		$basket = array_map(function ($item) {
+			return unserialize(serialize($item));
+		}, $basket);
+
+		foreach	($basket as $item) {
+			/* @var $item Product */
+			$totalPrice += $item->sizes[0]->price * $quantityMap[$item->productID];
+			$productsInOrdersQueue[] = [$item->productID, $item->sizes[0]->sizeID, $quantityMap[$item->productID]];
+		}
+
+		// Delete and reinsert products in order.
+		$stmt = $this->conn->prepare("DELETE FROM products_in_orders WHERE orderID = ?");
+		$stmt->execute([$orderID]);
+		$stmt = $this->conn->prepare("INSERT INTO products_in_orders (orderID, productID, sizeID, quantity) VALUES (?, ?, ?, ?)");
+		foreach ($productsInOrdersQueue as $productInOrder) {
+			$stmt->execute([$orderID, $productInOrder[0], $productInOrder[1], $productInOrder[2]]);
+		}
+
+		// Update order itself
+		$stmt = $this->conn->prepare("UPDATE orders SET addressID = ?, direction = ?, status = ?, paidAmount = ? WHERE id = ?");
+		$stmt->execute([$addressID, $direction, $status, $totalPrice, $orderID]);
+
+		return true;
 	}
 
 	/**
