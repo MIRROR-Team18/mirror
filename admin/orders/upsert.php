@@ -89,53 +89,36 @@
 					</div>
 					<div class="col">
 						<h2>PRODUCTS IN ORDER</h2>
-						<table id="productsTable">
+						<table id="productsTable" class="fixed">
 							<thead>
 								<tr>
 									<th>Product</th>
-									<th>Quantity</th>
 									<th>Size</th>
+                                    <th>Quantity</th>
 									<th>Price</th>
 									<th>Actions</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr style="display: none;">
-									<td>
-										<input type="text" name="products[id][]" value="" aria-label="Product ID" placeholder="Product ID...">
-									</td>
-									<td>
-                                        <input type="text" name="products[quantity][]" value="" aria-label="Quantity" placeholder="Quantity of Product...">
-                                    </td>
-									<td>
-                                        <input type="text" name="products[size][]" value="" aria-label="Size" placeholder="Size of Product...">
-                                    </td>
-									<td>£0.00</td>
-									<td><i class="fa-solid fa-trash"></i></td>
-								</tr>
 								<?php
 									// If we're updating, we need to get the products in the order.
+                                    $allProducts = $db->getAllProducts();
 									if ($order != null) {
-										$products = array(); // $db->getProductsInOrder($order['id']);
-										foreach ($products as $product) {
-											// It's in cases like this I really wish we had an ORM, but I still refuse to use Laravel.
-											?>
-                                            <tr>
-                                                <td>
-                                                    <input type="text" name="products[id][]" value="<?= $product['id'] ?>" aria-label="Product ID" placeholder="Product ID...">
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="products[quantity][]" value="<?= $product['quantity'] ?>" aria-label="Quantity" placeholder="Quantity of Product...">
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="products[size][]" value="<?= $product['size'] ?>" aria-label="Size" placeholder="Size of Product...">
-                                                </td>
-                                                <td>£0.00</td>
-                                                <td><i class="fa-solid fa-trash"></i></td>
-                                            </tr>
-											<?php
-										}
-									}
+										$productsInOrder = $db->getProductsInOrder($order['id']);
+
+                                        // I'm screaming I really wrote this.
+                                        $hide = true;
+                                        include './_components/tableRow.php';
+                                        $hide = false;
+
+                                        foreach ($productsInOrder as $thisProduct) {
+                                            include './_components/tableRow.php';
+                                        }
+									} else {
+                                        // If we're inserting, we need to have at least one row else duplicating can't occur.
+                                        $hide = true;
+                                        include './_components/tableRow.php';
+                                    }
 								?>
 								<tr>
 									<td colspan="5">

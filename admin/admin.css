@@ -109,7 +109,7 @@ input.priceInput {
     opacity: 1;
 }
 
-#imageUpload .col .overlay i:hover {
+.fa-trash:hover {
     cursor: pointer;
 }
 
@@ -134,5 +134,14 @@ td button {
     font-size: 1rem;
 }
 td input {
+    width: 100%;
+}
+
+table.fixed {
+    table-layout: fixed;
+    width: 100%;
+}
+
+table.fixed input, select {
     width: 100%;
 }

@@ -657,6 +657,17 @@ class Database {
 	}
 
 	/**
+	 * Returns an array of all the products in the order.
+	 * @param string $id The orderID to access
+	 * @return array An array of all the products in the order.
+	 */
+	public function getProductsInOrder(string $id): array {
+		$stmt = $this->conn->prepare("SELECT * FROM products_in_orders WHERE orderID = ?");
+		$stmt->execute([$id]);
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	/**
 	 * Gets a list of all the reviews in the "reviews" table of the database.
 	 * @return array Array of all reviews
 	 */
@@ -742,7 +753,7 @@ class Database {
 	public function sortByOldest(): array {
 		$check = $this->conn->query("SELECT * FROM reviews order by date");
 		return $check->fetchAll();
-	}       
+	}
 }
 
 class Tester {

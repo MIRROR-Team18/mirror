@@ -206,14 +206,6 @@ input, textarea, select {
     font-size: 1.2rem;
 }
 
-input:disabled, textarea:disabled, select:disabled {
-    background: var(--disabled);
-}
-
-input:read-only {
-    cursor: not-allowed;
-}
-
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -225,6 +217,15 @@ input[type="number"] {
 
 label:hover, select:hover {
     cursor: pointer;
+}
+
+input:disabled, textarea:disabled, select:disabled {
+    background: var(--disabled);
+    cursor: not-allowed;
+}
+
+input:read-only {
+    cursor: not-allowed;
 }
 
 /* The next section is simply radios and checkboxes styling. */
