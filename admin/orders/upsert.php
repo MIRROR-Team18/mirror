@@ -127,17 +127,15 @@
 					<div class="col">
 						<label for="status">Status</label>
 						<select name="status" id="status">
-							<!-- php needed to select which. -->
-							<option value="processing">Processing</option>
-							<option value="dispatched">Dispatched</option>
+							<option value="processing" <?= isset($order['status']) && $order['status'] == 'processing' ? "selected" : "" ?>>Processing</option>
+							<option value="dispatched" <?= isset($order['status']) && $order['status'] == 'dispatched' ? "selected" : "" ?>>Dispatched</option>
 						</select>
 					</div>
 					<div class="col">
 						<label for="direction">Direction</label>
 						<select name="direction" id="direction">
-							<!-- php needed to select which. -->
-							<option value="in">In</option>
-							<option value="out">Out</option>
+							<option value="in" <?= isset($order['direction']) && $order['direction'] == 'in' ? "selected" : "" ?>>In</option>
+							<option value="out" <?= isset($order['direction']) && $order['direction'] == 'out' ? "selected" : "" ?>>Out</option>
 						</select>
 					</div>
 				</div>
