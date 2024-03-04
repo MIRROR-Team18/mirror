@@ -10,6 +10,7 @@
 	<title>Admin - Orders</title>
 	<link rel="stylesheet" href="../../_stylesheets/products.css">
 	<link rel="stylesheet" href="../admin.css">
+    <script src="../../_scripts/listFiltering.js" defer async></script>
 </head>
 <body>
 	<?php include '../_components/header.php'; ?>
@@ -27,7 +28,10 @@
                     <div class="filterGroup" data-for="direction">
                         <div class="title">
                             <h2>DIRECTION</h2>
-                            <span><a href="#">Deselect</a></span>
+                            <span>
+                                <a href="#" id="orderType_only" class="selected sr-only">Only</a>
+                                <a href="#" onclick="reset()">Deselect</a>
+                            </span>
                         </div>
                         <div class="inputLabelGroup" >
                             <input type="radio" name="direction" id="in" value="in">
@@ -62,11 +66,12 @@
 
                     foreach ($orders as $order) {
                         $quantity = $db->getQuantityProductsInOrder($order['id']);
+                        $address = $db->getAddressDetails($order['addressID'])
                         ?>
-                        <tr>
+                        <tr class="listObject" data-direction="<?= $order['direction']; ?>" data-name="<?= $order['id']; ?>">
                             <td><?= $order['id']; ?></td>
                             <td><?= $quantity ?></td>
-                            <td><?= $order['address'] ?? 'None provided'; ?></td>
+                            <td><?= $address['name'] ?? 'Unknown'; ?></td>
                             <td>£<?= $order['paidAmount']; ?></td>
                             <td>
                                 <a href="./upsert.php?id=<?php echo $order['id']; ?>">

@@ -37,12 +37,12 @@ function updateMode(ev) {
 }
 
 /**
- * Filter the products based on the filter groups and search bar.
+ * Filter the objects based on the filter groups and search bar.
  * <strong>This function requires options to be laid out in a particular way.</strong>
  */
 function filter() {
     // Before anything, un-hide everything.
-    document.querySelectorAll(".product").forEach(product => { product.style.display = "flex"; });
+    document.querySelectorAll(".listObject").forEach(obj => { obj.style.display = ""; });
 
     // The previous approach was naive in the sense that it would only apply the filter of what changed, but multiple filters can be active at once.
     // This means that we need to re-apply all filters every time one of them changes instead.
@@ -60,15 +60,15 @@ function filter() {
         });
 
         if (allFalse) { } // Do nothing for this rule
-        else if (mode === "any") { // Product must have any filterRule value true, iterate through products
-            document.querySelectorAll(".product").forEach(product => {
-                if (!filterRule[product.dataset[forWhat]]) product.style.display = "none";
+        else if (mode === "any") { // Object must have any filterRule value true, iterate through objects
+            document.querySelectorAll(".listObject").forEach(obj => {
+                if (!filterRule[obj.dataset[forWhat]]) obj.style.display = "none";
             })
-        } else if (mode === "only") { // Product must have all filterRule values which are true, iterate through filter rule
+        } else if (mode === "only") { // Objects must have all filterRule values which are true, iterate through filter rule
             for (const [key, value] of Object.entries(filterRule)) {
                 if (!value) continue; // If unchecked, skip
-                document.querySelectorAll(".product").forEach(product => {
-                    if (product.dataset[forWhat] !== key) product.style.display = "none";
+                document.querySelectorAll(".listObject").forEach(obj => {
+                    if (obj.dataset[forWhat] !== key) obj.style.display = "none";
                 });
             }
         } else console.error(`Unhandled mode when filtering ${forWhat}, was provided ${mode}!`);
@@ -77,8 +77,14 @@ function filter() {
     // Finally, apply the search filter. This is separate because it's not a filter group.
     const search = document.querySelector("#search").value.toLowerCase();
     if (search !== "") {
-        document.querySelectorAll(".product").forEach(product => {
-            if (!product.dataset.name.toLowerCase().includes(search)) product.style.display = "none";
+        document.querySelectorAll(".listObject").forEach(obj => {
+            if (!obj.dataset.name.toLowerCase().includes(search)) obj.style.display = "none";
         });
     }
+}
+
+function reset() {
+    document.querySelectorAll(".inputLabelGroup input").forEach(input => input.checked = false);
+    document.querySelector("#search").value = "";
+    filter();
 }
