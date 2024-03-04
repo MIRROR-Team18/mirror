@@ -31,6 +31,11 @@
         $quantityMap = [];
         for ($i = 0; $i < count($productsSubmitted['id']); $i++) {
             $id = $productsSubmitted['id'][$i];
+
+            if (!$productsSubmitted['size'][$i] || !$productsSubmitted['quantity'][$i]) {
+                exit(generateExitStr("Not all fields are set for product ID $id."));
+            }
+
             $size = $productsSubmitted['size'][$i];
             $quantity = $productsSubmitted['quantity'][$i];
 

@@ -215,7 +215,7 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-label:hover, select:hover {
+input[type=submit], input[type=reset], label:hover, select:hover {
     cursor: pointer;
 }
 
@@ -224,7 +224,7 @@ input:disabled, textarea:disabled, select:disabled {
     cursor: not-allowed;
 }
 
-input:read-only {
+input:not([type=submit], [type=reset]):read-only {
     cursor: not-allowed;
 }
 

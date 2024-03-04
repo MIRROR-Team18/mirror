@@ -186,7 +186,7 @@ class Database {
 				timeModified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 				FOREIGN KEY (userID) REFERENCES users(id),
 				FOREIGN KEY (addressID) REFERENCES addresses(id)
-			);",
+			) AUTO_INCREMENT=10000000;",
 				"CREATE TABLE IF NOT EXISTS products_in_orders (
 				orderID INT(8) NOT NULL,
 				productID VARCHAR(32) NOT NULL,
