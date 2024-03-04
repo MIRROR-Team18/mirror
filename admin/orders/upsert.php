@@ -209,7 +209,7 @@
                         <div class="buttonGrid">
 							<?php
 							if (isset($order)): ?>
-                                <button class="fullWidth" type="button" onclick="deleteProduct()">
+                                <button class="fullWidth" type="button" onclick="deleteOrder()">
                                     <i class="fa-solid fa-trash"></i> Delete
                                 </button>
 							<?php else: ?>

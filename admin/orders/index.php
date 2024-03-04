@@ -72,10 +72,6 @@
                                 <a href="./upsert.php?id=<?php echo $order['id']; ?>">
                                     <i class="fa-solid fa-pencil"></i>
                                 </a>
-                                <a href="./delete.php?id=<?php echo $order['id']; ?>">
-                                    <i class="fa-solid fa-trash"></i>
-                                </a>
-                            </td>
                         </tr>
                     <?php }
                 ?>

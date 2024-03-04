@@ -715,6 +715,23 @@ class Database {
 	}
 
 	/**
+	 * Deletes an order by the provided orderID
+	 * @param string $orderID
+	 * @return bool Returns true if order deleted successfully
+	 */
+	public function deleteOrder(string $orderID): bool {
+		// Delete products in order
+		$stmt = $this->conn->prepare("DELETE FROM products_in_orders WHERE orderID = ?");
+		$stmt->execute([$orderID]);
+
+		// Then finally, delete the order.
+		$stmt = $this->conn->prepare("DELETE FROM orders WHERE id = ?");
+		$stmt->execute([$orderID]);
+
+		return true;
+	}
+
+	/**
 	 * Gets an order by the provided orderID
 	 * @param string $orderID
 	 * @return mixed

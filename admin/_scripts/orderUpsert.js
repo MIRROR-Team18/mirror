@@ -92,3 +92,12 @@ function deleteRow(ev) {
 	const row = ev.target.parentElement.parentElement;
 	row.remove();
 }
+
+/**
+ * Deletes this order from the database.
+ */
+function deleteOrder() {
+	if (confirm("Are you sure you want to delete this order?\nThis could have undesirable side effects, especially outbound!")) {
+		window.location.href = window.location.href.replace("upsert", "delete");
+	}
+}
