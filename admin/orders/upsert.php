@@ -77,7 +77,7 @@
             if (!$result) exit(generateExitStr("Failed to insert order."));
         }
 
-		echo "OK"; // header("Location: ./");
+		header("Location: ./");
 	}
 
 	/**
