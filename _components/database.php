@@ -171,6 +171,7 @@ class Database {
 				productID VARCHAR(32) NOT NULL,
 				sizeID INT(2) NOT NULL,
 				price DECIMAL(6,2) NOT NULL,
+				stock INT(4) NOT NULL DEFAULT 0,
 				PRIMARY KEY (productID, sizeID),
 				FOREIGN KEY (productID) REFERENCES products(id),
 				FOREIGN KEY (sizeID) REFERENCES size_def(id)
@@ -239,6 +240,81 @@ class Database {
                 ('XS', 0), ('S', 0), ('M', 0), ('L', 0), ('XL', 0), ('XXL', 0),
 				('3-5 Years', 1), ('5-7 Years', 1), ('7-9 Years', 1), ('9-11 Years', 1), ('11-13 Years', 1)
 			",
+				"CREATE TRIGGER update_stock_after_order_update
+				    AFTER UPDATE ON products_in_orders
+				    FOR EACH ROW
+				BEGIN
+				    DECLARE in_quantity INT DEFAULT 0;
+				    DECLARE out_quantity INT DEFAULT 0;
+				
+				    SELECT IFNULL(SUM(quantity), 0) INTO in_quantity
+				    FROM products_in_orders INNER JOIN orders ON products_in_orders.orderID = orders.id
+				    WHERE direction = 'in'
+				      AND productID = NEW.productID
+				      AND sizeID = NEW.sizeID;
+				
+				    SELECT IFNULL(SUM(quantity), 0) INTO out_quantity
+				    FROM products_in_orders INNER JOIN orders ON products_in_orders.orderID = orders.id
+				    WHERE direction = 'out'
+				      AND productID = NEW.productID
+				      AND sizeID = NEW.sizeID;
+				
+				    UPDATE product_sizes
+				    SET stock = in_quantity - out_quantity
+				    WHERE productID = NEW.productID
+				      AND sizeID = NEW.sizeID;
+				END;
+				
+				CREATE TRIGGER update_stock_after_order_insert
+				    AFTER INSERT ON products_in_orders
+				    FOR EACH ROW
+				BEGIN
+				    DECLARE in_quantity INT DEFAULT 0;
+				    DECLARE out_quantity INT DEFAULT 0;
+				
+				    SELECT IFNULL(SUM(quantity), 0) INTO in_quantity
+				    FROM products_in_orders INNER JOIN orders ON products_in_orders.orderID = orders.id
+				    WHERE direction = 'in'
+				      AND productID = NEW.productID
+				      AND sizeID = NEW.sizeID;
+				
+				    SELECT IFNULL(SUM(quantity), 0) INTO out_quantity
+				    FROM products_in_orders INNER JOIN orders ON products_in_orders.orderID = orders.id
+				    WHERE direction = 'out'
+				      AND productID = NEW.productID
+				      AND sizeID = NEW.sizeID;
+				
+				    UPDATE product_sizes
+				    SET stock = in_quantity - out_quantity
+				    WHERE productID = NEW.productID
+				      AND sizeID = NEW.sizeID;
+				END;
+				
+				CREATE TRIGGER update_stock_after_order_delete
+				    AFTER DELETE ON products_in_orders
+				    FOR EACH ROW
+				BEGIN
+				    DECLARE in_quantity INT DEFAULT 0;
+				    DECLARE out_quantity INT DEFAULT 0;
+				
+				    SELECT IFNULL(SUM(quantity), 0) INTO in_quantity
+				    FROM products_in_orders INNER JOIN orders ON products_in_orders.orderID = orders.id
+				    WHERE direction = 'in'
+				      AND productID = OLD.productID
+				      AND sizeID = OLD.sizeID;
+				
+				    SELECT IFNULL(SUM(quantity), 0) INTO out_quantity
+				    FROM products_in_orders INNER JOIN orders ON products_in_orders.orderID = orders.id
+				    WHERE direction = 'out'
+				      AND productID = OLD.productID
+				      AND sizeID = OLD.sizeID;
+				
+				    UPDATE product_sizes
+				    SET stock = in_quantity - out_quantity
+				    WHERE productID = OLD.productID
+				      AND sizeID = OLD.sizeID;
+				END;
+			"
 			);
 
 			$stmt = $this->conn->prepare("SHOW TABLES");
