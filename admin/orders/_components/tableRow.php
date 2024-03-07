@@ -18,7 +18,7 @@
 		</select>
 	</td>
 	<td>
-		<select name="products[size][]" class="sizeSelect" aria-label="Size" <?= isset($thisProduct['sizeID']) ? "" : "disabled" ?>> onchange="calculatePrice(event)">
+		<select name="products[size][]" class="sizeSelect" aria-label="Size" onchange="calculatePrice(event)" <?= isset($thisProduct['sizeID']) ? "" : "disabled" ?>>
 			<option value="" selected disabled hidden>Size...</option>
 			<?php
 				$priceSelected = 0;
