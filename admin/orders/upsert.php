@@ -61,7 +61,7 @@
             $sizes[] = $sizeExists;
 
             $products[] = new Product($id, $product->name, $product->type, $product->gender, $product->description, $product->isSustainable, $sizes);
-            $quantityMap[$id] = $quantity;
+            $quantityMap[$id][$size] = $quantity;
         }
 
 		$addressID = $db->createOrGetAddress($_POST['addressName'], $_POST['addressLine1'], $_POST['addressLine2'], $_POST['addressLine3'], $_POST['addressCity'], $_POST['addressPostcode'], $_POST['addressCountry']);
@@ -71,15 +71,13 @@
             // Update the order
             $result = $db->updateOrder($_POST['id'], $products, $quantityMap, $addressID, $_POST['direction'], $_POST['status']);
             if (!$result) exit(generateExitStr("Failed to update order."));
-            else header("Location: ./");
         } else {
             // Insert the order. The userID will be ours.
             $result = $db->createOrder($_SESSION['userID'], $products, $quantityMap, $addressID, $_POST['direction'], $_POST['status']);
             if (!$result) exit(generateExitStr("Failed to insert order."));
-            else header("Location: ./");
         }
 
-        exit();
+		echo "OK"; // header("Location: ./");
 	}
 
 	/**

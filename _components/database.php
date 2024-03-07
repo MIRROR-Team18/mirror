@@ -771,8 +771,8 @@ class Database {
 
 		foreach	($basket as $item) {
 			/* @var $item Product */
-			$totalPrice += $item->sizes[0]->price * $quantityMap[$item->productID];
-			$productsInOrdersQueue[] = [$item->productID, $item->sizes[0]->sizeID, $quantityMap[$item->productID]];
+			$totalPrice += $item->sizes[0]->price * $quantityMap[$item->productID][$item->sizes[0]->sizeID];
+			$productsInOrdersQueue[] = [$item->productID, $item->sizes[0]->sizeID, $quantityMap[$item->productID][$item->sizes[0]->sizeID]];
 		}
 
 		// Delete and reinsert products in order.
