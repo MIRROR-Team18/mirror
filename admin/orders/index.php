@@ -33,11 +33,11 @@
                                 <a href="#" onclick="reset()">Deselect</a>
                             </span>
                         </div>
-                        <div class="inputLabelGroup" >
+                        <div class="inputLabelGroup">
                             <input type="radio" name="direction" id="in" value="in">
                             <label for="in">In</label>
                         </div>
-                        <div class="inputLabelGroup" >
+                        <div class="inputLabelGroup">
                             <input type="radio" name="direction" id="out" value="out">
                             <label for="out">Out</label>
                         </div>

@@ -224,6 +224,15 @@ class Database {
 				message TEXT NOT NULL,
 				FOREIGN KEY (userID) REFERENCES users(id)
 			);",
+				"CREATE TABLE IF NOT EXISTS alerts (
+				userID VARCHAR(8) NOT NULL,
+				productID VARCHAR(32) NOT NULL,
+				method ENUM('email', 'sms', 'site') NOT NULL,
+				threshold int NOT NULL,
+				FOREIGN KEY (userID) REFERENCES users(id),
+				FOREIGN KEY (productID) REFERENCES products(id),
+				PRIMARY KEY (userID, productID, method, threshold)
+			);",
 				"INSERT INTO gender_def (name) VALUES ('male'), ('female'), ('unisex')",
 				"INSERT INTO type_def (name) VALUES ('tops'), ('bottoms'), ('socks'), ('shoes'), ('accessories')",
 				"INSERT INTO products (id, name, type, gender) VALUES
