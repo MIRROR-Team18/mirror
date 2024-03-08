@@ -17,7 +17,7 @@
 			$price = (float) str_replace(['£', ','], '', $_POST['price_' . $sizeID]);
             if ($price >= 10000 || $price <= 0) exit(generateExitStr("Price invalid for sizeID ". $sizeID));
  			// I don't like this usage of the Size class.
-			$sizes[$sizeID] = new Size($sizeID, "", 0, $price);
+			$sizes[$sizeID] = new Size($sizeID, "", 0, $price, 0);
 		}
         return $sizes;
     }
@@ -290,11 +290,16 @@
                                         $priceOfSize = $productHasThisSize
                                             ? $currencyFormatter->formatCurrency($product->sizes[$size->sizeID]->price, "GBP")
                                             : '';
+                                        $stockOfSize = $productHasThisSize
+                                            ? $product->sizes[$size->sizeID]->stock
+                                            : 'x';
+
                                         echo <<<HTML
                                         <div class="row">
                                             <input type="checkbox" class="priceBox" name="size_$sizeID" id="$sizeName" $productHasThisSize >
                                             <label for="$sizeName">$sizeName</label>
-                                            <label for="price_$sizeName"></label>
+                                            <span class="stock">- $stockOfSize</span>
+                                            <label for="price_$sizeName" class="sr-only">Price for $sizeName</label>
                                             <input class="priceInput" name="price_$sizeID" id="price_$sizeName" type="text" value="$priceOfSize">
                                         </div>
                                         HTML;
@@ -314,10 +319,15 @@
 										$priceOfSize = $productHasThisSize
                                             ? $currencyFormatter->formatCurrency($product->sizes[$size->sizeID]->price, "GBP")
                                             : '';
+										$stockOfSize = $productHasThisSize
+											? $product->sizes[$size->sizeID]->stock
+											: 'x';
+
                                         echo <<<HTML
                                         <div class="row">
                                             <input type="checkbox" class="priceBox" name="size_$sizeID" id="$sizeName" $productHasThisSize >
                                             <label for="$sizeName">$sizeName</label>
+                                            <span class="stock">- $stockOfSize</span>
                                             <label for="price_$sizeName" class="sr-only">Price for $sizeName</label>
                                             <input class="priceInput" name="price_$sizeID" id="price_$sizeName" type="text" value="$priceOfSize">
                                         </div>

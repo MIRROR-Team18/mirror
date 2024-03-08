@@ -72,12 +72,14 @@ class Size {
 	public string $name;
 	public bool $isKids;
 	public float $price;
+	public int $stock;
 
-	public function __construct(string $sizeID, string $name, int $isKids, float $price) {
+	public function __construct(string $sizeID, string $name, int $isKids, float $price, int $stock) {
 		$this->sizeID = $sizeID;
 		$this->name = $name;
 		$this->isKids = $isKids === 1;
 		$this->price = $price;
+		$this->stock = $stock;
 	}
 }
 
@@ -422,7 +424,7 @@ class Database {
 
         $sizes = array();
         foreach ($sizeResults as $sizeResult) {
-            $sizes[$sizeResult['sizeID']] = new Size($sizeResult['sizeID'], $sizeResult['name'], $sizeResult['isKids'], $sizeResult['price']);
+            $sizes[$sizeResult['sizeID']] = new Size($sizeResult['sizeID'], $sizeResult['name'], $sizeResult['isKids'], $sizeResult['price'], $sizeResult['stock']);
         }
 
         return $sizes;
@@ -921,7 +923,7 @@ class Database {
 
 		$sizes = array();
 		foreach ($result as $size) {
-			$sizes[] = new Size($size['id'], $size['name'], $size['isKids'], 0);
+			$sizes[] = new Size($size['id'], $size['name'], $size['isKids'], 0, 0);
 		}
 		return $sizes;
 	}

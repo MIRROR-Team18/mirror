@@ -63,6 +63,11 @@ input.priceInput {
     padding: .5rem 1rem;
 }
 
+.stock {
+    margin: 0 2px;
+    line-height: 1.8rem;
+}
+
 #imageHeader {
     padding: 0 1rem;
 }
