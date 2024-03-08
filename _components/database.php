@@ -225,13 +225,19 @@ class Database {
 				FOREIGN KEY (userID) REFERENCES users(id)
 			);",
 				"CREATE TABLE IF NOT EXISTS alerts (
+    			id INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 				userID VARCHAR(8) NOT NULL,
 				productID VARCHAR(32) NOT NULL,
-				method ENUM('email', 'sms', 'site') NOT NULL,
-				threshold int NOT NULL,
 				FOREIGN KEY (userID) REFERENCES users(id),
-				FOREIGN KEY (productID) REFERENCES products(id),
-				PRIMARY KEY (userID, productID, method, threshold)
+				FOREIGN KEY (productID) REFERENCES products(id)
+			);",
+				"CREATE TABLE IF NOT EXISTS alert_methods (
+				alertID INT(8) NOT NULL,
+				threshold INT(4) NOT NULL,
+				byEmail INT(1) NOT NULL DEFAULT 0,
+				bySMS INT(1) NOT NULL DEFAULT 0,
+				bySite INT(1) NOT NULL DEFAULT 0,
+				FOREIGN KEY (alertID) REFERENCES alerts(id)
 			);",
 				"INSERT INTO gender_def (name) VALUES ('male'), ('female'), ('unisex')",
 				"INSERT INTO type_def (name) VALUES ('tops'), ('bottoms'), ('socks'), ('shoes'), ('accessories')",
@@ -935,6 +941,26 @@ class Database {
 			$sizes[] = new Size($size['id'], $size['name'], $size['isKids'], 0, 0);
 		}
 		return $sizes;
+	}
+
+	/**
+	 * Returns the alert information, with an extra field "thresholds" which is an array of all the thresholds + methods for the alert.
+	 * @param string $alertID
+	 * @return array
+	 */
+	public function getAlert(string $alertID): array {
+		$stmt = $this->conn->prepare("SELECT * FROM alerts WHERE id = ?");
+		$stmt->execute([$alertID]);
+		$alert = $stmt->fetch(PDO::FETCH_ASSOC);
+
+		// Using this approach instead of an INNER JOIN because it's cleaner,
+		// and we don't need to worry about the alert not having any thresholds.
+		$stmt = $this->conn->prepare("SELECT * FROM alert_methods WHERE alertID = ?");
+		$stmt->execute([$alertID]);
+		$thresholds = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		$alert['thresholds'] = $thresholds;
+		return $alert;
 	}
   
 	public function sortByHighest(): array {
