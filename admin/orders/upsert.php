@@ -132,6 +132,7 @@
 						<select name="status" id="status">
 							<option value="processing" <?= isset($order['status']) && $order['status'] == 'processing' ? "selected" : "" ?>>Processing</option>
 							<option value="dispatched" <?= isset($order['status']) && $order['status'] == 'dispatched' ? "selected" : "" ?>>Dispatched</option>
+                            <option value="arrived" <?= isset($order['status']) && $order['status'] == 'arrived' ? "selected" : "" ?>>Arrived</option>
 						</select>
 					</div>
 					<div class="col">

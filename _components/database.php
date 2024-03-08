@@ -181,7 +181,7 @@ class Database {
 				userID VARCHAR(8) NOT NULL,
 				addressID INT(8) NOT NULL,
 				direction ENUM('in', 'out') NOT NULL,
-				status ENUM('processing', 'dispatched') NOT NULL,
+				status ENUM('processing', 'dispatched', 'arrived') NOT NULL,
 				paidAmount DECIMAL(9,2) NOT NULL,
 				timeCreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				timeModified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -250,6 +250,7 @@ class Database {
 				    SELECT IFNULL(SUM(quantity), 0) INTO in_quantity
 				    FROM products_in_orders INNER JOIN orders ON products_in_orders.orderID = orders.id
 				    WHERE direction = 'in'
+				      AND status = 'arrived'
 				      AND productID = NEW.productID
 				      AND sizeID = NEW.sizeID;
 				
@@ -275,6 +276,7 @@ class Database {
 				    SELECT IFNULL(SUM(quantity), 0) INTO in_quantity
 				    FROM products_in_orders INNER JOIN orders ON products_in_orders.orderID = orders.id
 				    WHERE direction = 'in'
+				      AND status = 'arrived'
 				      AND productID = NEW.productID
 				      AND sizeID = NEW.sizeID;
 				
@@ -300,6 +302,7 @@ class Database {
 				    SELECT IFNULL(SUM(quantity), 0) INTO in_quantity
 				    FROM products_in_orders INNER JOIN orders ON products_in_orders.orderID = orders.id
 				    WHERE direction = 'in'
+				      AND status = 'arrived'
 				      AND productID = OLD.productID
 				      AND sizeID = OLD.sizeID;
 				
@@ -732,8 +735,8 @@ class Database {
 
 		foreach	($basket as $item) {
 			/* @var $item Product */
-			$totalPrice += $item->sizes[0]->price * $quantityMap[$item->productID];
-			$productsInOrdersQueue[] = [$item->productID, $item->sizes[0]->sizeID, $quantityMap[$item->productID]];
+			$totalPrice += $item->sizes[0]->price * $quantityMap[$item->productID][$item->sizes[0]->sizeID];
+			$productsInOrdersQueue[] = [$item->productID, $item->sizes[0]->sizeID, $quantityMap[$item->productID][$item->sizes[0]->sizeID]];
 		}
 
 		$stmt = $this->conn->prepare("INSERT INTO orders (userID, addressID, direction, status, paidAmount) VALUES (?, ?, ?, ?, ?)");
