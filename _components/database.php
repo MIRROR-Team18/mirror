@@ -237,7 +237,8 @@ class Database {
 				byEmail INT(1) NOT NULL DEFAULT 0,
 				bySMS INT(1) NOT NULL DEFAULT 0,
 				bySite INT(1) NOT NULL DEFAULT 0,
-				FOREIGN KEY (alertID) REFERENCES alerts(id)
+				FOREIGN KEY (alertID) REFERENCES alerts(id),
+				PRIMARY KEY (alertID, threshold)
 			);",
 				"INSERT INTO gender_def (name) VALUES ('male'), ('female'), ('unisex')",
 				"INSERT INTO type_def (name) VALUES ('tops'), ('bottoms'), ('socks'), ('shoes'), ('accessories')",

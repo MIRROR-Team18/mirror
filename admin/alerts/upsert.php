@@ -30,7 +30,7 @@
 	<?php include '../../_components/default.php'; ?>
 	<title>Upsert Alert - MIRЯOR</title>
 	<link rel="stylesheet" href="../admin.css">
-	<script src="../_scripts/orderUpsert.js" defer async></script>
+	<script src="../_scripts/alertUpsert.js" defer async></script>
 </head>
 <body>
 	<?php include "../_components/header.php"; ?>
@@ -62,26 +62,50 @@
                 <div class="row">
                     <div class="col">
                         <h2>THRESHOLDS</h2>
-                        <table>
+                        <table id="alertsTable">
                             <thead>
                             	<tr>
                             	    <th></th>
                             	    <th colspan="3">Methods</th>
+                                    <th></th>
                             	</tr>
                             	<tr>
                             	    <th>Threshold</th>
                             	    <th>Email</th>
                             	    <th>SMS</th>
                             	    <th>Site</th>
+                                    <th>Delete</th>
                             	</tr>
                             </thead>
                             <tbody>
                             	<?php
 									$thresholds = $alert['thresholds'] ?? [];
 
+                                    // This sucked last time, but I'm going to do it again
+                                    $hide = true;
+                                    include "_components/tableRow.php";
+                                    $hide = false;
+
+                                    $i = 0;
+                                    foreach ($thresholds as $threshold) {
+                                        include "_components/tableRow.php";
+                                        $i++;
+                                    }
                             	?>
+                                <td colspan="5">
+                                    <button type="button" class="fullWidth" onclick="createRow()">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Add Row
+                                    </button>
+                                </td>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="buttonGrid">
+                        <button class="fullWidth" type="submit">Save</button>
+                        <button class="fullWidth" type="reset">Reset</button>
                     </div>
                 </div>
             </form>

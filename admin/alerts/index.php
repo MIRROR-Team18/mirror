@@ -43,7 +43,7 @@
 						</div>
 						<div class="inputLabelGroup">
 							<input type="radio" name="method" id="site" value="site">
-							<label for="site">Site Only</label>
+							<label for="site">Site</label>
 						</div>
 					</div>
 				</div>
