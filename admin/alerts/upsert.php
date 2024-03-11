@@ -13,6 +13,53 @@
 	}
 
 	// POST things will go here.
+    if ($_SERVER['REQUEST_METHOD'] == "POST") {
+        var_dump($_POST);
+
+        // Check fields are set
+        if (!isset($_POST['mode']) || $_POST['mode'] == ""
+            || !isset($_POST['product']) || $_POST['product'] == ""
+            || ($_POST['mode'] == "update" && !isset($_POST['id'])) ) {
+			exit(generateExitStr("Not all fields are set."));
+        }
+
+        $thresholdsSubmitted = $_POST['thresholds'];
+        $thresholdList = [];
+        // Start from 1 as 0th will be the empty row.
+        for ($i = 1; $i < count($thresholdsSubmitted); $i++) {
+            $value = $thresholdsSubmitted['value'][$i] ?? "";
+			$email = $thresholdsSubmitted['email'][$i] ?? "";
+			$sms = $thresholdsSubmitted['sms'][$i] ?? "";
+			$site = $thresholdsSubmitted['site'][$i] ?? "";
+
+            if ($value == "") {
+                exit(generateExitStr("A threshold is missing a value."));
+            }
+
+            if ($email == "" && $sms == "" && $site == "") {
+                exit(generateExitStr("The threshold for " . $thresholdsSubmitted['value'][$i] . " items is missing a method."));
+            }
+
+            $thresholdList[] = [
+                "value" => $value,
+                "email" => $email != "", // Convert to boolean
+                "sms" => $sms != "",
+                "site" => $site != ""
+            ];
+        }
+
+        if (count($thresholdList) == 0) {
+            exit(generateExitStr("No thresholds were submitted."));
+        }
+
+        if ($_POST['mode'] == "insert") {
+            $db->createAlert($_SESSION['userID'], $_POST['product'], $thresholdList);
+        } else {
+            $db->updateAlert($_POST['id'], $_SESSION['userID'], $_POST['product'], $thresholdList);
+        }
+        header("Location: ./");
+        exit("");
+    }
 
 	// Then GET
 	// If there is an ID, then it's an update
@@ -40,7 +87,7 @@
 		</section>
         <section class="blue-1">
             <form id="upsertForm"
-				action="upsert.php<?= isset($alert['id']) ? "?id=" . $alert['id'] : "" ?>"
+				action="upsert.php<?= isset($alert['id']) ? '?id="' . $alert['id'] : '' ?>"
 				method="post"
 				onsubmit="return confirm('Are you sure you want to save?');"
             >
@@ -49,11 +96,11 @@
                     <div class="col">
                         <label for="product">Product</label>
 						<select name="product" id="product">
-							<option value="">Select a product...</option>
+							<option value="" selected disabled hidden>Select a product...</option>
 							<?php
 								$products = $db->getAllProducts();
 								foreach ($products as $product) {
-									echo "<option value='{$product->productID}'" . (isset($alert['productID']) && $alert['productID'] == $product->productID ? " selected" : "") . ">{$product->name}</option>";
+									echo "<option value='$product->productID'" . (isset($alert['productID']) && $alert['productID'] == $product->productID ? " selected" : "") . ">$product->name</option>";
 								}
 							?>
 						</select>
@@ -79,10 +126,12 @@
                             </thead>
                             <tbody>
                             	<?php
+								    // This sucked last time, but I'm going to do it again
+                                    // However, there is an issue: Checkboxes. My custom implementation of them means IDs and names MUST be unique.
+                                    // Hence, the introduction of i.
 									$thresholds = $alert['thresholds'] ?? [];
 								    $i = 0;
 
-                                    // This sucked last time, but I'm going to do it again
                                     $hide = true;
                                     include "_components/tableRow.php";
                                     $hide = false;
@@ -107,7 +156,7 @@
                 </div>
                 <div class="row">
                     <div class="buttonGrid">
-                        <button class="fullWidth" type="submit">
+                        <button class="fullWidth">
                             <i class="fa-solid fa-save"></i>
                             Save
                         </button>

@@ -963,7 +963,65 @@ class Database {
 		$alert['thresholds'] = $thresholds;
 		return $alert;
 	}
-  
+
+	/**
+	 * Creates a new alert with the provided parameters.
+	 * @param string $userID The userID to create the alert for
+	 * @param string $productID The productID to create the alert for
+	 * @param array $thresholds An array of thresholds, each with a threshold (number), byEmail, bySMS, and bySite (booleans)
+	 * @return bool Returns true if alert added successfully
+	 */
+	public function createAlert(string $userID, string $productID, array $thresholds): bool {
+		// First, check an alert doesn't already exist with this user and product IDs
+		$stmt = $this->conn->prepare("SELECT * FROM alerts WHERE userID = ? AND productID = ?");
+		$stmt->execute([$userID, $productID]);
+		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		if ($results) return false;
+
+		// Then, create the alert
+		$stmt = $this->conn->prepare("INSERT INTO alerts (userID, productID) VALUES (?, ?)");
+		$stmt->execute([$userID, $productID]);
+		$alertID = $this->conn->lastInsertId();
+
+		// With $alertID, create the thresholds
+		$stmt = $this->conn->prepare("INSERT INTO alert_methods (alertID, threshold, byEmail, bySMS, bySite) VALUES (?, ?, ?, ?, ?)");
+		foreach ($thresholds as $threshold) {
+			$stmt->execute([$alertID, $threshold['threshold'], $threshold['email'] ? 1 : 0, $threshold['sms'] ? 1 : 0, $threshold['site'] ? 1 : 0]);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Updates an alert with the provided parameters.
+	 * @param string $id
+	 * @param string $userID
+	 * @param string $productID
+	 * @param array $thresholds
+	 * @return bool
+	 */
+	public function updateAlert(string $id, string $userID, string $productID, array $thresholds): bool {
+		// First, check an alert doesn't already exist with this user and product IDs
+		$stmt = $this->conn->prepare("SELECT * FROM alerts WHERE userID = ? AND productID = ?");
+		$stmt->execute([$userID, $productID]);
+		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		if ($results) return false;
+
+		// Then, update the alert
+		$stmt = $this->conn->prepare("UPDATE alerts SET userID = ?, productID = ? WHERE id = ?");
+		$stmt->execute([$userID, $productID, $id]);
+
+		// With $alertID, delete the old thresholds and create the new ones
+		$stmt = $this->conn->prepare("DELETE FROM alert_methods WHERE alertID = ?");
+		$stmt->execute([$id]);
+		$stmt = $this->conn->prepare("INSERT INTO alert_methods (alertID, threshold, byEmail, bySMS, bySite) VALUES (?, ?, ?, ?, ?)");
+		foreach ($thresholds as $threshold) {
+			$stmt->execute([$id, $threshold['threshold'], $threshold['byEmail'] ? 1 : 0, $threshold['bySMS'] ? 1 : 0, $threshold['bySite'] ? 1 : 0]);
+		}
+
+		return true;
+	}
+
 	public function sortByHighest(): array {
 		$check = $this->conn->query("SELECT * FROM reviews order by rating DESC");
 		return $check->fetchAll();
