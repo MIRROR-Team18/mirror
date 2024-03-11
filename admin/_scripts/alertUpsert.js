@@ -6,6 +6,16 @@ function createRow() {
 	const final = tbody.lastElementChild;
 
 	const newRow = tbody.firstElementChild.cloneNode(true);
+	// i is the number of rows from the top of the table. It's set by PHP.
+	// We change it so that the checkboxes work.
+	i++;
+	newRow.querySelectorAll('input').forEach(input => {
+		input.id = input.id.replace(/\d+/, i)
+		input.name = input.name.replace(/\d+/, i)
+	});
+	newRow.querySelectorAll('label').forEach(label =>
+		label.htmlFor = label.htmlFor.replace(/\d+/, i)
+	)
 	newRow.style.display = '';
 
 	tbody.insertBefore(newRow, final);

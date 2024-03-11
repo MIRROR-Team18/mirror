@@ -80,13 +80,13 @@
                             <tbody>
                             	<?php
 									$thresholds = $alert['thresholds'] ?? [];
+								    $i = 0;
 
                                     // This sucked last time, but I'm going to do it again
                                     $hide = true;
                                     include "_components/tableRow.php";
                                     $hide = false;
 
-                                    $i = 0;
                                     foreach ($thresholds as $threshold) {
                                         include "_components/tableRow.php";
                                         $i++;
@@ -98,14 +98,23 @@
                                         Add Row
                                     </button>
                                 </td>
+                                <script>
+                                    let i = <?= $i ?>;
+                                </script>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="row">
                     <div class="buttonGrid">
-                        <button class="fullWidth" type="submit">Save</button>
-                        <button class="fullWidth" type="reset">Reset</button>
+                        <button class="fullWidth" type="submit">
+                            <i class="fa-solid fa-save"></i>
+                            Save
+                        </button>
+                        <button class="fullWidth" type="reset">
+                            <i class="fa-solid fa-undo"></i>
+                            Reset
+                        </button>
                     </div>
                 </div>
             </form>
