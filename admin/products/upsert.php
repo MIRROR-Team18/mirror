@@ -350,7 +350,7 @@
                             <button class="fullWidth" type="button">
                                 <i class="fa-solid fa-chart-line"></i> Stock
                             </button>
-                            <button class="fullWidth" type="button">
+                            <button class="fullWidth" type="button" onclick="window.location.href= '../alerts/upsert.php?product=<?= $product->productID ?>'">
                                 <i class="fa-solid fa-bell"></i> Alerts
                             </button>
                             <button class="fullWidth" type="button" onclick="deleteProduct()">

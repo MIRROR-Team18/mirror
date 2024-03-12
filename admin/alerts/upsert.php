@@ -65,8 +65,23 @@
     }
 
 	// Then GET
+    $alert = null;
+    $redirectProduct = null;
+
+    // If we have a product, then we've been redirected from the products upsert.
+    if (isset($_GET['product'])) {
+		$redirectProduct = $db->getProduct($_GET['product']);
+        if ($redirectProduct == null) {
+            exit(generateExitStr("Product provided in the URL doesn't return a product. Halting to prevent accidental damage."));
+        }
+        $alert = $db->getAlertByProduct($_SESSION['userID'], $_GET['product']);
+        if ($alert) {
+            header("Location: ./upsert.php?id=" . $alert['id']);
+            exit();
+        }
+    }
+
 	// If there is an ID, then it's an update
-	$alert = null;
 	if (isset($_GET['id'])) {
 		$alert = $db->getAlert($_GET['id']);
         if ($alert == null) {
@@ -103,7 +118,7 @@
 							<?php
 								$products = $db->getAllProducts();
 								foreach ($products as $product) {
-									echo "<option value='$product->productID'" . (isset($alert['productID']) && $alert['productID'] == $product->productID ? " selected" : "") . ">$product->name</option>";
+									echo "<option value='$product->productID'" . ((isset($alert['productID']) && $alert['productID'] == $product->productID) || (isset($redirectProduct) && $redirectProduct->productID == $product->productID) ? "selected" : '') . ">$product->name</option>";
 								}
 							?>
 						</select>

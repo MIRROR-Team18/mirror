@@ -974,6 +974,13 @@ class Database {
 		return $alerts;
 	}
 
+	public function getAlertByProduct(string $userID, string $productID): array | null {
+		$stmt = $this->conn->prepare("SELECT * FROM alerts WHERE userID = ? AND productID = ?");
+		$stmt->execute([$userID, $productID]);
+		$alert = $stmt->fetch(PDO::FETCH_ASSOC);
+		return $alert ? $this->mapThresholdsToAlert($alert) : null;
+	}
+
 	/**
 	 * Adds the thresholds to an alert, and returns the alert with the thresholds.
 	 * @param array $alert
