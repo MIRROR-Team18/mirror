@@ -29,3 +29,12 @@ function deleteRow(ev) {
 	const row = ev.target.parentElement.parentElement;
 	row.remove();
 }
+
+/**
+ * Deletes this alert from the database.
+ */
+function deleteAlert() {
+	if (confirm("Are you sure you want to delete this alert?")) {
+		window.location.href = window.location.href.replace("upsert", "delete");
+	}
+}

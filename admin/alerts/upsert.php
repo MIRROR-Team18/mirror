@@ -160,13 +160,18 @@
                 </div>
                 <div class="row">
                     <div class="buttonGrid">
+						<?php if (isset($alert)): ?>
+                            <button class="fullWidth" type="button" onclick="deleteAlert()">
+                                <i class="fa-solid fa-trash"></i> Delete
+                            </button>
+						<?php else: ?>
+                            <button class="fullWidth" type="button" onclick="window.location.href = './'">
+                                <i class="fa-solid fa-trash"></i> Cancel
+                            </button>
+						<?php endif ?>
                         <button class="fullWidth">
                             <i class="fa-solid fa-save"></i>
                             Save
-                        </button>
-                        <button class="fullWidth" type="reset">
-                            <i class="fa-solid fa-undo"></i>
-                            Reset
                         </button>
                     </div>
                 </div>

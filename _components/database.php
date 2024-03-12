@@ -1048,6 +1048,22 @@ class Database {
 		return true;
 	}
 
+	/**
+	 * Deletes the alert and alert methods from the database
+	 * @param string $alertID
+	 * @return bool If successful
+	 */
+	public function deleteAlert(string $alertID): bool {
+		// First, delete methods
+		$stmt = $this->conn->prepare("DELETE FROM alert_methods WHERE alertID = ?");
+		$stmt->execute([$alertID]);
+		// Then the alert itself
+		$stmt = $this->conn->prepare("DELETE FROM alerts WHERE id = ?");
+		$stmt->execute([$alertID]);
+
+		return true;
+	}
+
 	public function sortByHighest(): array {
 		$check = $this->conn->query("SELECT * FROM reviews order by rating DESC");
 		return $check->fetchAll();
