@@ -11,9 +11,11 @@
     <?php include '_components/header.php'; ?>
 
     <div class="confirmation-container">
-        <h1>Your Order Has Been Confirmed!</h1>
-        <p>Orders usually take 3-5 working days to be delivered.</p>
-        <p>To track your order, go to <a href="http://ww*.trackmyMIRROR.com" target="_blank">www.trackmyMIRROR.com</a></p>
+        <h1>THANK YOU</h1>
+        <p>Please check your emails for updates on your purchase</p>
+        <p>Or, if you need help, please contact us.</p>
+
+        <h3>Your purchase saved a total of 4.12kg of CO2!</h3>
     </div>
     <!-- Don't worry I accidentally did this for you haha -->
     <?php include '_components/footer.php'; ?>
