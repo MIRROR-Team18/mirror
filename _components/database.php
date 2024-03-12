@@ -953,11 +953,37 @@ class Database {
 		$stmt = $this->conn->prepare("SELECT * FROM alerts WHERE id = ?");
 		$stmt->execute([$alertID]);
 		$alert = $stmt->fetch(PDO::FETCH_ASSOC);
+		return $this->mapThresholdsToAlert($alert);
+	}
 
+	/**
+	 * Returns all alerts with the provided userID, with the extra field "thresholds"
+	 * @param string $userID
+	 * @return array An array of alerts
+	 * @see getAlert() for fetching a specific alert.
+	 */
+	public function getAlertsByAuthor(string $userID): array {
+		$stmt = $this->conn->prepare("SELECT * FROM alerts WHERE userID = ?");
+		$stmt->execute([$userID]);
+		$alerts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach ($alerts as &$alert) {
+			$alert = $this->mapThresholdsToAlert($alert);
+		}
+
+		return $alerts;
+	}
+
+	/**
+	 * Adds the thresholds to an alert, and returns the alert with the thresholds.
+	 * @param array $alert
+	 * @return array $alert but with thresholds added.
+	 */
+	private function mapThresholdsToAlert(array $alert): array {
 		// Using this approach instead of an INNER JOIN because it's cleaner,
 		// and we don't need to worry about the alert not having any thresholds.
-		$stmt = $this->conn->prepare("SELECT * FROM alert_methods WHERE alertID = ?");
-		$stmt->execute([$alertID]);
+		$stmt = $this->conn->prepare("SELECT * FROM alert_methods WHERE alertID = ? ORDER BY threshold");
+		$stmt->execute([$alert['id']]);
 		$thresholds = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		$alert['thresholds'] = $thresholds;

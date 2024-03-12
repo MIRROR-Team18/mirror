@@ -54,7 +54,45 @@
 			</div>
 		</aside>
 		<section id="alerts" class="blue-1">
-
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Threshold</th>
+                        <th>Method</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        $alerts = $db->getAlertsByAuthor($_SESSION['userID']);
+                        foreach ($alerts as $alert) {
+							$id = $alert['id'];
+                            $thresholds = implode(", ",
+                                array_map(function ($threshold) {
+                                    return $threshold['threshold'];
+                                },  $alert['thresholds'])
+                            );
+                            $method = implode(", ",
+                                array_map(function ($threshold) {
+                                    $sms = $threshold['bySMS'] ? "SMS" : "";
+                                    $email = $threshold['byEmail'] ? "Email" : "";
+                                    $site = $threshold['bySite'] ? "Site" : "";
+                                    return "(" . implode(", ", array_filter([$sms, $email, $site])) . ")";
+                                },  $alert['thresholds'])
+                            );
+                            echo <<<HTML
+                            <tr>
+                                <td>{$alert['productID']}</td>
+                                <td>{$thresholds}</td>
+                                <td>{$method}</td>
+                                <td><a href='./upsert.php?id=$id'><i class='fa-solid fa-pencil'></i></a></td>
+                            </tr>
+                            HTML;
+                        }
+                    ?>
+                </tbody>
+            </table>
 		</section>
 	</main>
 	<?php include '../../_components/shortFooter.php'; ?>
