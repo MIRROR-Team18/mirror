@@ -14,8 +14,6 @@
 
 	// POST things will go here.
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
-        var_dump($_POST);
-
         // Check fields are set
         if (!isset($_POST['mode']) || $_POST['mode'] == ""
             || !isset($_POST['product']) || $_POST['product'] == ""
@@ -26,7 +24,7 @@
         $thresholdsSubmitted = $_POST['thresholds'];
         $thresholdList = [];
         // Start from 1 as 0th will be the empty row.
-        for ($i = 1; $i < count($thresholdsSubmitted); $i++) {
+        for ($i = 1; $i < count($thresholdsSubmitted['value']); $i++) {
             $value = $thresholdsSubmitted['value'][$i] ?? "";
 			$email = $thresholdsSubmitted['email'][$i] ?? "";
 			$sms = $thresholdsSubmitted['sms'][$i] ?? "";
@@ -58,7 +56,7 @@
             $db->updateAlert($_POST['id'], $_SESSION['userID'], $_POST['product'], $thresholdList);
         }
         header("Location: ./");
-        exit("");
+        exit();
     }
 
 	// Then GET

@@ -986,7 +986,7 @@ class Database {
 		// With $alertID, create the thresholds
 		$stmt = $this->conn->prepare("INSERT INTO alert_methods (alertID, threshold, byEmail, bySMS, bySite) VALUES (?, ?, ?, ?, ?)");
 		foreach ($thresholds as $threshold) {
-			$stmt->execute([$alertID, $threshold['threshold'], $threshold['email'] ? 1 : 0, $threshold['sms'] ? 1 : 0, $threshold['site'] ? 1 : 0]);
+			$stmt->execute([$alertID, $threshold['value'], $threshold['email'] ? 1 : 0, $threshold['sms'] ? 1 : 0, $threshold['site'] ? 1 : 0]);
 		}
 
 		return true;
