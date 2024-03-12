@@ -1028,8 +1028,8 @@ class Database {
 	 */
 	public function updateAlert(string $id, string $userID, string $productID, array $thresholds): bool {
 		// First, check an alert doesn't already exist with this user and product IDs
-		$stmt = $this->conn->prepare("SELECT * FROM alerts WHERE userID = ? AND productID = ?");
-		$stmt->execute([$userID, $productID]);
+		$stmt = $this->conn->prepare("SELECT * FROM alerts WHERE userID = ? AND productID = ? AND id != ?");
+		$stmt->execute([$userID, $productID, $id]);
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		if ($results) return false;
 
@@ -1042,7 +1042,7 @@ class Database {
 		$stmt->execute([$id]);
 		$stmt = $this->conn->prepare("INSERT INTO alert_methods (alertID, threshold, byEmail, bySMS, bySite) VALUES (?, ?, ?, ?, ?)");
 		foreach ($thresholds as $threshold) {
-			$stmt->execute([$id, $threshold['threshold'], $threshold['byEmail'] ? 1 : 0, $threshold['bySMS'] ? 1 : 0, $threshold['bySite'] ? 1 : 0]);
+			$stmt->execute([$id, $threshold['value'], $threshold['email'] ? 1 : 0, $threshold['sms'] ? 1 : 0, $threshold['site'] ? 1 : 0]);
 		}
 
 		return true;

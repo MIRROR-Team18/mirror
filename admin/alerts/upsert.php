@@ -17,7 +17,7 @@
         // Check fields are set
         if (!isset($_POST['mode']) || $_POST['mode'] == ""
             || !isset($_POST['product']) || $_POST['product'] == ""
-            || ($_POST['mode'] == "update" && !isset($_POST['id'])) ) {
+            || ($_POST['mode'] == "update" && !isset($_GET['id'])) ) {
 			exit(generateExitStr("Not all fields are set."));
         }
 
@@ -50,11 +50,16 @@
             exit(generateExitStr("No thresholds were submitted."));
         }
 
+        $result = false;
         if ($_POST['mode'] == "insert") {
-            $db->createAlert($_SESSION['userID'], $_POST['product'], $thresholdList);
+            $result = $db->createAlert($_SESSION['userID'], $_POST['product'], $thresholdList);
+        } else if ($_POST['mode'] == "update") {
+            $result = $db->updateAlert($_GET['id'], $_SESSION['userID'], $_POST['product'], $thresholdList);
         } else {
-            $db->updateAlert($_POST['id'], $_SESSION['userID'], $_POST['product'], $thresholdList);
+            exit(generateExitStr("Mode provided is invalid!"));
         }
+
+        if (!$result) exit(generateExitStr("Failed to upsert!"));
         header("Location: ./");
         exit();
     }
@@ -85,7 +90,7 @@
 		</section>
         <section class="blue-1">
             <form id="upsertForm"
-				action="upsert.php<?= isset($alert['id']) ? '?id="' . $alert['id'] : '' ?>"
+				action="upsert.php<?= isset($alert['id']) ? '?id=' . $alert['id'] : '' ?>"
 				method="post"
 				onsubmit="return confirm('Are you sure you want to save?');"
             >
@@ -133,6 +138,7 @@
                                     $hide = true;
                                     include "_components/tableRow.php";
                                     $hide = false;
+                                    $i++;
 
                                     foreach ($thresholds as $threshold) {
                                         include "_components/tableRow.php";

@@ -122,15 +122,16 @@ input.priceInput {
     font-size: 3rem;
 }
 
-#orders table {
+#orders table, #alerts table {
     width: 100%;
     border-collapse: collapse;
     text-align: center;
 }
-#orders table td {
+#orders table td, #alerts table td {
     border-top: 1px solid var(--white);
 }
-#orders table th:not(:nth-of-type(1)), #orders table td:not(:nth-of-type(1)) {
+#orders table th:not(:nth-of-type(1)), #orders table td:not(:nth-of-type(1)),
+#alerts table th:not(:nth-of-type(1)), #alerts table td:not(:nth-of-type(1)) {
     border-left: 1px solid var(--white);
 }
 td {

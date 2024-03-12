@@ -60,7 +60,7 @@
                         <th>Product</th>
                         <th>Threshold</th>
                         <th>Method</th>
-                        <th></th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,10 +75,10 @@
                             );
                             $method = implode(", ",
                                 array_map(function ($threshold) {
+									$site = $threshold['bySite'] ? "Site" : "";
+									$email = $threshold['byEmail'] ? "Email" : "";
                                     $sms = $threshold['bySMS'] ? "SMS" : "";
-                                    $email = $threshold['byEmail'] ? "Email" : "";
-                                    $site = $threshold['bySite'] ? "Site" : "";
-                                    return "(" . implode(", ", array_filter([$sms, $email, $site])) . ")";
+                                    return "(" . implode(", ", array_filter([$site, $email, $sms])) . ")";
                                 },  $alert['thresholds'])
                             );
                             echo <<<HTML
