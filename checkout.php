@@ -50,7 +50,7 @@
 
 		// Redirect to processedCheckout.php
         header('Location: processedCheckout.php');
-        exit(); // Make sure to stop further execution
+        exit(); //
     }
     ?>
 
