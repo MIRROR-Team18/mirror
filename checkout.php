@@ -58,7 +58,7 @@
     <br>
     <!-- End Dummy Card Details -->
 
-    
+    <!--Pay Now Button -->
     <input type="hidden" name="continue" value="yeah">
     <button type="submit">Continue</button>
 </form>
@@ -71,7 +71,7 @@
     <?php include '_components/footer.php'; ?>
 
     <?php
-    // Check if the form is submitted and the "Continue" button is clicked
+    // Check if the form is submitted and the "Pay Now" button is clicked
     if (isset($_POST['continue'])) {
         require_once '_components/database.php';
         $db = new Database();
@@ -81,7 +81,7 @@
 
 		// Redirect to processedCheckout.php
         header('Location: processedCheckout.php');
-        exit(); // Make sure to stop further execution
+        exit(); 
     }
     ?>
 
