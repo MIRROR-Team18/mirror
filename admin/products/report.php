@@ -55,6 +55,17 @@
 				}
 			}
 		});
+
+		<?php
+            $history = [];
+            try {
+				$history = $db->getProductStockHistory($_GET['id'], 3, "all");
+			} catch (Exception $e) {
+                echo "console.error('".$e->getMessage()."')";
+            }
+        ?>
+        const overall = <?= json_encode($history) ?>;
+        console.log(overall);
     </script>
 	<?php include '../../_components/shortFooter.php'; ?>
 </body>
