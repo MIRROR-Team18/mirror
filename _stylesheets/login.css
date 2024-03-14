@@ -1,11 +1,14 @@
 h2{
     text-align: center;
     text-decoration: underline;
+    color: white
+    
 }
 
 .Register, .login-1 {
-    background-color: #fff;
+   /* background-color: #060606;
     border:1px solid #ccc;
+    */
     padding: 20px;
     width: 500px;
     border-radius: 8px;
