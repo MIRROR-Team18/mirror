@@ -21,6 +21,7 @@ if (isset($_POST['submitted'])){
   $email = $_POST["email"];
   $password = $_POST["password"];
   $confirm_pass = $_POST["confirm_pass"];
+  $confirm_email = $_POST["confirm_email"];
   $firstname = $_POST["Firstname"];
   $lastname = $_POST["Last_name"];
 
@@ -49,6 +50,17 @@ if (isset($_POST['submitted'])){
       echo'Passwords need to  match';
       echo ' <a href = "register.php"> Try again</a>';
      exit;
+   }
+
+   //Checking if the emails match
+
+   if ($_POST["email"]==$_POST["confirm_email"]){
+    echo '';
+   }
+   else {echo'Email needs to match';
+    echo '<a href = "register.php"> Try again </a>';
+    exit;
+  
    }
 
  try{
