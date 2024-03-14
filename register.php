@@ -60,8 +60,8 @@ if (isset($_POST['submitted'])){
    else {echo'Email needs to match';
     echo '<a href = "register.php"> Try again </a>';
     exit;
-   }
 
+   }
  try{
 
 	#register user by inserting the user info
