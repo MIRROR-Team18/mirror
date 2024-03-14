@@ -60,7 +60,6 @@ if (isset($_POST['submitted'])){
    else {echo'Email needs to match';
     echo '<a href = "register.php"> Try again </a>';
     exit;
-  
    }
 
  try{
@@ -114,6 +113,8 @@ if (isset($_POST['submitted'])){
 
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" placeholder="Email" required pattern=".+(\.co.uk\.uk|\.com)" title="Please a valid email address."/><br>
+        <label for="confirm_email">Confirm Email:</label>
+        <input type="email" id="confirm_email" name="confirm_email" placeholder="Confirm Email" required/><br>
 
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" placeholder="Password" required/><br>
