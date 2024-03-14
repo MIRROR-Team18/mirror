@@ -1,5 +1,5 @@
 <?php /* Admin pages will already have session_start activated */ ?>
-<nav>
+<nav class="noPrint">
 	<div class="left">
 		<a href="/"><img src="/_images/logo_square.svg" alt=""></a>
 	</div>

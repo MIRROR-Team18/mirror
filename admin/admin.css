@@ -157,3 +157,17 @@ table.fixed {
 table.fixed input, select {
     width: 100%;
 }
+
+@media print {
+    .noPrint {
+        display: none;
+    }
+
+    #report {
+        filter: invert(100%);
+    }
+
+    * {
+        color: var(--black);
+    }
+}

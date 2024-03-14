@@ -19,7 +19,7 @@
 		</section>
 		<section class="blue-1">
 			<canvas id="report"></canvas>
-            <div class="buttonGrid">
+            <div class="buttonGrid noPrint">
                 <button class="fullWidth" onclick="window.location.href = window.location.href.replace('report', 'upsert')">
                     <i class="fa-solid fa-arrow-left"></i>
                     Return
@@ -187,6 +187,8 @@
 		report.update();
 
     </script>
-	<?php include '../../_components/shortFooter.php'; ?>
+    <div class="noPrint">
+		<?php include '../../_components/shortFooter.php'; ?>
+    </div>
 </body>
 </html>
