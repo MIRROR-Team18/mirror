@@ -544,6 +544,17 @@ class Database {
 	}
 
 	/**
+	 * Returns the history of stock for the entire site.
+	 * @return array An array of stock history
+	 * @note This will only be 30 days due to the load this could cause on the database.
+	 */
+	public function getSiteStockHistory(): array {
+		$stmt = $this->conn->prepare("SELECT orders.timeCreated, orders.direction, products_in_orders.productID, products_in_orders.sizeID, products_in_orders.quantity FROM products_in_orders INNER JOIN orders ON products_in_orders.orderID = orders.id WHERE orders.timeCreated > DATE_SUB(NOW(), INTERVAL 30 DAY) ORDER BY orders.timeCreated DESC;");
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	/**
 	 * Creates a product with the provided product
 	 * @param Product $product
 	 * @return bool Returns true if product added successfully.
