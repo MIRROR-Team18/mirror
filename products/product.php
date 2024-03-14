@@ -14,22 +14,24 @@ if (isset($_POST['product_id'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php include '../_components/default.php'; ?>
     <title>Product Page</title>
-    <link rel="stylesheet" href="../_stylesheets/main.css?v=1.1">
     <link rel="stylesheet" href="../_stylesheets/product.css?v=1.1">
 </head>
 <body>
-<?php include '../_components/header.php'; ?>
-
+<?php include '../_components/header.php';
+    $product = $db->getProduct($_GET['id']);
+?>
 <main class="product-container">
     <div class="product-image">
         <!-- Place your product image here -->
-        <img src="path_to_your_image.jpg" alt="Product Image">
+        <?php
+            $img = Database::findAllProductImageUrls($product->productID);
+        ?>
+        <img src="<?= $img[2] ?>" alt="Product Image">
     </div>
     <div class="product-details">
-        <h1>PRODUCT NAME</h1>
+        <h1><?= $product->name ?></h1>
         <!-- Product description here -->
         <p>Product description...</p>
         
