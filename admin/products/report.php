@@ -23,49 +23,143 @@
 	</main>
     <script>
         // As much as I'd like to separate this into another file, I'd have to create API endpoints again and I kinda don't wanna
+        // Overwriting defaults so they don't have to be re-specified.
+        Chart.defaults.borderColor = 'rgba(150, 150, 150, 0.5)';
+		Chart.defaults.color = '#eee';
+		Chart.defaults.font = {
+			size: 16,
+            family: "'Zen Kaku Gothic New', sans-serif"
+        }
+
+        // Generating the table.
         const report = new Chart(document.getElementById('report').getContext('2d'), {
 			type: 'line',
 			data: {
-				labels: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+				labels: [],
 				datasets: [{
 					label: 'Incoming Stock',
-					data: [ 0, 10, 3, 0, 3, 6, 7, 8, 9, 10, 11, 12 ],
-					backgroundColor: 'rgba(0, 255, 0, 0.5)',
 					borderColor: 'rgba(0, 255, 0, 1)',
-					borderWidth: 1
+					borderDash: [10, 5],
 				}, {
 					label: 'Outgoing Orders',
-					data: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3 ],
-					backgroundColor: 'rgba(255, 0, 0, 0.5)',
 					borderColor: 'rgba(255, 0, 0, 1)',
-					borderWidth: 1
+                    borderDash: [10, 5],
                 }, {
 					label: 'Stock Remaining',
-					data: [ 0, 5, 10, 13, 13, 16, 22, 29, 37, 46, 55, 64, 73 ],
 					backgroundColor: 'rgba(0, 0, 255, 0.5)',
 					borderColor: 'rgba(0, 0, 255, 1)',
-                    borderWidth: 1
-                }]
+                    fill: true,
+                }],
 			},
 			options: {
+				responsive: true,
 				scales: {
 					y: {
-						beginAtZero: true
+						beginAtZero: true,
+                        suggestedMax: 50,
 					}
-				}
+				},
+                plugins: {
+					title: "Stock for <?= $_GET['id']; ?>"
+                }
 			}
 		});
 
 		<?php
+            $mode = "month";
             $history = [];
             try {
-				$history = $db->getProductStockHistory($_GET['id'], 3, "all");
+				$history = $db->getProductStockHistory($_GET['id'], 3, $mode);
 			} catch (Exception $e) {
                 echo "console.error('".$e->getMessage()."')";
             }
         ?>
+        const mode = '<?= $mode ?>';
         const overall = <?= json_encode($history) ?>;
-        console.log(overall);
+
+		const overallByDate = {};
+		overall.forEach((entry) => {
+			const date = entry.timeCreated.split(" ")[0];
+			if (!overallByDate[date]) {
+				overallByDate[date] = {
+                    incoming: 0,
+                    outgoing: 0
+                };
+			}
+
+			switch (entry.direction) {
+				case 'in':
+					overallByDate[date].incoming += entry.quantity;
+					break;
+
+                case 'out':
+					overallByDate[date].outgoing += entry.quantity;
+					break;
+
+                default:
+					console.error(`Invalid direction in entry at ${entry.timeCreated}!`);
+					break;
+            }
+        })
+
+		const dates = [];
+		switch (mode) {
+			case 'month':
+				for (let i = 0; i < 31; i++) {
+					const newDate = new Date();
+					newDate.setDate(newDate.getDate() - i);
+					dates.push(newDate.toISOString().split('T')[0]);
+				}
+				break;
+
+            case 'year':
+				for (let i = 0; i < 12; i++) {
+					const newDate = new Date();
+                    newDate.setMonth(newDate.getMonth() - i);
+                    dates.push(newDate.toISOString().split('T')[0].split('-')[1]);
+
+				}
+				break;
+
+            case "all":
+				// Get the last date, and figure out how to get the rest of the dates from there.
+                break;
+
+            default:
+				console.error("Invalid mode!");
+        }
+		dates.reverse(); // Mutates array
+		report.data.labels = dates;
+
+		let started = false;
+		const graphData = {
+			in: [],
+            out: [],
+            stock: [],
+        }
+        dates.forEach((date) => {
+			const yesterdayStock = graphData.stock[graphData.stock.length - 1] || 0;
+            if (overallByDate[date]) {
+                started = true;
+                graphData.in.push(overallByDate[date].incoming);
+                graphData.out.push(overallByDate[date].outgoing);
+                graphData.stock.push(yesterdayStock + overallByDate[date].incoming - overallByDate[date].outgoing);
+            } else if (started) {
+                graphData.in.push(0);
+                graphData.out.push(0);
+                graphData.stock.push(yesterdayStock);
+            } else {
+                graphData.in.push(null);
+                graphData.out.push(null);
+                graphData.stock.push(null);
+            }
+        })
+        report.data.datasets[0].data = graphData.in;
+        report.data.datasets[1].data = graphData.out;
+        report.data.datasets[2].data = graphData.stock;
+
+		report.update();
+
     </script>
 	<?php include '../../_components/shortFooter.php'; ?>
 </body>
