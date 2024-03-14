@@ -23,7 +23,7 @@
 	</main>
     <script>
         // As much as I'd like to separate this into another file, I'd have to create API endpoints again and I kinda don't wanna
-        // Overwriting defaults so they don't have to be re-specified.
+        // Overwriting defaults, so they don't have to be re-specified.
         Chart.defaults.borderColor = 'rgba(150, 150, 150, 0.5)';
 		Chart.defaults.color = '#eee';
 		Chart.defaults.font = {
@@ -66,7 +66,7 @@
 		});
 
 		<?php
-            $mode = "month";
+            $mode = "year";
             $history = [];
             try {
 				$history = $db->getProductStockHistory($_GET['id'], 3, $mode);
@@ -79,7 +79,11 @@
 
 		const overallByDate = {};
 		overall.forEach((entry) => {
-			const date = entry.timeCreated.split(" ")[0];
+			let date = entry.timeCreated.split(" ")[0];
+			if (mode === "year") {
+				date = date.split("-").slice(0, 2).join("-");
+				console.log(date);
+            }
 			if (!overallByDate[date]) {
 				overallByDate[date] = {
                     incoming: 0,
@@ -116,7 +120,8 @@
 				for (let i = 0; i < 12; i++) {
 					const newDate = new Date();
                     newDate.setMonth(newDate.getMonth() - i);
-                    dates.push(newDate.toISOString().split('T')[0].split('-')[1]);
+					const monthYear = newDate.toISOString().split('T')[0].split('-').slice(0, 2).join('-');
+                    dates.push(monthYear);
 
 				}
 				break;
