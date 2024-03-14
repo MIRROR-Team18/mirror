@@ -19,6 +19,16 @@
 		</section>
 		<section class="blue-1">
 			<canvas id="report"></canvas>
+            <div class="buttonGrid">
+                <button class="fullWidth" onclick="window.location.href = window.location.href.replace('report', 'upsert')">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Return
+                </button>
+                <button class="fullWidth" onclick="window.print()">
+                    <i class="fa-solid fa-print"></i>
+                    Print
+                </button>
+            </div>
 		</section>
 	</main>
     <script>
@@ -59,14 +69,11 @@
                         suggestedMax: 50,
 					}
 				},
-                plugins: {
-					title: "Stock for <?= $_GET['id']; ?>"
-                }
 			}
 		});
 
 		<?php
-            $mode = "year";
+            $mode = "month";
             $history = [];
             try {
 				$history = $db->getProductStockHistory($_GET['id'], 3, $mode);
@@ -80,7 +87,7 @@
 		const overallByDate = {};
 		overall.forEach((entry) => {
 			let date = entry.timeCreated.split(" ")[0];
-			if (mode === "year") {
+			if (mode !== "month") {
 				date = date.split("-").slice(0, 2).join("-");
 				console.log(date);
             }
@@ -126,9 +133,23 @@
 				}
 				break;
 
-            case "all":
-				// Get the last date, and figure out how to get the rest of the dates from there.
-                break;
+            case 'all':
+				// First, get the date furthest back
+                const furthestBack = new Date(overall[overall.length - 1].timeCreated);
+				console.log(furthestBack);
+
+				// How many months to furthestBack?
+                let months = (new Date().getFullYear() - furthestBack.getFullYear()) * 12
+                    + new Date().getMonth() - furthestBack.getMonth();
+				if (months < 1) months = 1; // At least one month, else the graph will be empty
+
+				for (let i = 0; i < months; i++) {
+					const newDate = new Date();
+                    newDate.setMonth(newDate.getMonth() - i);
+                    const monthYear = newDate.toISOString().split('T')[0].split('-').slice(0, 2).join('-');
+                    dates.push(monthYear);
+				}
+				break;
 
             default:
 				console.error("Invalid mode!");
