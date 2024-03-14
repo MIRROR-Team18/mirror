@@ -91,7 +91,8 @@ if (isset($_POST['submitted'])){
     <h4> You can register if you are a new user and need to set up login details. </h4>
     <br><h4> Please be ready to provide a username, password and valid email address.</h4><br>
     <br>
-
+    <!-- <min  = "RegisterF"> -->
+    
     <form method="post" action="register.php">
 
         <label for="Firstname">First Name:</label>
@@ -106,8 +107,8 @@ if (isset($_POST['submitted'])){
         <input type="password" id="password" name="password" placeholder="Password" required/><br>
         <label for="confirm_pass">Confirm Password:</label>
         <input type="password" id="confirm_pass" name="confirm_pass" placeholder="Confirm password" required/><br>
-
-
+        
+    
         <input type="submit" value="Register"/>
         <input type="reset" value="Clear"/>
         <input type="hidden" name="submitted" value="true"/>
@@ -115,8 +116,8 @@ if (isset($_POST['submitted'])){
 
     <p> Already a user? <a href="login.php">Log in</a></p>
     <p> Return back to the <a href="index.php"><em>home page</em></a></p> <!-- change html to homepage  -->
+    </main>
 
-</main>
 <?php include '_components/footer.php'; ?>
 </body>
 
