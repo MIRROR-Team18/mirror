@@ -38,29 +38,27 @@ body {
 }
 
 .product-container {
-    display: flex;
-    justify-content: center;
-    max-width: 1200px;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Adjust column sizes as needed */
+    gap: 20px; /* Adjust gap between columns */
+    max-width: 1000px; /* Adjust to a smaller value */
     margin: 50px auto;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.product-image {
-    flex: 1;
+.product-image img {
     max-width: 100%;
-    height: auto;
-    margin-right: 20px;
+    max-height: 200px; /* Adjust the maximum height as needed */
+    border-radius: 8px;
 }
 
+
+
 .product-details {
-    flex: 1;
     padding: 20px;
     text-align: left;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
 .product-details h1 {
