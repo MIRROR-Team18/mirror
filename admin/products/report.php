@@ -18,6 +18,17 @@
 			<h1>PRODUCT REPORT</h1>
 		</section>
 		<section class="blue-1">
+            <form action="" method="GET" class="noPrint">
+                <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+                <label for="mode">Mode:</label>
+                <select name="mode" id="mode" onchange="this.form.submit();">
+                    <!-- The purpose of this first element is to allow users to switch to month. Else, clicking on it does nothing. Doing it this way largely hides this problem. -->
+                    <option value="" hidden disabled selected><?= ucfirst($_GET['mode']); ?></option>
+                    <option value="month">Month</option>
+                    <option value="year">Year</option>
+                    <option value="all">All</option>
+                </select>
+            </form>
 			<canvas id="report"></canvas>
             <div class="buttonGrid noPrint">
                 <button class="fullWidth" onclick="window.location.href = window.location.href.replace('report', 'upsert')">
@@ -73,7 +84,7 @@
 		});
 
 		<?php
-            $mode = "month";
+            $mode = $_GET['mode'] ?? "month";
             $history = [];
             try {
 				$history = $db->getProductStockHistory($_GET['id'], 3, $mode);
