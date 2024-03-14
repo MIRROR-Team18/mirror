@@ -45,6 +45,12 @@ form h2 {
     font-size: 2rem;
 }
 
+#graphRow {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
 input.priceInput {
     width: 40%;
     margin: .1rem 1rem .1rem auto;

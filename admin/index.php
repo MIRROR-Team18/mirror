@@ -49,6 +49,20 @@
 		?>
 		const mode = '<?= $mode ?>';
 		const overall = <?= json_encode($history) ?>;
+		const totalPurchases = overall.reduce((acc, cur) => acc + cur.quantity, 0);
+        let mostPurchases = {};
+
+		overall.forEach((item) => {
+			if (!mostPurchases.quantity || item.quantity > mostPurchases.quantity) {
+                mostPurchases = item;
+            }
+        });
+
+
+		window.addEventListener('load', () => {
+			document.querySelector('#totalPurchases').innerText = totalPurchases;
+			document.querySelector('#peakDate').innerText = new Date(mostPurchases.timeCreated).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+		});
     </script>
     <script src="./_scripts/generateChart.js"></script>
 	<?php include '../_components/shortFooter.php'; ?>
