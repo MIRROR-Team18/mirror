@@ -48,7 +48,7 @@
             $mode = $_GET['mode'] ?? "month";
             $history = [];
             try {
-				$history = $db->getProductStockHistory($_GET['id'], 3, $mode);
+				$history = $db->getProductStockHistory($_GET['id'], $mode);
 			} catch (Exception $e) {
                 echo "console.error('".$e->getMessage()."')";
             }
