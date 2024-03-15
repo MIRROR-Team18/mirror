@@ -555,6 +555,19 @@ class Database {
 	}
 
 	/**
+	 * Get the lowest stock from across the site
+	 * @param int $limit How many to return
+	 * @return array
+	 */
+	public function getLowestStock(int $limit): array {
+		// Find the products with the lowest stock
+		if (is_nan($limit)) return [];
+		$stmt = $this->conn->prepare("SELECT * FROM products INNER JOIN product_sizes on products.id = product_sizes.productID ORDER BY stock LIMIT " . $limit);
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	/**
 	 * Creates a product with the provided product
 	 * @param Product $product
 	 * @return bool Returns true if product added successfully.

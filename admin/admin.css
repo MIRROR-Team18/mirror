@@ -45,10 +45,47 @@ form h2 {
     font-size: 2rem;
 }
 
+#items {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1rem;
+
+    margin-top: 1rem;
+}
+
+#items .item {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+}
+
+#items .item .text {
+    margin: auto 0;
+}
+
+#items .item .text h2 a {
+    color: var(--white);
+}
+
+#items .item .text h2 a:hover {
+    color: var(--off-white);
+}
+
+#items .homeImage {
+    width: 5rem;
+    height: 5rem;
+    margin: 0 2rem;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
 #graphRow {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 2rem;
+
+    margin-top: 1rem;
 }
 
 input.priceInput {

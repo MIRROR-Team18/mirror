@@ -20,7 +20,27 @@
 		<section id="attention" class="blue-2">
 			<h2>these might need your attention:</h2>
 			<div id="items">
-				<!-- Code needed to load low stock items -->
+                <?php
+                    // We want to find the products with the lowest stock.
+                    $products = $db->getLowestStock(6);
+                    foreach ($products as $product) {
+						$id = $product['id'];
+                        $image = Database::findPrimaryProductImageUrl($id);
+                        $name = $product['name'];
+                        $reason = ($product['stock'] < 1) ? "Out of Stock!" : "Low on Stock.";
+                        echo <<<HTML
+                            <div class="item">
+                                <div class="image">
+                                    <img class="homeImage" src="$image" alt="$id image"></image>
+                                </div>
+                                <div class="text">
+                                    <h2><a href="./products/upsert.php?id=$id">$name</a></h2>
+                                    <p>$reason</p>
+                                </div>
+                            </div>
+                        HTML;
+                    }
+                ?>
 			</div>
 		</section>
 		<section id="orders" class="blue-1">
@@ -47,6 +67,7 @@
 			echo "console.error('".$e->getMessage()."')";
 		}
 		?>
+        // Bringing PHP variables into JS
 		const mode = '<?= $mode ?>';
 		const overall = <?= json_encode($history) ?>;
 		const totalPurchases = overall.reduce((acc, cur) => acc + cur.quantity, 0);
@@ -58,7 +79,7 @@
             }
         });
 
-
+		// Waiting for page to load before trying to change the DOM
 		window.addEventListener('load', () => {
 			document.querySelector('#totalPurchases').innerText = totalPurchases;
 			document.querySelector('#peakDate').innerText = new Date(mostPurchases.timeCreated).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
