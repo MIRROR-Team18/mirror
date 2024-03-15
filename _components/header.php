@@ -9,7 +9,7 @@
         <?php if (isset($_SESSION['userID'])): ?>
             <a href="/logout.php"><i class="fa-solid fa-right-from-bracket"></i>Logout</a>
             <?php if (isset($_SESSION["isAdmin"]) && $_SESSION['isAdmin'] === true): ?>
-                <a href="/admin.php"><i class="fa-solid fa-wrench"></i>Admin</a>
+                <a href="/admin/index.php"><i class="fa-solid fa-wrench"></i>Admin</a>
             <?php endif; ?>
         <?php else: ?>
             <a href="/login.php"><i class="fa-solid fa-right-to-bracket"></i>Login</a>

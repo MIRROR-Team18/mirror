@@ -4,7 +4,7 @@
     <?php include '../_components/default.php'; ?>
     <title>Products - MIRЯOR</title>
     <link rel="stylesheet" href="../_stylesheets/products.css">
-    <script src="../_scripts/productsListing.js" defer async></script>
+    <script src="../_scripts/listFiltering.js" defer async></script>
 </head>
 <body>
     <?php include '../_components/header.php'; ?>
@@ -15,7 +15,7 @@
                     <label class="sr-only" for="search">SEARCH</label>
                     <input type="text" id="search" placeholder="Search for a product...">
                 </div>
-                <div id="forProductType" class="filterGroup">
+                <div class="filterGroup" data-for="type">
                     <div class="title">
                         <h2>TYPE</h2>
                         <span>
@@ -24,26 +24,44 @@
                             <a href="#" id="productType_only">Only...</a>
                         </span>
                     </div>
-                    <div class="inputLabelGroup">
-                        <input type="checkbox" name="tops" id="tops">
-                        <label for="tops">Tops</label>
+					<?php
+					require_once '../_components/database.php';
+					$db = new Database();
+					$productTypes = $db->getTypes();
+
+					foreach ($productTypes as $type) {
+						$typeName = $type['name'];
+						echo <<<HTML
+                            <div class="inputLabelGroup">
+                                <input type="checkbox" name="$typeName" id="$typeName">
+                                <label for="$typeName">$typeName</label>
+                            </div>
+                            HTML;
+					}
+					?>
+                </div>
+                <div class="filterGroup" data-for="gender">
+                    <div class="title">
+                        <h2>GENDER</h2>
+                        <span>
+                            <a href="#" id="productGender_any" class="selected">Any of...</a>
+                            &nbsp;|&nbsp;
+                            <a href="#" id="productGender_only">Only...</a>
+                        </span>
                     </div>
-                    <div class="inputLabelGroup">
-                        <input type="checkbox" name="bottoms" id="bottoms">
-                        <label for="bottoms">Bottoms</label>
-                    </div>
-                    <div class="inputLabelGroup">
-                        <input type="checkbox" name="socks" id="socks">
-                        <label for="socks">Socks</label>
-                    </div>
-                    <div class="inputLabelGroup">
-                        <input type="checkbox" name="shoes" id="shoes">
-                        <label for="shoes">Shoes</label>
-                    </div>
-                    <div class="inputLabelGroup">
-                        <input type="checkbox" name="accessories" id="accessories">
-                        <label for="accessories">Accessories</label>
-                    </div>
+					<?php
+					$productGenders = $db->getGenders();
+
+					foreach ($productGenders as $gender) {
+						$genderName = $gender['name'];
+						echo <<<HTML
+                            <div class="inputLabelGroup">
+                                <input type="checkbox" name="$genderName" id="$genderName">
+                                <label for="$genderName">$genderName</label>
+                            </div>
+                            HTML;
+					}
+					?>
                 </div>
             </div>
         </aside>
@@ -51,15 +69,11 @@
             <h1 id="productsDescriptor">PRODUCTS</h1>
             <div id="productsGrid">
                 <?php
-                require_once '../_components/database.php';
-                $db = new Database();
                 try {
 					$products = $db->getAllProducts();
 
 					foreach ($products as $product) {
-                        $pathForPhoto = "../_images/products/" . $product->productID . "/";
-                        $photo = file_exists($pathForPhoto) ? $pathForPhoto . scandir($pathForPhoto)[2] : "https://picsum.photos/512"; // [0] is ".", [1] is ".."
-
+                        $photo = Database::findPrimaryProductImageUrl($product->productID);
                         $price = "Unknown...";
 
                         if (sizeof($product->sizes) > 0) {
@@ -75,7 +89,12 @@
                         }
 
                     ?>
-                        <div class="product" id="<?= $product->productID ?>" data-product-type="<?= $product->type ?>" data-product-name="<?= $product->name ?>" onclick="window.location.href='./product.php?id=<?= $product->productID ?>'">
+                        <div class="product listObject" id="<?= $product->productID ?>"
+                             data-gender="<?= $product->gender ?>"
+                             data-type="<?= $product->type ?>"
+                             data-name="<?= $product->name ?>"
+                             onclick="window.location.href='./product.php?id=<?= $product->productID ?>'"
+                        >
                             <img src="<?= $photo ?>" alt="<?= $product->productID . "_image" ?>">
                             <h1><?= $product->name ?></h1>
                             <h2><?= $price ?></h2>
