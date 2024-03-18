@@ -1,25 +1,33 @@
 <?php
     $errorMessage = "";
     if (isset($_POST["submitted"])) {
-        if (!isset($_POST["name"]) || !isset($_POST["email"]) || !isset($_POST["message"])) {
+        if (!isset($_POST["name"]) || !isset($_POST["email"]) ||
+            !isset($_POST['confirmEmail']) || !isset($_POST["message"])) {
             $errorMessage = "Fields missing from submission";
-            return;
+        }
+
+        if ($_POST["email"] !== $_POST["confirmEmail"]) {
+            $errorMessage = "Emails do not match";
         }
 
         $name = htmlspecialchars($_POST["name"]);
         $email = htmlspecialchars($_POST["email"]);
         $message = htmlspecialchars($_POST["message"]);
 
-        try {
-            require_once "_components/database.php";
-            $db = new Database();
-            $success = $db->createContactEnquiry($name, $email, $message);
+        $message = $message . "\n\nOrder Number: " . $_POST["order_number"] ?? "none" . "\nProduct Number: " . $_POST["product_number"] ?? "none" . "\n";
 
-            if ($success) {
-                header("Location: thanks.php");
-                exit();
-            } else {
-                $errorMessage = "Didn't save enquiry, perhaps it is a duplicate ticket?";
+        try {
+            if ($errorMessage === "") {
+				require_once "_components/database.php";
+				$db = new Database();
+				$success = $db->createContactEnquiry($name, $email, $message);
+
+				if ($success) {
+					header("Location: thanks.php");
+					exit();
+				} else {
+					$errorMessage = "Didn't save enquiry, perhaps it is a duplicate ticket?";
+				}
             }
         } catch (Exception $e) {
             $errorMessage = "There was an issue with the database.";
@@ -60,7 +68,9 @@
         <section class="lower-half">
             <h1>CONTACT FORM</h1>
             <p>Please fill in all details.</p>
-            <form class="contact-form" method="POST" onsubmit="return submitForm()">
+            <p class="error-message"><?php echo $errorMessage; ?></p>
+            <form class="contact-form" method="POST">
+                <input type="hidden" name="submitted" value="true">
                 <div class="row">
                     <label for="name" class="sr-only">Name</label>
                     <input type="text" id="name" name="name" placeholder="Your Name" required>
@@ -88,13 +98,5 @@
 
     <!-- Footer -->
     <?php include "_components/footer.php"; ?>
-    <script>
-		function submitForm() {
-			// Redirect to "thanks.php" after form submission
-			window.location.href = "thanks.php";
-			// Prevent default form submission
-			return false;
-		}
-    </script>
 </body>
 </html>

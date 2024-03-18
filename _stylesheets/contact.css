@@ -25,10 +25,22 @@ p, li {
     text-align: right;
 }
 
+input, textarea {
+    margin: .25rem;
+}
+
+textarea {
+    width: 100%;
+}
+
 .contact-form {
     text-align: left;
 }
 
 button {
     margin: auto 0 auto 75%;
+}
+
+.error-message {
+    color: red;
 }
