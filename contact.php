@@ -30,10 +30,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php include "_components/default.php"; ?>
     <title>Contact Us - MIRЯOR</title>
-    <link rel="stylesheet" href="_stylesheets/main.css">
     <link rel="stylesheet" href="_stylesheets/contact.css">
 </head>
 <body>
@@ -41,26 +39,62 @@
     <?php include "_components/header.php"; ?>
 
     <!-- Contact Us Content -->
-    <main class="contact-us-content">
-        <h1>Contact Us</h1>
-        <form method="POST">
-            <label for="name">Your Name:</label>
-            <input type="text" id="name" name="name" required>
-
-            <label for="email">Your Email:</label>
-            <input type="email" id="email" name="email" required>
-
-            <label for="message">Your Message:</label>
-            <textarea id="message" name="message" rows="4" required></textarea>
-
-            <input type="hidden" name="submitted" value="true">
-            <button type="submit">Send Message</button>
-        </form>
-
-        <pre><?= $errorMessage ?></pre>
+    <main class="content">
+        <section class="upper-half">
+            <h1>WHAT'S UP?</h1>
+            <p>If you need to contact us about anything, whether it's about a product, shipping, or something else, feel free to contact us!<br>
+                We can be contacted by:
+            </p>
+            <ul>
+                <li>Phone: 01892755555</li>
+                <li>Email: support@mirror.com</li>
+                <li>Address: 71 This Is Real Street, Real City A11 2BB</li>
+            </ul>
+            <p>Or you can fill out our Contact Form below.<br><br>
+                Companies, if you want to see your product with us, please send a query to the email below:
+            </p>
+            <ul>
+                <li>sales@mirror.com</li>
+            </ul>
+        </section>
+        <section class="lower-half">
+            <h1>CONTACT FORM</h1>
+            <p>Please fill in all details.</p>
+            <form class="contact-form" method="POST" onsubmit="return submitForm()">
+                <div class="row">
+                    <label for="name" class="sr-only">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Your Name" required>
+                </div>
+                <div class="row">
+                    <label for="email" class="sr-only">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Your Email" required>
+                    <label for="confirmEmail" class="sr-only"></label>
+                    <input type="email" id="confirmEmail" name="confirmEmail" placeholder="Confirm Email" required>
+                </div>
+                <div class="row">
+                    <label for="orderNumber" class="sr-only">Order Number</label>
+                    <input type="text" id="orderNumber" name="order_number" placeholder="Order Number (if applicable)">
+                    <label for="productNumber" class="sr-only">Product Number</label>
+                    <input type="text" id="productNumber" name="product_number" placeholder="Product Number (if applicable)">
+                </div>
+                <div class="row">
+                    <label for="message" class="sr-only">Message</label>
+                    <textarea name="message" id="message" rows="5" placeholder="Your Message" required></textarea>
+                </div>
+                <button type="submit">Send</button>
+            </form>
+        </section>
     </main>
 
     <!-- Footer -->
     <?php include "_components/footer.php"; ?>
+    <script>
+		function submitForm() {
+			// Redirect to "thanks.php" after form submission
+			window.location.href = "thanks.php";
+			// Prevent default form submission
+			return false;
+		}
+    </script>
 </body>
 </html>
