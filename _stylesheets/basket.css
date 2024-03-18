@@ -1,8 +1,8 @@
 /* basket.css */
 /*Style for basket page */
-
 body {
-    background-color: #f4f4f4;
+    background-color: #0d0032;
+    color: white;
 }
 
 .basket-container {
@@ -11,6 +11,9 @@ body {
     padding: 20px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: grid; /* Use grid layout */
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    gap: 20px; /* Gap between columns */
 }
 
 #basket {
@@ -84,19 +87,19 @@ body {
     box-shadow: 0 0 5px rgba(31, 0, 93, 0.5);
 }
 
-
-
 /* Style for Checkout Page */
-
 .checkout-container {
     text-align: center;
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    background-color: #0d0032; /* Change to dark blue */
+    color: white; /* Change text color to white */
 }
 
 .checkout-content {
     text-align: center;
+    color: white; /* Change text color to white */
 }
 
 .checkout-content p {
@@ -104,7 +107,6 @@ body {
 }
 
 .checkout-content form {
-    max-width: 400px;
     margin: 0 auto;
 }
 
@@ -122,36 +124,12 @@ body {
     padding: 10px;
 }
 
-
-
-
-/* Style for Processed Checkout Page */
-.confirmation-container {
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto;
+/* Dummy Card details */
+.card-details-container {
     padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    grid-column: 2 / 3; /* Place in the right column */
 }
 
-.confirmation-container h1 {
-    color: #1f005d; /* Mirror theme color, adjust as needed */
-}
-
-.confirmation-container p {
-    font-size: 1rem;
-    margin: 10px 0;
-}
-
-
-
-/* email to appear bigger test code*/
-
-.label-large {
-    font-size: 1.2rem; /* Adjust the font size as needed */
-}
-
-.input-large {
-    width: 100%; /* Make the input field take up 100% of the available width */
-    padding: 8px; /* Adjust the padding as needed */
-    font-size: 1rem; /* Adjust the font size as needed */
-}

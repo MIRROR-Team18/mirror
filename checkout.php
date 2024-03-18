@@ -15,6 +15,7 @@
         <h1>Checkout</h1>
         <?php
             if (session_status() === PHP_SESSION_NONE) session_start();
+            /*
             if (!isset($_SESSION["userID"])) {
                 echo "<p>You must be logged in to check out.</p>";
                 echo "<p><a href='./login.php'>Login</a></p>";
@@ -24,50 +25,85 @@
 				echo "<p><a href='./products'>Go to get some products first!</a></p>";
 				exit();
 			}
+            */
         ?>
-        <p>Enter your email address to proceed.</p>
-        <p>We need your email address to send updates about your order.</p> <br>
-        <form method="post">
-            <label for="email" class="label-large">Email:</label>
-            <input type="email" id="email" name="email" class="input-large" required>
-            <br>
-            <input type="hidden" name="continue" value="yeah">
 
-            <form method="post">
+<form id="checkout-form" action="">
+            <div class="checkout-content">
+                <div class="order-summary">
+                    <h2>MIRROR</h2>
+                    <p>£ 54.70</p>
+                </div>
+                <div class="delivery-options">
+                    <h2>DELIVERY OPTIONS</h2>
+                    <input type="radio" id="dpd" name="delivery-option" value="dpd">
+                    <label for="dpd">DPD (Next Working Day)</label><br>
 
-            
-    <label for="email" class="label-large">Email:</label>
-    <input type="email" id="email" name="email" class="input-large" required>
-    <br>
+                    <input type="radio" id="evri" name="delivery-option" value="evri">
+                     <label for="evri">Evri (3-5 days)</label><br>
 
-    <!-- Dummy Card Details -->
-    <label for="card_number" class="label-large">Card Number:</label>
-    <input type="text" id="card_number" name="card_number" class="input-large" placeholder="4242 4242 4242 4242" required>
-    <br>
-
-    <label for="cardholder_name" class="label-large">Cardholder's Name:</label>
-    <input type="text" id="cardholder_name" name="cardholder_name" class="input-large" placeholder="John Doe" required>
-    <br>
-
-    <label for="expiry_date" class="label-large">Expiry Date (MM/YY):</label>
-    <input type="text" id="expiry_date" name="expiry_date" class="input-large" placeholder="12/23" required>
-    <br>
-
-    <label for="cvv" class="label-large">CVV:</label>
-    <input type="text" id="cvv" name="cvv" class="input-large" placeholder="123" required>
-    <br>
-    <!-- End Dummy Card Details -->
-
-    
-    <input type="hidden" name="continue" value="yeah">
-    <button type="submit">Continue</button>
-</form>
-
-
-
+                    <input type="radio" id="courier" name="delivery-option" value="courier">
+                    <label for="courier">Local Courier (5-7 days)</label><br>
+                </div>
+                <div class="delivery-address">
+                    <h2>DELIVERY ADDRESS</h2>
+                    <input type="text" name="first-name" placeholder="First Name" required>
+                    <input type="text" name="last-name" placeholder="Last Name" required>
+                    <input type="text" name="address-line-1" placeholder="Address Line 1" required>
+                    <input type="text" name="address-line-2" placeholder="Address Line 2">
+                    <input type="text" name="address-line-3" placeholder="Address Line 3">
+                    <input type="text" name="city" placeholder="City" required>
+                    <input type="text" name="country" placeholder="Country" required>
+                    <input type="text" name="postcode" placeholder="Postcode" required>
+                </div>
+                <br><br>
+                <div class="card-details">
+                    <h2>CARD DETAILS</h2>
+                    <input type="text" name="card-number" placeholder="Card Number" required>
+                    <input type="text" name="card-name" placeholder="Name" required>
+                    <input type="text" name="card-expiry" placeholder="MM/YY" required>
+                    <input type="text" name="card-cvv" placeholder="CVV" required>
+                </div>
+                <div class="billing-address">
+                <br><br>
+    <h2>BILLING ADDRESS</h2>
+    <input type="checkbox" name="same-address" id="same-address">
+    <label for="same-address">Same as delivery address?</label>
+    <br><br>
+    <div class="billing-address-form">
+        <input type="text" name="billing-first-name" placeholder="First Name" required>
+        <input type="text" name="billing-last-name" placeholder="Last Name" required>
+        <input type="text" name="billing-address-line-1" placeholder="Address Line 1" required>
+        <input type="text" name="billing-address-line-2" placeholder="Address Line 2">
+        <input type="text" name="billing-address-line-3" placeholder="Address Line 3">
+        <input type="text" name="billing-city" placeholder="City" required>
+        <input type="text" name="billing-country" placeholder="Country" required>
+        <input type="text" name="billing-postcode" placeholder="Postcode" required>
     </div>
 </div>
-    
+            </div>
+            
+        </form>
+    <br> <br>
+    <input type="hidden" name="continue" value="yeah">
+    <button id="payNowBtn" type="submit"> PAY NOW </button>
+    </div>
+</div>
+
+
+<script>
+        // Find the Pay Now button by its ID
+        var payNowBtn = document.getElementById("payNowBtn");
+
+        // Add a click event listener to the Pay Now button
+        payNowBtn.addEventListener("click", function() {
+            // Redirect the user to the order confirmation page
+            window.location.href = "processedCheckout.php";
+        });
+    </script>
+
+
+
     <?php include '_components/footer.php'; ?>
 
     <?php
@@ -88,4 +124,3 @@
 
 </body>
 </html>
-
