@@ -22,8 +22,8 @@
             </p>
             <div class="image-container">
                 <!-- Image added here -->
-                <img src="A.jpeg" alt="Description of the image" class="img1">
-                <p class="this-is-us">This is us</p> <!-- Added paragraph -->
+                <img src="/_images/group-image.jpg" alt="A group photo" class="img1">
+                <p class="this-is-us">this is us!</p> <!-- Added paragraph -->
             </div>
         </section>
         <section class="second-container">
@@ -34,9 +34,11 @@
                 Or go find something to match with your mates. That's up to you.<br>
                 We'll just ensure you're causing the least environmental impact doing so.
             </p>
+            <div class="image-container">
+                <!-- Image added here -->
+                <img src="/_images/wardrobe.jpg" alt="An example wardrobe" class="img2">
+            </div>
         </section>
-        <!-- Image added here -->
-        <img src="A.jpeg" alt="Description of the image" class="img2">
     </main>
 
     <!-- Footer -->
