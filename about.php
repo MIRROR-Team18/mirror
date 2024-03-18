@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php include "./_components/default.php" ?>
     <title>About Us - MIRЯOR</title>
-    <link rel="stylesheet" href="_stylesheets/main.css">
     <link rel="stylesheet" href="_stylesheets/about.css">
 </head>
 <body>
