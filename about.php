@@ -12,25 +12,31 @@
     <?php include "./_components/header.php" ?>
 
     <!-- About Us Content -->
-    <main class="about-us-content">
-        <h1>About MIRЯOR</h1>
-        <p>
-            Welcome to MIRЯOR, where fashion meets expression. Our journey began with a vision to redefine clothing as more than just fabric. We believe that each piece of clothing tells a unique story, an expression of your individuality and creativity.
-        </p>
-        <p>
-            At MIRЯOR, we are passionate about delivering high-quality fashion that empowers you to be a trendsetter. Our commitment to style and quality sets us apart in the world of fashion. Explore our collection and discover the perfect ensemble to showcase your personality.
-        </p>
-        <p>
-            Join us on this fashion-forward journey, where every piece is a reflection of your unique style. MIRЯOR - Reflect Your Style.
-        </p>
-
-        <!-- Creative Addition with Spacing -->
-        <div style="margin-top: 2rem;">
-            <h2>Discover Your Style, Redefine Your Wardrobe</h2>
-            <p>
-                Immerse yourself in the world of MIRЯOR, where fashion is more than just garments; it's an experience. Unleash your creativity, experiment with styles, and embrace the extraordinary. Our curated collections are not just clothes; they're a canvas for your self-expression. Elevate your wardrobe with MIRЯOR, where every thread weaves a story of individuality and charm.
+    <main class="content">
+        <section class="first-container">
+            <h1>HELLO.</h1>
+            <p class="description">
+                MIRЯOR, where fashion meets expression.<br>
+                Our journey began with a simple mission: redefine clothing from just the work of cloth. We believe that each piece of clothing tells a unique story - an expression of individuality and creativity - and you cannot tell it without knowing your articles are from the most ethical of sources.<br>
+                At MIRROR, we want to empower you to be a trendsetter. Our commitment to style and quality sets us apart from the competition. All we ask in return is that you join us.
             </p>
-        </div>
+            <div class="image-container">
+                <!-- Image added here -->
+                <img src="A.jpeg" alt="Description of the image" class="img1">
+                <p class="this-is-us">This is us</p> <!-- Added paragraph -->
+            </div>
+        </section>
+        <section class="second-container">
+            <h1>REDEFINE THE WARDROBE.</h1>
+            <p class="description">
+                What you wear is an extension of you.<br>
+                Now go out and explore our collection and discover the perfect ensemble to showcase your personality.<br>
+                Or go find something to match with your mates. That's up to you.<br>
+                We'll just ensure you're causing the least environmental impact doing so.
+            </p>
+        </section>
+        <!-- Image added here -->
+        <img src="A.jpeg" alt="Description of the image" class="img2">
     </main>
 
     <!-- Footer -->

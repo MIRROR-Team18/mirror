@@ -1,27 +1,32 @@
-body {
-    background-color: #f8f8f8;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+.image-container {
+    text-align: right; /* Aligns contents to the right */
+    margin-bottom: 1rem; /* Adds space between the image and text */
 }
 
-.about-us-content {
-    padding: 2rem 10vw;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-content: center;
+.img1 {
+    margin-bottom: 1rem; /* Adds space between the image and text */
 }
 
-.about-us-content img {
-    max-width: 100%;
-    border-radius: 8px;
-    margin-bottom: 1rem;
+.this-is-us {
+    text-align: right; /* Aligns the text to the right */
 }
 
-.about-us-content p {
-    font-size: 1.2rem;
-    line-height: 1.5;
-    text-align: justify;
-    color: #333;
+.first-container {
+    background-color: var(--blue-2);
+}
+
+
+section h1 {
+    font-family: 'Dela Gothic One', cursive;
+    text-align: unset;
+}
+
+section p.description {
+    font-size: 1.25rem;
+}
+
+.second-container {
+    text-align: right; /* Aligns contents to the right */
+    margin-bottom: 1rem; /* Adds space between the heading and text */
+    background-color: var(--blue-1);
 }
