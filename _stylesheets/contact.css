@@ -44,3 +44,9 @@ button {
 .error-message {
     color: red;
 }
+
+.follow-up-content {
+    margin-top: 30vh;
+    text-align: center;
+    background-color: var(--blue-2);
+}
