@@ -1,20 +1,8 @@
-.image-container {
-    text-align: right; /* Aligns contents to the right */
-    margin-bottom: 1rem; /* Adds space between the image and text */
+img {
+    width: 50%; /* Makes the image responsive */
+    aspect-ratio: 9/4;
+    object-fit: cover;
 }
-
-.img1 {
-    margin-bottom: 1rem; /* Adds space between the image and text */
-}
-
-.this-is-us {
-    text-align: right; /* Aligns the text to the right */
-}
-
-.first-container {
-    background-color: var(--blue-2);
-}
-
 
 section h1 {
     font-family: 'Dela Gothic One', cursive;
@@ -25,8 +13,30 @@ section p.description {
     font-size: 1.25rem;
 }
 
+.image-container {
+    margin: 1rem; /* Adds space between the image and text */
+}
+.this-is-us {
+    font-size: 1.5rem;
+    margin: .25rem; /* Adds space between the image and text */
+    font-weight: 600;
+}
+
+.first-container {
+    background-color: var(--blue-2);
+    text-align: left;
+}
+
+.first-container .image-container {
+    text-align: right;
+}
+
 .second-container {
     text-align: right; /* Aligns contents to the right */
     margin-bottom: 1rem; /* Adds space between the heading and text */
     background-color: var(--blue-1);
+}
+
+.second-container .image-container {
+    text-align: left;
 }
