@@ -14,11 +14,10 @@
 
     <div class="confirmation-container">
         <h1>THANK YOU</h1>
-        <p>Please check youremails for updates on your purchase.</p>
+        <p>Please check your emails for updates on your purchase</p>
         <p>Or, if you need help, please contact us.</p>
-        <br></br>
 
-        <h2>Your purchase saved a total of 4.12kg of CO2.</h2>
+        <h3>Your purchase saved a total of 4.12kg of CO2!</h3>
     </div>
     <br><br><br><br>
 

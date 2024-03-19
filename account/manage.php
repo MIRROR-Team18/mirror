@@ -37,7 +37,7 @@
             //update fname in db
             else {
                 $userID = $_SESSION["userID"];
-                $sql = "UPDATE users SET firstName = '$fName' WHERE userID = '$userID'";
+                $sql = "UPDATE users SET firstName = '$fName' WHERE id = '$userID'";
                 $conn = Connection:: getConnection();
                 $conn->query($sql);
                 $conn = null;
@@ -61,7 +61,7 @@
             //update sname in db
             else {
                 $userID = $_SESSION["userID"];
-                $sql = "UPDATE users SET lastName = '$sName' WHERE userID = '$userID'";
+                $sql = "UPDATE users SET lastName = '$sName' WHERE id = '$userID'";
                 $conn = Connection:: getConnection();
                 $conn->query($sql);
                 $conn = null;
@@ -97,7 +97,7 @@
 
             //Get pre-existing hashed password
             $userID = $_SESSION["userID"];
-            $sql = "SELECT password FROM users WHERE userID = :userID";
+            $sql = "SELECT password FROM users WHERE id = :userID";
             $conn = Connection:: getConnection();
             $statment = $conn->prepare($sql);
             $statment->bindParam(':userID', $userID, PDO::PARAM_INT);
@@ -117,7 +117,7 @@
                         //update data base with new password
                         $userID = $_SESSION["userID"];
                         $newHashedPassword = password_hash($newPassword, null);
-                        $sql = "UPDATE users SET password = '$newHashedPassword' WHERE userID = '$userID'";
+                        $sql = "UPDATE users SET password = '$newHashedPassword' WHERE id = '$userID'";
                         $conn = Connection:: getConnection();
                         $conn->query($sql);
                         $conn = null;
@@ -167,7 +167,7 @@
                     case "details":
                         //Needs to get names and stuff from username based on userID
                         $userID = $_SESSION["userID"];
-                        $sql = "SELECT * FROM users WHERE userID = '$userID'";
+                        $sql = "SELECT * FROM users WHERE id = '$userID'";
                         $conn = Connection:: getConnection();
                         $user = $conn->query($sql)->fetch(PDO::FETCH_ASSOC);
                         $conn = null;
@@ -227,7 +227,7 @@
                         // Make call to database to return orders.
                         ?><div class = "wrapper"><?php
                             $userID = $_SESSION["userID"];
-                            $sql = "SELECT orderID FROM orders WHERE userID = '$userID'";
+                            $sql = "SELECT id FROM orders WHERE userID = '$userID'";
                             $conn = Connection:: getConnection();
                             $orders = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                             $conn = null;
