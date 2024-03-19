@@ -32,15 +32,46 @@
             <input type="email" id="email" name="email" class="input-large" required>
             <br>
             <input type="hidden" name="continue" value="yeah">
-            <button type="submit">Continue</button>
-        </form>
+
+            <form method="post">
+
+            
+    <label for="email" class="label-large">Email:</label>
+    <input type="email" id="email" name="email" class="input-large" required>
+    <br>
+
+    <!-- Dummy Card Details -->
+    <label for="card_number" class="label-large">Card Number:</label>
+    <input type="text" id="card_number" name="card_number" class="input-large" placeholder="4242 4242 4242 4242" required>
+    <br>
+
+    <label for="cardholder_name" class="label-large">Cardholder's Name:</label>
+    <input type="text" id="cardholder_name" name="cardholder_name" class="input-large" placeholder="John Doe" required>
+    <br>
+
+    <label for="expiry_date" class="label-large">Expiry Date (MM/YY):</label>
+    <input type="text" id="expiry_date" name="expiry_date" class="input-large" placeholder="12/23" required>
+    <br>
+
+    <label for="cvv" class="label-large">CVV:</label>
+    <input type="text" id="cvv" name="cvv" class="input-large" placeholder="123" required>
+    <br>
+    <!-- End Dummy Card Details -->
+
+    <!--Pay Now Button -->
+    <input type="hidden" name="continue" value="yeah">
+    <button type="submit">Continue</button>
+</form>
+
+
+
     </div>
 </div>
     
     <?php include '_components/footer.php'; ?>
 
     <?php
-    // Check if the form is submitted and the "Continue" button is clicked
+    // Check if the form is submitted and the "Pay Now" button is clicked
     if (isset($_POST['continue'])) {
         require_once '_components/database.php';
         $db = new Database();
@@ -50,7 +81,7 @@
 
 		// Redirect to processedCheckout.php
         header('Location: processedCheckout.php');
-        exit(); // Make sure to stop further execution
+        exit(); 
     }
     ?>
 
