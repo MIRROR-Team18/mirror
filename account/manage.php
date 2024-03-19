@@ -84,6 +84,56 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $stmt->execute([$email, $userID]);
             }
             break;
+
+        case "change-password":
+            $oldPass = $_POST['currentPassword'] ?? "";
+            $newPass = $_POST['newPassword'] ?? "";
+            $confirmNewPass = $_POST['confirmNewPassword'] ?? "";
+
+            if ($oldPass == "" || $newPass == "" || $confirmNewPass == "") {
+                $inputError = "All fields must be filled in";
+                $currentView = "change-password";
+                break;
+            }
+
+            if ($newPass != $confirmNewPass) {
+                $inputError = "New password and confirm new password do not match";
+                $currentView = "change-password";
+                break;
+            }
+
+            if (strlen($newPass) < 8) {
+                $inputError = "Password must be at least 8 characters long";
+                $currentView = "change-password";
+                break;
+            }
+
+			if (preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[\s\S]{7,256}$/', $newPass)) {
+                $inputError = "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character";
+                $currentView = "change-password";
+                break;
+			}
+
+            // Get old password, ensure it matches
+            $userID = $_SESSION["userID"];
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("SELECT password FROM users WHERE id = ?");
+            $stmt->execute([$userID]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!password_verify($oldPass, $result['password'])) {
+                $inputError = "Old password is incorrect";
+                $currentView = "change-password";
+                break;
+            }
+
+            // Update password
+            $newPass = password_hash($newPass, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+            $stmt->execute([$newPass, $userID]);
+
+            $currentView = "security";
+            break;
     }
 }
 ?>
@@ -166,14 +216,34 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 </div>
                 <?php
                 break;
+            case "change-password":
+                ?>
+                <form method = "post" action="">
+                    <input type="hidden" name="for" value="change-password">
+					<?php echo "<p>". nl2br($inputError) ."</p><br>"?>
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" name="currentPassword" id="currentPassword">
+                    <br>
+                    <label for="newPassword">New Password</label>
+                    <input type="password" name="newPassword" id="newPassword">
+                    <br>
+                    <label for="confirmNewPassword">Confirm New Password</label>
+                    <input type="password" name="confirmNewPassword" id="confirmNewPassword">
+                    <br><br>
+                    <input class="button" type="submit" value="Submit Changes">
+                </form>
+            <?php
+                break;
+
             case "pastOrders":
                 ?>
                 <h1>ORDERS</h1>
-
                 <nav class = ordersNav>
                     <form action="#" method="GET" style = "margin: 0 auto;">
-                        <input type="number" name="search" placeholder="Search by order ID">
-                        <select name="filter">
+                        <label class="sr-only" for="search">Search by Order ID</label>
+                        <input type="number" id="search" name="search" placeholder="Search by order ID">
+                        <label for="filter" class="sr-only">Filter by</label>
+                        <select id="filter" name="filter">
                             <option value="order-id-highest">Order ID (Highest)</option>
                             <option value="order-id-lowest">Order ID (Lowest)</option>
                             <option value="price-highest">Filter by Price (Highest)</option>
