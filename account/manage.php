@@ -295,15 +295,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <?php
                 break;
             case "statistics":
+                $orders = $db->getOrdersByUser($_SESSION["userID"]);
+                $totalSpent = array_reduce($orders, function($carry, $item) {
+                    return $carry + $item['paidAmount'];
+                }, 0);
                 ?>
                 <h1>STATS</h1>
                 <p>Some random facts about your account!</p>
                 <br><br>
-                <p>Total spent: £[amt]</p>
+                <p>Total spent: £<?= $totalSpent ?>></p>
                 <p>This means you have brought the equivalent of [random fact]</p>
                 <br><br>
-                <p style = "color: #2DF695;">CO2 saved: [amt]</p>
-                <p style = "color: #2DF695;">Or, done the same amount of work as [amt] trees!</p>
+                <p style = "color: var(--green);">CO2 saved: [amt]</p>
+                <p style = "color: var(--green);">Or, done the same amount of work as [amt] trees!</p>
                 <br><br>
                 <p>Articles Brought: [amt]</p>
                 <p>That's enough to fill [amt] wardrobes!</p>
