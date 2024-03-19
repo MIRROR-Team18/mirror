@@ -30,6 +30,7 @@ if (isset($_POST['input']) && !empty($_POST['input'])) {
 
     <h2>PROVE THAT YOU ARE NOT A ROBOT!!</h2>
     <img src="mirror\captcha.php">
+    mirror\captcha.php
 
     <form method="POST" >
         <input type="text" name="input" />
