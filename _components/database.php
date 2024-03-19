@@ -884,6 +884,17 @@ class Database {
 	}
 
 	/**
+	 * Gets all orders by the provided userID
+	 * @param string $userID
+	 * @return array An array of orders.
+	 */
+	public function getOrdersByUser(string $userID): array {
+		$stmt = $this->conn->prepare("SELECT * FROM orders WHERE userID = ?");
+		$stmt->execute([$userID]);
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	/**
 	 * Gets all orders.
 	 * @return array Array of all orders
 	 */
