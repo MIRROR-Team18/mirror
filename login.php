@@ -29,12 +29,7 @@ if (isset($_POST['submitted'])) {
     }
 }
 
-  /*   if ($code && password_verify($password, $data['password'])) {
-        $otp = rand(10000, 99999);
-        $otp_expiry = date("Y-m-d H:i:s", strtotime("+3 minute"));
-        $subject= "Your OTP for Login";
-        $message="Your OTP is: $otp";
-} */
+  
 ?>
 
 
