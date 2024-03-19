@@ -9,9 +9,11 @@ $msg = '';
 if (isset($_POST['input']) && !empty($_POST['input'])) {
     // If the captcha is valid
     if ($_POST['input'] == $_SESSION['captcha']) {
-        $msg = '<span style="color:green">SUCCESSFUL!!!</span>';
+        $msg = '<span style="color:green"> Successful, you will now be logged in </span>';
+        header("Location: index.php");
+        exit();
     } else {
-        $msg = '<span style="color:red">CAPTCHA FAILED!!!</span>';
+        $msg = '<span style="color:red"> Unsuccessful, try again by clicking refresh </span>';
     }
 }
 ?>
@@ -28,10 +30,11 @@ if (isset($_POST['input']) && !empty($_POST['input'])) {
 <body>
 <?php include '_components/header.php'; ?>
 
-    <h2>PROVE THAT YOU ARE NOT A ROBOT!!</h2>
+    <h4>Prove you are not a robot... enter the code that is shown in the image</h4>
+    
+   <id image>
     <img src="captcha.php">
-   
-
+   </id>
     <form method="POST" >
         <input type="text" name="input" />
         <input type="hidden" name="flag" value="1" />
@@ -43,11 +46,10 @@ if (isset($_POST['input']) && !empty($_POST['input'])) {
     </div>
 
     <div>
-        Can't read the image? Click
+      Are you unable to view the code. Click 
         <a href='<?php echo $_SERVER['PHP_SELF']; ?>'>
-            here
+            to refresh
         </a>
-        to refresh!
     </div>
 </body>
 <?php include '_components/footer.php'; ?>
