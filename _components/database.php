@@ -385,7 +385,7 @@ class Database {
 		$stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
 		$stmt->execute([$id]);
 		$result = $stmt->fetch(PDO::FETCH_ASSOC);
-		return $result ? new User($result['userID'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']) : null;
+		return $result ? new User($result['id'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']) : null;
 	}
 
 	/**
