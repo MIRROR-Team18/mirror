@@ -1,5 +1,5 @@
 <?php
-//session_start();
+session_start();
   // connect to the database
   require_once('./_components/database.php');
   $db = new Database();
