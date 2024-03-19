@@ -261,21 +261,35 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                         <th>More</th>
                     </tr>
                     <!-- Sample data rows, replace with actual data from the database -->
-                    <tr>
-                        <td>1</td>
-                        <td>5</td>
-                        <td>Shipped</td>
-                        <td>£50.00</td>
-                        <td><a href="#">View Details</a></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>Delivered</td>
-                        <td>£30.00</td>
-                        <td><a href="#">View Details</a></td>
-                    </tr>
-                    <!-- More rows here -->
+                    <?php
+                        $userID = $_SESSION["userID"];
+                        $orders = $db->getOrdersByUser($userID);
+
+                        $orders = array_filter($orders, function($order) {
+                            if (isset($_GET['search']) && $_GET['search'] != "") { // If searching
+                                return $order['id'] == $_GET['search'];
+                            }
+                            return $order['direction'] === "out"; // Only show orders going out, we don't want to display the other ones here.
+                        });
+
+                        foreach ($orders as $order) {
+                            $products = $db->getProductsInOrder($order['id']);
+                            $quantity = array_reduce($products, function($carry, $item) {
+                                return $carry + $item['quantity'];
+                            }, 0);
+							$ucStatus = ucfirst($order['status']);
+
+                            echo <<<HTML
+                            <tr>
+                                <td>{$order['id']}</td>
+                                <td>{$quantity}</td>
+                                <td>{$ucStatus}</td>
+                                <td>£{$order['paidAmount']}</td>
+                                <td><a href="#">View Details</a></td>
+                            </tr>
+                            HTML;
+                        }
+                    ?>
                 </table>
 
                 <?php
@@ -283,11 +297,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             case "statistics":
                 ?>
                 <h1>STATS</h1>
-                <p>Some random facts about your account!</p><br><br>
+                <p>Some random facts about your account!</p>
+                <br><br>
                 <p>Total spent: £[amt]</p>
-                <p>This means you have brought the equivalent of [random fact]</p><br><br>
+                <p>This means you have brought the equivalent of [random fact]</p>
+                <br><br>
                 <p style = "color: #2DF695;">CO2 saved: [amt]</p>
-                <p style = "color: #2DF695;">Or, done the same amount of work as [amt] trees!</p><br><br>
+                <p style = "color: #2DF695;">Or, done the same amount of work as [amt] trees!</p>
+                <br><br>
                 <p>Articles Brought: [amt]</p>
                 <p>That's enough to fill [amt] wardrobes!</p>
                 <?php
