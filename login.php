@@ -17,7 +17,7 @@ if (isset($_POST['submitted'])) {
         if (session_status() === PHP_SESSION_NONE) session_start();
         $_SESSION["userID"] = $login->userID;
         $_SESSION["isAdmin"] = $login->isAdmin;
-        header("Location:index.php"); // Change location to home page
+        header("Location:test1.php"); // Change location to home page
         exit();
     } catch (PDOException $ex) {
         echo ("Failed to connect to the database.<br>");
