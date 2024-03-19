@@ -26,9 +26,9 @@ if (isset($_POST['input']) && !empty($_POST['input'])) {
 <?php include '_components/header.php'; ?>
 
     <h2>PROVE THAT YOU ARE NOT A ROBOT!!</h2>
+    <img src="mirror\captcha.php">
 
     <form method="POST" >
-    <img src="mirror\captcha.php">
         <input type="text" name="input" />
         <input type="hidden" name="flag" value="1" />
         <input type="submit" value="Submit" name="submit" />
