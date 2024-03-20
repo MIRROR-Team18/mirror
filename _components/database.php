@@ -701,7 +701,7 @@ class Database {
         $results = $check->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($results as $row) {
-            if ($row["name"] == $name && $row["message"] == $message) // Don't check email again.
+            if ($row["nameProvided"] == $name && $row["message"] == $message) // Don't check email again.
                 return false; // Do not save it again.
         }
 
