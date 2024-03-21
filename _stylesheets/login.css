@@ -42,16 +42,16 @@ img {
     margin-right: auto;
   }
 
-  /* styles.css */
+  
 input[type="text"] {
-    width: 150px; /* Adjust width as needed */
+    width: 150px; 
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
 
 input[type="submit"] {
-    width: 150px; /* Adjust width as needed */
+    width: 150px; 
     margin-left: auto;
     margin-right: auto;
     
