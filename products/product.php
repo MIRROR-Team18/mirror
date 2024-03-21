@@ -9,6 +9,13 @@ if (isset($_POST['product_id'])) {
     $product = $db->getProduct($_POST['product_id']);
     $_SESSION['basket'][] = $product;
 }
+
+// Ensure $product is initialized to prevent errors
+$product = $db->getProduct($_GET['id']);
+if (is_null($product)) {
+    header('Location: /products');
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,18 +26,13 @@ if (isset($_POST['product_id'])) {
     <link rel="stylesheet" href="../_stylesheets/product.css?v=1.1">
 </head>
 <body>
-<?php include '../_components/header.php';
-    $product = $db->getProduct($_GET['id']);
-    if (is_null($product)) {
-        header('Location: /products');
-        exit();
-    }
-?>
+<?php include '../_components/header.php'; ?>
 <main class="product-container">
     <div class="product-image">
         <!-- Place your product image here -->
         <?php
-            $img = Database::findAllProductImageUrls($product->productID);
+        // Ensure $img is initialized before usage
+        $img = Database::findAllProductImageUrls($product->productID);
         ?>
         <img src="<?= $img[2] ?>" alt="Product Image">
     </div>
@@ -41,15 +43,11 @@ if (isset($_POST['product_id'])) {
 
         <div class="product-sizes">
             <span>SIZES</span>
-            <?php
-                $sizes = $product->sizes;
-                foreach ($sizes as $size) {
-                    /** @var $size Size */
-                    echo <<<HTML
-                    <button data-price="$size->price" data-stock="$size->stock">$size->name</button>
-                    HTML;
-                }
-            ?>
+            <!-- Adding size buttons -->
+            <button data-price="23.99" data-stock="10">Small</button>
+            <button data-price="25.99" data-stock="8">Medium</button>
+            <button data-price="27.99" data-stock="5">Large</button>
+            <button data-price="29.99" data-stock="3">Extra Large</button>
             <p id="stockIndicator"></p>
         </div>
 
@@ -67,22 +65,23 @@ if (isset($_POST['product_id'])) {
             const stock = button.getAttribute("data-stock");
             document.querySelector(".product-price span").innerHTML = `Price: £${price}`;
             document.querySelector("#stockIndicator").innerHTML = `Stock: ${stock} available`;
+            document.querySelector(".add-to-cart").setAttribute("data-price", price); // Add price attribute to the add-to-cart button
         });
     });
-    document.addEventListener("DOMContentLoaded", function () {
-        const sizeButtons = document.querySelectorAll(".size-button");
-        const sizeInput = document.getElementById("selected-size");
 
-        sizeButtons.forEach(button => {
-            button.addEventListener("click", () => {
-                sizeButtons.forEach(btn => btn.classList.remove("selected"));
-                button.classList.add("selected");
-                sizeInput.value = button.dataset.size;
-            });
-        });
+    document.querySelector(".add-to-cart").addEventListener("click", () => {
+        const selectedSize = document.querySelector(".product-sizes button:focus");
+        if (selectedSize) {
+            const price = selectedSize.getAttribute("data-price");
+            const productId = selectedSize.getAttribute("data-product-id");
+            // You can now use the price and productId to add the product to the basket
+            console.log("Price:", price);
+            console.log("Product ID:", productId);
+        } else {
+            console.log("Please select a size.");
+        }
     });
 </script>
 <?php include '../_components/footer.php'; ?>
 </body>
 </html>
-
