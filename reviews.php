@@ -56,23 +56,53 @@
                 </select>
             </form>
         </div>
-        <div id="reviews-list">
-            <?php 
-                $ordered = $_POST['ordered'] ?? 'overall';
-                $reviews = match($ordered) {
-                    'overall' => $db->getAllReviews(),
-                    'lowest' => $db->sortbyLowest(),
-                    'highest' => $db->sortbyHighest(),
-                    'newest' => $db->sortbyNewest(),
-                    'oldest' => $db->sortbyOldest(),
-                };
-                foreach ($reviews as $review) {
-                    $name = $review["name"];
-                    $rating = $review["rating"];
-                    $comment = $review["comment"];
-                    $date = $review["date"];
-                    $imagePath = "/_images/reviews/" . $review["filename"];
-                
+        <div id="reviews-list"></div>
+
+        <div class="reviews-container">
+
+        <?php
+
+            if(isset($_POST["ordered"])) {
+                $sorted=$_POST["ordered"];
+
+                if ($sorted == "highest") {
+                    $newlysorted = $db->sortByHighest();
+                    foreach ($newlysorted as $row) {
+                        print_r($row['name']);
+                    }
+                }
+                else if ($sorted == "lowest") {
+                    $newlysorted = $db->sortByLowest();
+                    foreach ($newlysorted as $row) {
+                        print_r($row['name']);
+                    }
+                }
+                else if ($sorted == "newest") {
+                    $newlysorted = $db->sortByNewest();
+                    foreach ($newlysorted as $row) {
+                        print_r($row['name']);
+                    }
+                }
+                else {
+                    $newlysorted = $db->sortByOldest();
+                    foreach ($newlysorted as $row) {
+                        print_r($row['name']);
+                    }
+                }
+                        
+
+        }
+            $allReviews = (isset($newlysorted)) ? ($newlysorted) : $db->getAllReviews();
+
+            $pathToPhotos = "./_images/reviews/";
+            $images = array_slice(scandir($pathToPhotos), 2); // Get all images from folder, remove first two ("." and "..")
+
+            
+                foreach ($allReviews as $review) {
+                    $photoSelected =$pathToPhotos . $images[random_int(0, sizeof($images) - 1)];
+                    if (isset($newlysorted)) {
+                        echo '    placeholder    ';
+                    }
                     echo <<<HTML
                         <div class="review">
                             <img src="$imagePath" alt="$name's photo" class="review-image">

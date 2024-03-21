@@ -6,7 +6,7 @@
 	<title>Products Admin - MIRЯOR</title>
     <link rel="stylesheet" href="../../_stylesheets/products.css">
 	<link rel="stylesheet" href="../admin.css">
-    <script src="../../_scripts/productsListing.js" defer async></script>
+    <script src="../../_scripts/listFiltering.js" defer async></script>
 </head>
 <body>
 	<?php include '../_components/header.php'; ?>
@@ -70,7 +70,7 @@
 						?>
                     </div>
                 </div>
-                <button onclick="window.location.href='./upsert.php'">
+                <button class="fullWidth" onclick="window.location.href='./upsert.php'">
                     <i class="fa-solid fa-plus"></i>
                     <span>Add Product</span>
                 </button>
@@ -83,9 +83,9 @@
 					$products = $db->getAllProducts();
 
 					foreach ($products as $product) {
-						$photo = Database::findProductImageUrl($product->productID);
+						$photo = Database::findPrimaryProductImageUrl($product->productID);
 						?>
-                        <div class="product" id="<?= $product->productID ?>"
+                        <div class="product listObject" id="<?= $product->productID ?>"
                              data-gender="<?= $product->gender ?>"
                              data-type="<?= $product->type ?>"
                              data-name="<?= $product->name ?>"

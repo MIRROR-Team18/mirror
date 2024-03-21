@@ -1,27 +1,42 @@
-body {
-    background-color: #f8f8f8;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+img {
+    width: 50%; /* Makes the image responsive */
+    aspect-ratio: 9/4;
+    object-fit: cover;
 }
 
-.about-us-content {
-    padding: 2rem 10vw;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-content: center;
+section h1 {
+    font-family: 'Dela Gothic One', cursive;
+    text-align: unset;
 }
 
-.about-us-content img {
-    max-width: 100%;
-    border-radius: 8px;
-    margin-bottom: 1rem;
+section p.description {
+    font-size: 1.25rem;
 }
 
-.about-us-content p {
-    font-size: 1.2rem;
-    line-height: 1.5;
-    text-align: justify;
-    color: #333;
+.image-container {
+    margin: 1rem; /* Adds space between the image and text */
+}
+.this-is-us {
+    font-size: 1.5rem;
+    margin: .25rem; /* Adds space between the image and text */
+    font-weight: 600;
+}
+
+.first-container {
+    background-color: var(--blue-2);
+    text-align: left;
+}
+
+.first-container .image-container {
+    text-align: right;
+}
+
+.second-container {
+    text-align: right; /* Aligns contents to the right */
+    margin-bottom: 1rem; /* Adds space between the heading and text */
+    background-color: var(--blue-1);
+}
+
+.second-container .image-container {
+    text-align: left;
 }

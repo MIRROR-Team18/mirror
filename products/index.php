@@ -4,7 +4,7 @@
     <?php include '../_components/default.php'; ?>
     <title>Products - MIRЯOR</title>
     <link rel="stylesheet" href="../_stylesheets/products.css">
-    <script src="../_scripts/productsListing.js" defer async></script>
+    <script src="../_scripts/listFiltering.js" defer async></script>
 </head>
 <body>
     <?php include '../_components/header.php'; ?>
@@ -73,7 +73,7 @@
 					$products = $db->getAllProducts();
 
 					foreach ($products as $product) {
-                        $photo = Database::findProductImageUrl($product->productID);
+                        $photo = Database::findPrimaryProductImageUrl($product->productID);
                         $price = "Unknown...";
 
                         if (sizeof($product->sizes) > 0) {
@@ -89,7 +89,7 @@
                         }
 
                     ?>
-                        <div class="product" id="<?= $product->productID ?>"
+                        <div class="product listObject" id="<?= $product->productID ?>"
                              data-gender="<?= $product->gender ?>"
                              data-type="<?= $product->type ?>"
                              data-name="<?= $product->name ?>"
