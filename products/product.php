@@ -21,6 +21,10 @@ if (isset($_POST['product_id'])) {
 <body>
 <?php include '../_components/header.php';
     $product = $db->getProduct($_GET['id']);
+    if (is_null($product)) {
+        header('Location: /products');
+        exit();
+    }
 ?>
 <main class="product-container">
     <div class="product-image">
@@ -33,24 +37,39 @@ if (isset($_POST['product_id'])) {
     <div class="product-details">
         <h1><?= $product->name ?></h1>
         <!-- Product description here -->
-        <p>Product description...</p>
+        <p><?= $product->description ?></p>
         
         <div class="product-sizes">
             <span>SIZES</span>
-            <button>S</button>
-            <button>M</button>
-            <button>L</button>
-            <button>XL</button>
-            <p>3 items left at this size!</p>
+            <?php
+                $sizes = $product->sizes;
+                foreach ($sizes as $size) {
+                    /** @var $size Size */
+                    echo <<<HTML
+                    <button data-price="$size->price" data-stock="$size->stock">$size->name</button>
+                    HTML;
+                }
+            ?>
+            <p id="stockIndicator"></p>
         </div>
         
         <div class="product-price">
-            <span>£23.99</span>
+            <span>Click on a size...</span>
         </div>
         
         <button class="add-to-cart">Add to Cart</button>
     </div>
 </main>
+<script>
+    document.querySelectorAll("button").forEach(button => {
+        button.addEventListener("click", () => {
+            const price = button.getAttribute("data-price");
+            const stock = button.getAttribute("data-stock");
+            document.querySelector(".product-price span").innerHTML = `Price: £${price}`;
+            document.querySelector("#stockIndicator").innerHTML = `Stock: ${stock} available`;
+        });
+    });
+</script>
 
 <?php include '../_components/footer.php'; ?>
 </body>
