@@ -14,17 +14,32 @@ h2{
     margin:auto;
 }
 
-.Register{
-    display: grid;
+.formR{
+    width: 400px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;  
+}
+        
+  .Register{
+    column-count: 2;
+    column-gap: 50px;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 3fr 1fr;
+    column-fill:balance;
+    display: grid;
+    grid-auto-flow: dense;
+    grid-gap: 50px;
     grid-template-areas:
         "left right"
         "bottom bottom";
     
-}
+}  
 
-.Register .left {
+
+ .Register .left {
     grid-area: left;
     
 }
@@ -38,6 +53,8 @@ h2{
     grid-area: bottom;
     
 }
+ 
+
 
 form {
     display: flex;
