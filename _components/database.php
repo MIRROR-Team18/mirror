@@ -922,7 +922,7 @@ class Database {
 	 * @return array Array of all reviews
 	 */
 	public function getAllReviews(): array {
-		$stmt = $this->conn->prepare("SELECT * FROM reviews");
+		$stmt = $this->conn->prepare("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id");
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
@@ -986,6 +986,23 @@ class Database {
 			$sizes[] = new Size($size['id'], $size['name'], $size['isKids'], 0, 0);
 		}
 		return $sizes;
+	}
+  
+	public function sortbyHighest(){
+		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id order by rating DESC");
+		return $check->fetchAll();
+	} 
+	public function sortbyLowest(){
+		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id order by rating ASC");
+		return $check->fetchAll();
+	}
+	public function sortbyNewest(){
+		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id order by date DESC");
+		return $check->fetchAll();
+	}
+	public function sortbyOldest(){
+		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id  order by date ASC");
+    return $check->fetchAll();
 	}
 
 	/**
@@ -1113,23 +1130,6 @@ class Database {
 		$stmt->execute([$alertID]);
 
 		return true;
-	}
-
-	public function sortByHighest(): array {
-		$check = $this->conn->query("SELECT * FROM reviews order by rating DESC");
-		return $check->fetchAll();
-	} 
-	public function sortByLowest(): array {
-		$check = $this->conn->query("SELECT * FROM reviews order by rating");
-		return $check->fetchAll();
-	}
-	public function sortByNewest(): array {
-		$check = $this->conn->query("SELECT * FROM reviews order by date DESC");
-		return $check->fetchAll();
-	}
-	public function sortByOldest(): array {
-		$check = $this->conn->query("SELECT * FROM reviews order by date");
-		return $check->fetchAll();
 	}
 }
 
