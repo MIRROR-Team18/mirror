@@ -87,49 +87,52 @@ if (isset($_POST['submitted'])){
 <html lang="en">
 <meta charset="utf-8">
 <head>
-    <link rel="stylesheet" type="text/css" href="_stylesheets/main.css"/>
+    <?php include "_components/default.php" ?>
     <link rel="stylesheet" type="text/css" href="_stylesheets/login.css"/>
-
     <title>Register </title>
-    <link rel="stylesheet" href="./_stylesheets/main.css">
 
 </head>
 
 <body>
 <?php include '_components/header.php'; ?>
-<main class="Register">
-    <h2>Register</h2><br>
-    <h4> You can register if you are a new user and need to set up login details. </h4>
-    <br><h4> Please be ready to provide a username, password and valid email address.</h4><br>
-    <br>
-    <!-- <min  = "RegisterF"> -->
-    
-    <form method="post" action="register.php">
+<main>
+    <section>
+    <h1>Register</h1>
+    <form method="post" action="register.php" class="Register">
 
-        <label for="Firstname">First Name:</label>
-        <input type="text" id="Firstname" name="Firstname" placeholder="First name" required/><br>
-        <label for="Lastname">Last Name:</label>
-        <input type="text" id="Lastname" name="Last name" placeholder="Last name" required/><br>
+        <div class="left">
+            <label for="Firstname">First Name:</label>
+            <input type="text" id="Firstname" name="Firstname" placeholder="First name" required/><br>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" placeholder="Email" required pattern=".+(\.co.uk\.uk|\.com)" title="Please a valid email address."/><br>
-        <label for="confirm_email">Confirm Email:</label>
-        <input type="email" id="confirm_email" name="confirm_email" placeholder="Confirm Email" required/><br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Email" required pattern=".+(\.co.uk\.uk|\.com)" title="Please a valid email address."/><br>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" placeholder="Password" required/><br>
-        <label for="confirm_pass">Confirm Password:</label>
-        <input type="password" id="confirm_pass" name="confirm_pass" placeholder="Confirm password" required/><br>
-        
-    
-        <input type="submit" value="Register"/>
-        <input type="reset" value="Clear"/>
-        <input type="hidden" name="submitted" value="true"/>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Password" required/><br>
+        </div>
+        <div class="right">
+            <label for="Lastname">Last Name:</label>
+            <input type="text" id="Lastname" name="Last name" placeholder="Last name" required/><br>
+
+            <label for="confirm_email">Confirm Email:</label>
+            <input type="email" id="confirm_email" name="confirm_email" placeholder="Confirm Email" required/><br>
+
+            <label for="confirm_pass">Confirm Password:</label>
+            <input type="password" id="confirm_pass" name="confirm_pass" placeholder="Confirm password" required/><br>
+        </div>
+
+        <div class="bottom">
+            <input type="submit" value="Register"/>
+            <input type="reset" value="Clear"/>
+            <input type="hidden" name="submitted" value="true"/>
+        </div>
     </form>
 
     <p> Already a user? <a href="login.php">Log in</a></p>
     <p> Return back to the <a href="index.php"><em>home page</em></a></p> <!-- change html to homepage  -->
-    </main>
+
+    </section>
+</main>
 
 <?php include '_components/footer.php'; ?>
 </body>
