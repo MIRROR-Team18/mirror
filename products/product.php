@@ -1,3 +1,4 @@
+
 <?php
 require_once '../_components/database.php';
 $db = new Database();
