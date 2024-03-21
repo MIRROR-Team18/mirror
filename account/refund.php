@@ -2,11 +2,12 @@
 // Only accessible if logged in
 if (session_status() === PHP_SESSION_NONE) session_start();
 if (!isset($_SESSION['userID'])) {
-	// Redirect back to the refund page with an error message
-	header("Location: ../login.php?error=not_logged_in");
-	exit();
+    // Redirect back to the refund page with an error message
+    header("Location: ../login.php?error=not_logged_in");
+    exit();
 }
 $orderNum = $_GET['order_number'] ?? "";
+$successMessage = isset($_GET['success']) ? $_GET['success'] : ""; // Check if there's a success message
 ?>
 
 <!DOCTYPE html>
@@ -17,14 +18,15 @@ $orderNum = $_GET['order_number'] ?? "";
     <title>Refund Request</title>
     <link rel="stylesheet" href="../_stylesheets/main.css">
     <link rel="stylesheet" href="../_stylesheets/refund.css">
-  
 </head>
 <body>
     <?php include '../_components/header.php'; ?>
-
-
+    
     <main class="container">
         <h2>Refund Request</h2>
+        <?php if ($successMessage): ?>
+            <p class="success-message"><?= $successMessage ?></p>
+        <?php endif; ?>
         <p class="subtitle">Fill in all the details</p>
         <form action="refund_processed.php" method="post">
             <label for="order_number">Order Number:</label>
@@ -40,7 +42,6 @@ $orderNum = $_GET['order_number'] ?? "";
         </form>
     </main>
 
-
-	<?php include '../_components/footer.php'; ?>
+    <?php include '../_components/footer.php'; ?>
 </body>
 </html>
