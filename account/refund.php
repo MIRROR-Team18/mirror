@@ -25,9 +25,13 @@ $orderNum = $_GET['order_number'] ?? "";
 
     <main class="container">
         <h2>Refund Request</h2>
+        <p class="subtitle">Fill in all the details</p>
         <form action="refund_processed.php" method="post">
             <label for="order_number">Order Number:</label>
             <input type="text" id="order_number" name="order_number" value="<?= $orderNum ?>" required>
+
+            <label for="product_number">Product Number (if returning one item):</label>
+            <input type="text" id="product_number" name="product_number">
 
             <label for="reason">Reason for Refund:</label>
             <textarea id="reason" name="reason" rows="4" required></textarea>
@@ -35,7 +39,6 @@ $orderNum = $_GET['order_number'] ?? "";
             <input type="submit" value="Submit Refund Request">
         </form>
     </main>
-
 
 
 	<?php include '../_components/footer.php'; ?>
