@@ -97,7 +97,7 @@ if (isset($_POST['submitted'])){
 
 <body>
 <?php include '_components/header.php'; ?>
-<main class="Register">
+ <main class="Register">
     <h2>Register</h2><br>
     <h4> You can register if you are a new user and need to set up login details. </h4>
     <br><h4> Please be ready to provide a username, password and valid email address.</h4><br>

@@ -21,8 +21,7 @@ h2{
     grid-template-areas:
         "left right"
         "bottom bottom";
-    grid-column-gap: 50px;
-    grid-row-gap: 50px;
+    
 }
 
 .Register .left {
