@@ -18,11 +18,11 @@ h2{
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 3fr 1fr;
-    grid-column-gap: 50px;
-    grid-row-gap: 50px;
     grid-template-areas:
         "left right"
         "bottom bottom";
+    grid-column-gap: 50px;
+    grid-row-gap: 50px;
 }
 
 .Register .left {

@@ -130,7 +130,7 @@ if (isset($_POST['submitted'])){
 
     <p> Already a user? <a href="login.php">Log in</a></p>
     <p> Return back to the <a href="index.php"><em>home page</em></a></p> <!-- changed html to homepage  -->
-    </main>
+ </main>
 
 <?php include '_components/footer.php'; ?>
 </body>
