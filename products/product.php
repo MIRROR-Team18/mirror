@@ -28,10 +28,7 @@ if (isset($_POST['product_id'])) {
 ?>
 <main class="product-container">
     <div class="product-image">
-        <!-- Place your product image here -->
-        <?php
-            $img = Database::findAllProductImageUrls($product->productID);
-        ?>
+        <?php $img = Database::findAllProductImageUrls($product->productID); ?>
         <img src="<?= $img[2] ?>" alt="Product Image">
     </div>
     <div class="product-details">
@@ -69,8 +66,19 @@ if (isset($_POST['product_id'])) {
             document.querySelector("#stockIndicator").innerHTML = `Stock: ${stock} available`;
         });
     });
-</script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sizeButtons = document.querySelectorAll(".size-button");
+        const sizeInput = document.getElementById("selected-size");
 
+        sizeButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                sizeButtons.forEach(btn => btn.classList.remove("selected"));
+                button.classList.add("selected");
+                sizeInput.value = button.dataset.size;
+            });
+        });
+    });
+</script>
 <?php include '../_components/footer.php'; ?>
 </body>
 </html>
