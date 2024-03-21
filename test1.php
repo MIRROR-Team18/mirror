@@ -30,7 +30,7 @@ if (isset($_POST['input']) && !empty($_POST['input'])) {
 <body>
 <?php include '_components/header.php'; ?>
 
-    <h4>Prove you are not a robot... enter the code that is shown in the image</h4>
+    <h4>Prove you are not a robot to succefully log in... enter the code that is shown in the image</h4>
     
    <id image>
     <img src="captcha.php">
