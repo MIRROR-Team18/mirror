@@ -12,17 +12,17 @@ $captcha = rand(10000, 99999);
 // The captcha will be stored for the session
 $_SESSION["captcha"] = $captcha; 
 
-// Generate a 90x64 standard captcha image
-$image = imagecreatetruecolor(90, 64); 
+// Generate a 250x250 standard captcha image
+$image = imagecreatetruecolor(250, 250); 
 
 // White color for the image text
 $white = imagecolorallocate($image, 255, 255, 255);
 
 // Give the image a black background
-imagefill($image, 0, 0, 0); 
+//imagefill($image, 0, 0,0); 
 
 //imagestring will print the captcha text within the image, with a position and size.
-imagestring($image, 20, 30, 40, $captcha, $white);
+imagestring($image, 175, 100, 120, $captcha, $white);
 
 // used to prevent any Browser Cache!!
 header("Cache-Control: no-store, no-cache, must-revalidate"); 

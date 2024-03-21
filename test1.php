@@ -32,25 +32,23 @@ if (isset($_POST['input']) && !empty($_POST['input'])) {
 
     <h4>Prove you are not a robot to succefully log in... enter the code that is shown in the image</h4>
     
-   <id image>
     <img src="captcha.php">
-   </id>
+ 
+ 
     <form method="POST" >
         <input type="text" name="input" />
         <input type="hidden" name="flag" value="1" />
         <input type="submit" value="Submit" name="submit" />
     </form>
-
+    
     <div style='margin-bottom:5px'>
         <?php echo $msg; ?>
     </div>
-
-    <div>
+ 
       Are you unable to view the code. Click 
         <a href='<?php echo $_SERVER['PHP_SELF']; ?>'>
             to refresh
         </a>
-    </div>
 </body>
 <?php include '_components/footer.php'; ?>
 </html>
