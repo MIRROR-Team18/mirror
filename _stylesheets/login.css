@@ -27,19 +27,17 @@ h2{
 
 .Register .left {
     grid-area: left;
-    gap: 50px;
     
 }
 
 .Register .right {
     grid-area: right;
-    gap: 50px;
     
 }
 
 .Register .bottom {
     grid-area: bottom;
-    gap: 50px;
+    
 }
 
 form {

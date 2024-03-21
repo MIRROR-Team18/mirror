@@ -120,12 +120,13 @@ if (isset($_POST['submitted'])){
         <input type="password" id="password" name="password" placeholder="Password" required/><br>
         <label for="confirm_pass">Confirm Password:</label>
         <input type="password" id="confirm_pass" name="confirm_pass" placeholder="Confirm password" required/><br>
-        
+  
     
         <input type="submit" value="Register"/>
         <input type="reset" value="Clear"/>
         <input type="hidden" name="submitted" value="true"/>
     </form>
+    
 
     <p> Already a user? <a href="login.php">Log in</a></p>
     <p> Return back to the <a href="index.php"><em>home page</em></a></p> <!-- changed html to homepage  -->
