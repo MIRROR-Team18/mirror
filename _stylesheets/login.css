@@ -10,15 +10,29 @@ h2{
     border:1px solid #ccc;
     */
     padding: 20px;
-    width: 500px;
     border-radius: 8px;
-    margin:auto ;
+    margin:auto;
 }
 
 .Register{
-    column-count: 2;
-    column-gap: 50px;
-    column-fill:balance;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 3fr 1fr;
+    grid-template-areas:
+        "left right"
+        "bottom bottom";
+}
+
+.Register .left {
+    grid-area: left;
+}
+
+.Register .right {
+    grid-area: right;
+}
+
+.Register .bottom {
+    grid-area: bottom;
 }
 
 form {
@@ -42,17 +56,11 @@ img {
     margin-right: auto;
   }
 
-  
+
 input[type="text"] {
-    width: 150px; 
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
 }
 
 input[type="submit"] {
-    width: 150px; 
-    margin-left: auto;
-    margin-right: auto;
-    
+    margin: auto;
 }
