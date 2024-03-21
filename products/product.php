@@ -28,7 +28,10 @@ if (isset($_POST['product_id'])) {
 ?>
 <main class="product-container">
     <div class="product-image">
-        <?php $img = Database::findAllProductImageUrls($product->productID); ?>
+        <!-- Place your product image here -->
+        <?php
+            $img = Database::findAllProductImageUrls($product->productID);
+        ?>
         <img src="<?= $img[2] ?>" alt="Product Image">
     </div>
     <div class="product-details">
