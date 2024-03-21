@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Shopping Basket - MIЯЯOR</title>
+    <title>Basket - MIЯЯOR</title>
     <link rel="stylesheet" href="_stylesheets/main.css">
     <link rel="stylesheet" href="_stylesheets/basket.css">
 </head>
+
 <body>
     <?php include '_components/header.php'; ?>
 
     <main class="basket-container">
-        <h1>Your Shopping Basket</h1>
+        <h1>Basket</h1>
         <table id="basket">
             <thead>
                 <tr>
@@ -23,51 +25,44 @@
             </thead>
             <tbody>
                 <?php
-				    require_once '_components/database.php';
-				    if (session_status() === PHP_SESSION_NONE) session_start();
-				    $total = 0; // Used at the bottom
+                require_once '_components/database.php';
+                if (session_status() === PHP_SESSION_NONE)
+                    session_start();
+                $total = 0; // Used at the bottom
+                
+                if (isset($_SESSION['basket'])) {
+                    $basket = array_map(function ($item) {
+                        return unserialize(serialize($item));
+                    }, $_SESSION['basket']);
 
-                    if (isset($_SESSION['basket'])) {
-						// Fixes __PHP_Incomplete_Class_Name. Did you know I dislike PHP? - Pawel
-						$basket = array_map(function ($item) {
-							return unserialize(serialize($item));
-						}, $_SESSION['basket']);
+                    foreach ($basket as $item) {
+                        $photo = file_exists("_images/products/{$item->productID}/") ? "_images/products/{$item->productID}/" . scandir("_images/products/{$item->productID}/")[2] : "https://picsum.photos/512";
 
-                        foreach ($basket as $item) {
-							/* @var $item Product */
+                        $sizeName = $item->sizes[0]->name ?? "One Size";
+                        $sizePrice = $item->sizes[0]->price ?? 0;
 
-                            $MAX_QUANTITY = 10;
-                            $quantityOptions = "";
-                            for ($i = 1; $i <= $MAX_QUANTITY; $i++) {
-                                $quantityOptions .= "<option value='$i'>$i</option>";
-                            }
-
-							$pathForPhoto = "./_images/products/" . $item->productID . "/";
-							$photo = file_exists($pathForPhoto) ? $pathForPhoto . scandir($pathForPhoto)[2] : "https://picsum.photos/512"; // [0] is ".", [1] is ".."
-
-                            $sizeName = $item->sizes[0]->name ?? "One Size";
-                            $sizePrice = $item->sizes[0]->price ?? 0;
-
-                            echo <<<EOT
-                            <tr id="{$item->productID}">
-                                <td><img src="{$photo}" alt="{$item->name}" class="product-image"></td>
-                                <td>
-                                    <p class="name">{$item->name}</p>
-                                    <p>Color: {$sizeName}</p>
-                                </td>
-                                <td>
-                                    <select>$quantityOptions</select>
-                                </td>
-                                <td class="price">£{$sizePrice}</td>
-                            </tr>      
-                            EOT;
-
-                            $total += $sizePrice;
-                        }
-                    } else {
-                        echo "<tr><td colspan='4'>Your basket is empty!</td></tr>";
+                        echo <<<EOT
+            <tr id="{$item->productID}">
+                <td><img src="{$photo}" alt="{$item->name}" class="product-image"></td>
+                <td>
+                    <p class="name">{$item->name}</p>
+                    <p>Color: {$sizeName}</p>
+                    <p>Price: £{$sizePrice}</p>
+                    <p>You saved 3.06kg of CO2 emissions!</p>
+                </td>
+                <td>
+                    <select>
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <!-- Add more quantity options as needed -->
+                    </select>
+                </td>
+            </tr>
+        EOT;
                     }
-				?>
+                }
+                ?>
             </tbody>
         </table>
 
@@ -75,9 +70,12 @@
         <div id="order-summary">
             <h2>Order Summary</h2>
             <!-- <p>Order Value: £19.99</p> Reimplement after MVP -->
+
             <!-- Add other order summary details as needed -->
             <div id="total">TOTAL: £0.00</div>
+
             <!-- Use an anchor tag around the button for navigation -->
+
             <button onclick="storeQuantityData()" id="continue-to-checkout">Continue to Checkout</button>
         </div>
     </main>
@@ -114,4 +112,5 @@
 
     <?php include '_components/footer.php'; ?>
 </body>
+
 </html>

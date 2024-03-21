@@ -1,16 +1,23 @@
 /* basket.css */
 /*Style for basket page */
-
 body {
-    background-color: #f4f4f4;
+    background-color: #0d0032;
+    color: white;
 }
 
 .basket-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
+    background-color: var(--blue-2);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: grid;
+    /* Use grid layout */
+    grid-template-columns: 1fr 1fr;
+    /* Two columns */
+    gap: 20px;
+    /* Gap between columns */
+    overflow: hidden;
 }
 
 #basket {
@@ -42,23 +49,31 @@ body {
 #total {
     font-size: 1.2rem;
     margin-top: 10px;
+    text-align: right;
+    /* Align total to the right */
 }
 
 #continue-to-checkout {
     display: inline-block;
+    width: 50%;
     padding: 10px 20px;
-    background-color: var(--mirror-blue); /* Change the button color */
+    margin: 10px 0;
+    background-color: var(--blue-4);
+    /* Change the button color */
     color: white;
     border: none;
     border-radius: 5px;
     font-size: 1rem;
     cursor: pointer;
-    text-decoration: none; /* Remove underline from anchor tag */
-    transition: background-color 0.3s ease; /* Add a smooth transition effect */
+    text-decoration: none;
+    /* Remove underline from anchor tag */
+    transition: background-color 0.3s ease;
+    /* Add a smooth transition effect */
 }
 
 #continue-to-checkout:hover {
-    background-color: #0d0032; /* Change the button color on hover */
+    background-color: #0d0032;
+    /* Change the button color on hover */
 }
 
 /* Fancy drop-down menu */
@@ -70,12 +85,15 @@ body {
 }
 
 #basket select::after {
-    content: '\25BC'; /* Unicode character for down arrow */
+    content: '\25BC';
+    /* Unicode character for down arrow */
     position: absolute;
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
     pointer-events: none;
+    width: 1440px;
+    height: 1024px;
 }
 
 #basket select:focus {
@@ -84,19 +102,22 @@ body {
     box-shadow: 0 0 5px rgba(31, 0, 93, 0.5);
 }
 
-
-
 /* Style for Checkout Page */
-
 .checkout-container {
     text-align: center;
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    background-color: #0d0032;
+    /* Change to dark blue */
+    color: white;
+    /* Change text color to white */
 }
 
 .checkout-content {
     text-align: center;
+    color: white;
+    /* Change text color to white */
 }
 
 .checkout-content p {
@@ -104,14 +125,16 @@ body {
 }
 
 .checkout-content form {
-    max-width: 400px;
     margin: 0 auto;
 }
 
 .checkout-content form button {
-    width: 100%; /* Set the button width to 100% */
-    max-width: 200px; /* Set a max-width to avoid excessive stretching */
-    margin: 10px auto; /* Center the button with margin */
+    width: 100%;
+    /* Set the button width to 100% */
+    max-width: 200px;
+    /* Set a max-width to avoid excessive stretching */
+    margin: 10px auto;
+    /* Center the button with margin */
 }
 
 /* Common styles for footer */
@@ -122,36 +145,12 @@ body {
     padding: 10px;
 }
 
-
-
-
-/* Style for Processed Checkout Page */
-.confirmation-container {
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto;
+/* Dummy Card details */
+.card-details-container {
     padding: 20px;
-}
-
-.confirmation-container h1 {
-    color: #1f005d; /* Mirror theme color, adjust as needed */
-}
-
-.confirmation-container p {
-    font-size: 1rem;
-    margin: 10px 0;
-}
-
-
-
-/* email to appear bigger test code*/
-
-.label-large {
-    font-size: 1.2rem; /* Adjust the font size as needed */
-}
-
-.input-large {
-    width: 100%; /* Make the input field take up 100% of the available width */
-    padding: 8px; /* Adjust the padding as needed */
-    font-size: 1rem; /* Adjust the font size as needed */
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    grid-column: 2 / 3;
+    /* Place in the right column */
 }
