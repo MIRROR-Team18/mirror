@@ -21,6 +21,37 @@ if (isset($_POST['product_id'])) {
 <body>
 <?php include '../_components/header.php';
     $product = $db->getProduct($_GET['id']);
+?>
+<main class="product-container">
+    <div class="product-image">
+        <!-- Place your product image here -->
+        <?php
+            $img = Database::findAllProductImageUrls($product->productID);
+        ?>
+        <img src="<?= $img[2] ?>" alt="Product Image">
+    </div>
+    <div class="product-details">
+        <h1><?= $product->name ?></h1>
+        <!-- Product description here -->
+        <p>Product description...</p>
+
+        <div class="product-sizes">
+            <span>SIZES</span>
+            <button>S</button>
+            <button>M</button>
+            <button>L</button>
+            <button>XL</button>
+            <p>3 items left at this size!</p>
+        </div>
+
+        <div class="product-price">
+            <span>£23.99</span>
+        </div>
+
+        <button class="add-to-cart">Add to Cart</button>
+    </div>
+<?php include '../_components/header.php';
+    $product = $db->getProduct($_GET['id']);
     if (is_null($product)) {
         header('Location: /products');
         exit();
@@ -38,7 +69,7 @@ if (isset($_POST['product_id'])) {
         <h1><?= $product->name ?></h1>
         <!-- Product description here -->
         <p><?= $product->description ?></p>
-        
+
         <div class="product-sizes">
             <span>SIZES</span>
             <?php
@@ -52,11 +83,11 @@ if (isset($_POST['product_id'])) {
             ?>
             <p id="stockIndicator"></p>
         </div>
-        
+
         <div class="product-price">
             <span>Click on a size...</span>
         </div>
-        
+
         <button class="add-to-cart">Add to Cart</button>
     </div>
 </main>
@@ -74,4 +105,3 @@ if (isset($_POST['product_id'])) {
 <?php include '../_components/footer.php'; ?>
 </body>
 </html>
-
