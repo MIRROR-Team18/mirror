@@ -1,27 +1,71 @@
-h2{
+h1 {
     text-align: center;
-    text-decoration: underline;
+    font-family: 'Dela Gothic One', cursive;
+    font-size: 4rem;
+    margin-bottom: 1rem;
 }
 
-.Register, .login-1 {
-    background-color: #fff;
-    border:1px solid #ccc;
-    padding: 20px;
-    width: 500px;
-    border-radius: 8px;
-    margin:auto ;
+.Register {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 3fr 1fr;
+    display: grid;
+    grid-template-areas:
+        "left right"
+        "bottom bottom";
 }
+
+
+.Register .left {
+    grid-area: left;
+
+}
+
+.Register .right {
+    grid-area: right;
+
+}
+
+.Register .bottom {
+    grid-area: bottom;
+    text-align: center;
+
+}
+
 
 form {
     display: flex;
     flex-direction: column;
+    width: min-content;
+    margin: auto;
 }
+
 
 label {
     margin-bottom: 4px;
 }
 
 input {
-    padding: 4px;
-    margin-bottom: 10px;
+    margin: .5rem;
+}
+
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.center {
+    text-align: center;
+    color: var(--blue-5);
+    margin-top: 1rem;
+}
+
+.center a {
+    color: white;
+}
+
+.login-1 .button {
+    width: 50%;
+    padding: .5rem 2rem;
 }
