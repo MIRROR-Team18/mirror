@@ -26,9 +26,9 @@ h2{
 
 }
         
-  .Register{
+   .Register{
     column-count: 2;
-    column-gap: 70px;
+    grid-column-gap: 70px;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 3fr 1fr;
     column-fill:balance;
@@ -38,9 +38,10 @@ h2{
     grid-gap: 50px;
     grid-template-areas:
         "left right"
-        "bottom bottom";
-    
-}  
+        "bottom bottom"; 
+  }
+        
+  
 
 
  .Register .left {

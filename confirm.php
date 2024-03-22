@@ -30,7 +30,7 @@ if (isset($_POST['input']) && !empty($_POST['input'])) {
 <body>
 <?php include '_components/header.php'; ?>
 
-    <h3><centre>Prove you are not a robot to succefully log in... enter the code that is shown in the image</centre></h3>
+   <div class = "center"> <h3>Prove you are not a robot to succefully log in... enter the code that is shown in the image</h3></div>
     
     <img src="captcha.php">
  
@@ -45,10 +45,12 @@ if (isset($_POST['input']) && !empty($_POST['input'])) {
         <?php echo $msg; ?>
     </div>
  
+     <div class = "center">
       Are you unable to view the code. Click 
         <a href='<?php echo $_SERVER['PHP_SELF']; ?>'>
             to refresh
         </a>
+     </div>
 </body>
 <?php include '_components/footer.php'; ?>
 </html>
