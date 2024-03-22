@@ -299,18 +299,29 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $totalSpent = array_reduce($orders, function($carry, $item) {
                     return $carry + $item['paidAmount'];
                 }, 0);
+                $totalBought = array_reduce($orders, function($carry, $item) {
+					global $db;
+					return $carry + count($db->getProductsInOrder($item['id']));
+                }, 0);
+
+                include "../_components/accountFacts.php";
+                $fact = getRandomFact();
+                $comparison = round($totalSpent / $fact['cost'], 8);
+
                 ?>
                 <h1>STATS</h1>
                 <p>Some random facts about your account!</p>
                 <br><br>
-                <p>Total spent: £<?= $totalSpent ?>></p>
-                <p>This means you have brought the equivalent of [random fact]</p>
+                <p>Total spent: £<?= $totalSpent ?></p>
+                <p>This means you have brought the equivalent of <?= $comparison ?> <?= $fact['object'] . ($comparison != 1 ? "s" : "") ?> <?= $fact['historical'] ? "(in today's money)" : "" ?></p>
                 <br><br>
-                <p style = "color: var(--green);">CO2 saved: [amt]</p>
-                <p style = "color: var(--green);">Or, done the same amount of work as [amt] trees!</p>
+                <!-- We aren't tracking carbon emissions yet, so this is just a placeholder -->
+                <p style = "color: var(--green);">CO2 saved: 0g</p>
+                <p style = "color: var(--green);">Or, done the same amount of work as 0 trees!</p>
                 <br><br>
-                <p>Articles Brought: [amt]</p>
-                <p>That's enough to fill [amt] wardrobes!</p>
+                <p>Articles Brought: <?= $totalBought ?></p>
+                <p>That's enough to fill <?= round($totalBought / 74, 2) ?> wardrobes!</p>
+                <!-- Source for 74 clothes: 4th paragraph of https://www.vogue.com/article/how-many-clothes-should-we-own -->
                 <?php
                 break;
             case "dangerZone":
