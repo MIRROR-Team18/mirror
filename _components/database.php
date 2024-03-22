@@ -932,10 +932,11 @@ class Database {
 	 * @param string $name
 	 * @param int $rating
 	 * @param string $comment
+	 * @param string $imageID
 	 * @return bool True if succeeded successfully
 	 * @throws Exception If an error occurred (and a check should've happened already)
 	 */
-	public function addReview(string $name, int $rating, string $comment): bool {
+	public function addReview(string $name, int $rating, string $comment, string $imageID): bool {
 		if ($rating > 5 || $rating < 1) throw new Exception("Invalid rating provided!");
 
 		$check = $this->conn->prepare("SELECT * FROM reviews WHERE name = ?");
@@ -945,10 +946,21 @@ class Database {
 			if ($review['rating'] == $rating && $review['comment'] == $comment) return false; // Duplicate entry, do not enter
 		}
 
-		$stmt = $this->conn->prepare("INSERT INTO reviews (name, rating, comment, date, type) VALUES (?, ?, ?, ?, ?)");
-		$stmt->execute([$name, $rating, $comment, date("Y-m-d"), "site"]);
+		$stmt = $this->conn->prepare("INSERT INTO reviews (name, rating, comment, date, type, imageID) VALUES (?, ?, ?, ?, ?, ?)");
+		$stmt->execute([$name, $rating, $comment, date("Y-m-d"), "site", $imageID]);
 
 		return true;
+	}
+
+	/**
+	 * Creates a row in the user_images table, returning the new imageID.
+	 * @param string $filename
+	 * @return string The ID of the image created
+	 */
+	public function createUserImage(string $filename): string {
+		$stmt = $this->conn->prepare("INSERT INTO user_images (filename, approved) VALUES (?, 0)");
+		$stmt->execute([$filename]);
+		return $this->conn->lastInsertId();
 	}
   
 	/**

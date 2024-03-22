@@ -6,7 +6,7 @@
         $db = new Database();
         try {
             $img = $_FILES['image'];
-            $path = "./_image/reviews/";
+            $path = "./_images/reviews/";
 
             if (!scandir($path)) {
                 mkdir($path);
@@ -19,7 +19,8 @@
                 throw new Exception("Issue with image!");
             }
 
-			$db->addReview($_POST["name"], $_POST["rating"], $_POST["comment"]);
+            $imageID = $db->createUserImage($img['name']);
+			$db->addReview($_POST["name"], $_POST["rating"], $_POST["comment"], $imageID);
         } catch (Exception $e) {
             exit("An error occurred when saving your review! " . $e->getMessage());
         }
