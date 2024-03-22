@@ -115,6 +115,7 @@ if (isset($_POST['submitted'])){
             <input type="password" id="password" name="password" placeholder="Password" required/><br>
         </div>
         <div class="right">
+    
             <label for="Lastname">Last Name:</label>
             <input type="text" id="Lastname" name="Last name" placeholder="Last name" required/><br>
 

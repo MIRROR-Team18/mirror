@@ -12,6 +12,7 @@ h2{
     padding: 20px;
     border-radius: 8px;
     margin:auto;
+
 }
 
 .formR{
@@ -80,6 +81,7 @@ img {
 
 input[type="text"] {
     margin: auto;
+    width:fit-content;
 }
 
 input[type="submit"] {
