@@ -339,6 +339,32 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 </div>
                 <?php
                 break;
+
+            case "request-data":
+                ?>
+                <h1>REQUEST DATA</h1>
+                <p>It's on its way! <i>When we figure out emails...</i><br>
+                    You should expect it within 30 days.
+                </p>
+                <a href="manage.php?option=dangerZone"><input class="button" type="submit" value="Back"></a>
+                <?php
+                break;
+
+            case "delete-account":
+                ?>
+                <!-- Formatting here could absolutely be better if I wasn't in a rush. -->
+                <h1>DELETE ACCOUNT</h1>
+                <p>Are you sure you want to delete your account? This action is irreversible!</p>
+                <p>By deleting your account, you will lose all your data and will not be able to recover it.</p>
+                <p>Deleting your account will NOT:<br>
+                    - Cancel your orders<br>
+                    - Remove your reviews<br>
+                    - Un-send enquiries and refund requests<br> (but will make it impossible to give you a refund if not processed yet)
+                </p>
+                <a href="manage.php?option=dangerZone"><input class="button" type="submit" value="No, go back"></a>
+                <a href="deleteAccount.php"><input class="button" type="submit" value="Yes, delete my account"></a>
+                <?php
+                break;
             }
         ?>
     </main>
