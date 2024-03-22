@@ -59,8 +59,9 @@ if (isset($_POST['submitted'])) {
         <input type="hidden" name="submitted" value="true" />
 
     </form>
-
+   <div class = "center">
     <p> Not a register user? <a href="register.php"> Register </a></p>
+   </div>
 </main>
 
 <?php include '_components/footer.php'; ?>

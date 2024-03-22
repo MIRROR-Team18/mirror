@@ -133,9 +133,11 @@ if (isset($_POST['submitted'])){
         </div>
      
   </form>
+   <div class = "center">
 
     <p> Already a user? <a href="login.php">Log in</a></p>
     <p> Return back to the <a href="index.php"><em>home page</em></a></p> <!-- changed html to homepage  -->
+   </div>
  </main>
 
 <?php include '_components/footer.php'; ?>

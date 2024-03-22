@@ -21,15 +21,18 @@ h2{
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: auto;  
+    margin: auto;
+    width: min-content;  
+
 }
         
   .Register{
     column-count: 2;
-    column-gap: 50px;
+    column-gap: 70px;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 3fr 1fr;
     column-fill:balance;
+    text-align:left;
     display: grid;
     grid-auto-flow: dense;
     grid-gap: 50px;
@@ -52,6 +55,7 @@ h2{
 
 .Register .bottom {
     grid-area: bottom;
+    text-align: center;
     
 }
  
@@ -60,7 +64,9 @@ h2{
 form {
     display: flex;
     flex-direction: column;
-}
+    width: min-content;
+    margin: auto;
+    
 
 label {
     margin-bottom: 4px;
@@ -85,5 +91,29 @@ input[type="text"] {
 }
 
 input[type="submit"] {
+    margin: 10px;
+    background-color: rgb(118, 118, 193); 
+    color: white;
+    cursor: pointer; 
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 250px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    align-items: center; 
     margin: auto;
+}
+
+input[type="submit"]:hover {
+    background-color: rgb(133, 133, 198);
+}
+
+.center{
+    text-align: center;
+}
+
+.center a {
+    color: white;
 }
