@@ -19,7 +19,7 @@ $successMessage = isset($_GET['success']) ? $_GET['success'] : ""; // Check if t
 </head>
 <body>
     <?php include '../_components/header.php'; ?>
-    
+
     <main>
         <section class="refund">
             <h1>REFUND FORM</h1>
