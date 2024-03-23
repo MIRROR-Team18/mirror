@@ -385,7 +385,7 @@ class Database {
 		$stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
 		$stmt->execute([$id]);
 		$result = $stmt->fetch(PDO::FETCH_ASSOC);
-		return $result ? new User($result['userID'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']) : null;
+		return $result ? new User($result['id'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']) : null;
 	}
 
 	/**
@@ -425,6 +425,43 @@ class Database {
 		if (!$result || !password_verify($password, $result['password'])) {
 			throw new Exception("Incorrect email or password!"); // We use the same error to prevent brute force attacks
 		} else return new User($result['id'], $result['email'], $result['firstName'], $result['lastName'], $result['admin']);
+	}
+
+	/**
+	 * Deletes the user, returning true if successful.
+	 * @param int $id The ID of the user to delete.
+	 * @note This will also delete a lot of other data, such as orders, alerts, etc.
+	 */
+	public function deleteUser(int $id): bool {
+		// Check user exists
+		$stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
+		$stmt->execute([$id]);
+		$user = $stmt->fetch(PDO::FETCH_ASSOC);
+		if (!$user) return false;
+
+		// Delete user's orders
+		// First we need to delete the products in orders first.
+		$stmt = $this->conn->prepare("DELETE FROM products_in_orders WHERE orderID IN (SELECT id FROM orders WHERE userID = ?)");
+		$stmt->execute([$id]);
+		$stmt = $this->conn->prepare("DELETE FROM orders WHERE userID = ?");
+		$stmt->execute([$id]);
+
+		// Delete user's alerts
+		// Likewise, we have to delete the alert methods first.
+		$stmt = $this->conn->prepare("DELETE FROM alert_methods WHERE alertID IN (SELECT id FROM alerts WHERE userID = ?)");
+		$stmt->execute([$id]);
+		$stmt = $this->conn->prepare("DELETE FROM alerts WHERE userID = ?");
+		$stmt->execute([$id]);
+
+		// Delete user's enquiries
+		$stmt = $this->conn->prepare("DELETE FROM enquiries WHERE userID = ?");
+		$stmt->execute([$id]);
+
+		// Delete user
+		$stmt = $this->conn->prepare("DELETE FROM users WHERE id = ?");
+		$stmt->execute([$id]);
+
+		return true;
 	}
 
     /**
@@ -881,6 +918,17 @@ class Database {
 		$stmt = $this->conn->prepare("SELECT * FROM orders WHERE id = ?");
 		$stmt->execute([$orderID]);
 		return $stmt->fetch(PDO::FETCH_ASSOC);
+	}
+
+	/**
+	 * Gets all orders by the provided userID
+	 * @param string $userID
+	 * @return array An array of orders.
+	 */
+	public function getOrdersByUser(string $userID): array {
+		$stmt = $this->conn->prepare("SELECT * FROM orders WHERE userID = ?");
+		$stmt->execute([$userID]);
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	/**

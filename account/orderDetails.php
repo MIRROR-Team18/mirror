@@ -1,55 +1,81 @@
 <?php
     session_start();
     require '../_components/database.php';
+    $db = new Database();
     if (!isset($_SESSION["userID"])) echo '<script>window.location.replace("../index.php");</script>';
 ?>
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <?php require_once '../_components/default.php'; ?>
     <title>Order Details</title>
-    <link rel="stylesheet" href="../_stylesheets/main.css">
     <link rel="stylesheet" href="../_stylesheets/accountManage.css">
 </head>
 <body>
-<?php include '../_components/header.php'; ?>
+<?php include '../_components/header.php';
+      include '../_components/accountSidebar.php'; ?>
     <main>
         <?php
             //get price and status of order
             $orderID = $_GET["orderID"];
-            $sql = "SELECT * FROM orders WHERE orderID = '$orderID'";
-            $conn = Connection:: getConnection();
-            $order = $conn->query($sql)->fetch(PDO::FETCH_ASSOC);
-            $conn = null;
-            $price = $order["paidAmount"];
-            $status = $order["status"];
+            $order = $db->getOrderByID($orderID);
+
+            if (is_null($order) || $order["userID"] != $_SESSION["userID"]) {
+                header("Location: manage.php?option=pastOrders");
+                die;
+            }
 
             //get items in the order
-            $products = "";
-            $sql = "SELECT productID FROM products_in_orders WHERE orderID = '$orderID'";
-            $conn = Connection:: getConnection();
-            $productIDs = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-            $conn = null;
-            foreach($productIDs as $productID) {
-                $sql = "SELECT name FROM products WHERE productID = '{$productID['productID']}'";
-                $conn = Connection::getConnection();
-                $productName = $conn->query($sql)->fetch(PDO::FETCH_ASSOC);
-                $conn = null;
-                $products .= "ProductID: " . $productID['productID'] . " | Product name: " . $productName['name'] . "\n";
-            }
+            $productsInOrder = $db->getProductsInOrder($orderID);
+
             ?>
-            <section id = "accountPanel">
-                <div id = "options">
-                    <a class = "button" href = "manage.php?option=pastOrders" type = "submit">Return to previous orders</a>
-                    <br>
-                    <a href="refund.php?order_number=<?= $orderID ?>" class="button">Request Refund</a>
+            <section class="main orderDetails">
+                <div class="top">
+                    <h1>ORDER #<?= $orderID ?></h1>
                 </div>
-                <div id = "view"><?php
-                    echo '<p>OrderID: '.$orderID. '</p><br><p>Order status: '.$status.'</p><br><p>Order price: £'.$price.'</p><br><p>'.nl2br($products).'</p>';
-                ?></div>
+                <!-- This differs from the design because I just got a better idea, after submitting the report. -->
+                <div class="left">
+                    <p>Status: <?= ucfirst($order['status']) ?></p>
+                    <p>Last Updated: <?= date_format(date_create($order['timeModified']), "jS F Y") ?></p>
+                    <!-- Again, CO2 isn't tracked... -->
+                    <p class="green"><i class="fa-solid fa-leaf"></i>C02 saved: 4.12kg</p>
+                </div>
+                <div class="right">
+                    <h2>PRODUCTS</h2>
+                    <table>
+                        <tr>
+                            <th>Product</th>
+                            <th>Size</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                        <?php
+                            $totalPrice = 0;
+                            foreach ($productsInOrder as $po) {
+                                $product = $db->getProduct  ($po["productID"]);
+                                $productSize = $product->sizes[$po["sizeID"]];
+                                $paid = $productSize->price * $po['quantity'];
+                                $totalPrice += $paid;
+                                ?>
+                                <tr>
+                                    <td><?= $product->name ?></td>
+                                    <td><?= $productSize->name ?></td>
+                                    <td><?= $po["quantity"] ?></td>
+                                    <td>$<?= number_format($paid, 2) ?></td>
+                                </tr>
+                                <?php
+                            }
+                        ?>
+                        <tr>
+                            <td colspan="3" class="total">Total</td>
+                            <td>$<?= number_format($totalPrice, 2) ?></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="bottom">
+                    <a class="button" href="manage.php?option=pastOrders">Back to Past Orders</a>
+                    <a class="button" href="refund.php?order_number=<?= $orderID ?>">Request Refund</a>
+                </div>
             </section>
             <?php
         ?>

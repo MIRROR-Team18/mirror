@@ -1,61 +1,116 @@
-#accountPanel {
-    background-color: #ddd;
-    padding: 1rem 2rem;
-    margin: 1rem;
-    border-radius: 8px;
-
-    display: grid;
-    grid-template-columns: 0.5fr 2.5fr;
-    justify-content: center;
-    align-items: center;
-}
-#accountPanel #options{
+/* new */
+.main {
+    margin-left: 20%;
+    background: #0F1027;
     text-align: center;
+    padding-top: 2.5%;
+    color: #FFFFFF;
+}
+.main h1 {
+    font-family: "Dela Gothic One", cursive;
+    font-size: 4rem;
+    font-weight: bold;
+}
+.main h2 {
+    font-family: "Dela Gothic One", cursive;
+    font-size: 2rem;
+    font-weight: bold;
+}
+.main p {
+    font-family: "Zen Kaku Gothic New", sans-serif;
+    font-size: 2rem;
+}
+.sidenav {
+    height: 80%;
+    width: 20%;
+    position: fixed;
+    top: auto;
+    left: 0;
+    background-color: #1C1A3A;
+    overflow-x:hidden;
+    padding-top: 20px;
     display: flex;
-    flex-flow: column nowrap;
+    justify-content:center;
+    align-items:center;
 }
-#accountPanel #options a{
-    font-size: 1.5rem;
+.sidenav a {
     text-decoration: none;
-
-    color: black;
-    white-space: nowrap;
-    width: 100%;
-
-    margin-bottom: 1rem;
-}
-#accountPanel #options a.button {
-    color: white;
-}
-#accountPanel #options a:hover{
-    font-weight: bold;
-}
-
-#accountPanel #view {
-    font-size: 1rem;
+    color: #FFFFFF;
+    display: block;
+    font-family: "Zen Kaku Gothic New", sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 46px;
+    letter-spacing: 0;
     text-align: center;
 }
-#view a {
-    text-decoration: none;
-    color: black;
-}
-#view a:hover {
+.sidenav a:hover {
     font-weight: bold;
 }
-
-input.button {
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    cursor: pointer;
-    width: 25%;
+.grid {
+    background: #0F1027;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+}
+form.accDetails {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50%;
     margin: auto;
 }
+form.accDetails label { text-align: left; }
+form.accDetails input:not([type=submit]) { margin: 0 0 1rem; }
 
-.wrapper {
+table {
+    margin-left: 2.5%;
+    border-collapse: collapse;
+    width: 95%;
+    background-color: #242E52;
+}
+tr:nth-child(odd) {
+    background-color: #1C1A3A;
+}
+table a {
+    color: var(--white);
+    text-decoration: none;
+}
+table a:hover {
+    color: var(--disabled)
+}
+.ordersNav {
+    margin-left: 2.5%;
+    width: 95%;
+}
+.green {
+    color: var(--green);
+}
+.orderDetails {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
+    grid-template-areas:
+        "top top"
+        "left right"
+        "bottom bottom";
+}
+.orderDetails .left {
+    grid-area: left;
+}
+.orderDetails .right {
+    grid-area: right;
+}
+.orderDetails .right h2 {
+    text-align: left;
+}
+.orderDetails .right td.total {
+    text-align: right;
+}
+.orderDetails .top {
+    grid-area: top;
+}
+.orderDetails .bottom {
+    grid-area: bottom;
+    margin-top: 1rem;
 }
