@@ -29,37 +29,41 @@ if (is_null($product)) {
 <?php include '../_components/header.php'; ?>
 <main class="product-container">
     <div class="product-image">
-        <!-- Place your product image here -->
-        <?php
-        // Ensure $img is initialized before usage
-        $img = Database::findAllProductImageUrls($product->productID);
-        ?>
-        <img src="<?= $img[2] ?>" alt="Product Image">
+        <img src="<?= Database::findPrimaryProductImageUrl($product->productID); ?>" alt="Product Image">
     </div>
     <div class="product-details">
-        <h1><?= $product->name ?></h1>
-        <!-- Product description here -->
-        <p><?= $product->description ?></p>
+        <div class="topHalf">
+            <h1>
+				<?= $product->isSustainable ? "<i class='fa-solid fa-leaf'></i>" : "" ?>
+				<?= $product->name ?>
+            </h1>
+            <p><?= $product->description !== "" ? $product->description : "Looks like this product doesn't come with a description... Well, we're sure it's still awesome." ?></p>
 
-        <div class="product-sizes">
-            <span>SIZES</span>
-            <!-- Adding size buttons -->
-            <button data-price="23.99" data-stock="10">Small</button>
-            <button data-price="25.99" data-stock="8">Medium</button>
-            <button data-price="27.99" data-stock="5">Large</button>
-            <button data-price="29.99" data-stock="3">Extra Large</button>
+            <h2>SIZES</h2>
+            <div class="product-sizes">
+				<?php
+				$sizes = $product->sizes;
+				foreach ($sizes as $size) {
+					/** @var $size Size */
+					$isDisabled = $size->stock === 0 ? "disabled" : "";
+					echo <<<HTML
+                    <button data-price="$size->price" data-stock="$size->stock" $isDisabled>$size->name</button>
+                HTML;
+				}
+				?>
+            </div>
             <p id="stockIndicator"></p>
         </div>
-
-        <div class="product-price">
-            <span>Click on a size...</span>
+        <div class="bottomHalf">
+            <div class="product-price">
+                <span>Click on a size...</span>
+            </div>
+            <button class="add-to-cart">Add to Cart</button>
         </div>
-
-        <button class="add-to-cart">Add to Cart</button>
     </div>
 </main>
 <script>
-    document.querySelectorAll("button").forEach(button => {
+    document.querySelectorAll(".product-sizes button").forEach(button => {
         button.addEventListener("click", () => {
             const price = button.getAttribute("data-price");
             const stock = button.getAttribute("data-stock");
