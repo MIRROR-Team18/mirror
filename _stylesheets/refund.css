@@ -6,8 +6,12 @@ section h1 {
     font-size: 1.5em;
 }
 
-section h1, .subtitle {
+section.refund h1, .subtitle {
     text-align: right;
+}
+
+section.processed h1 {
+    text-align: left;
 }
 
 form {
@@ -22,4 +26,9 @@ form input, form textarea {
 form input[type="submit"] {
     width: 25%;
     margin: 0 .5rem 0 auto;
+}
+
+a.return {
+    margin-top: 1rem;
+    color: var(--blue-4);
 }

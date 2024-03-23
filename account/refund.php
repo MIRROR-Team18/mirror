@@ -21,7 +21,7 @@ $successMessage = isset($_GET['success']) ? $_GET['success'] : ""; // Check if t
     <?php include '../_components/header.php'; ?>
     
     <main>
-        <section>
+        <section class="refund">
             <h1>REFUND FORM</h1>
 			<?php if ($successMessage): ?>
                 <p class="success-message"><?= $successMessage ?></p>
