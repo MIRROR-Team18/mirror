@@ -198,6 +198,16 @@ button, .button {
     text-decoration: none;
 }
 
+button:hover, .button:hover {
+    background: var(--blue-5);
+    cursor: pointer;
+}
+
+button:disabled, .button:disabled {
+    background: var(--blue-3);
+    cursor: not-allowed;
+}
+
 input, textarea, select {
     background: var(--white);
     border: none;
