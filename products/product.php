@@ -7,6 +7,7 @@ if (isset($_POST['product_id'])) {
     if (!isset($_SESSION['basket'])) $_SESSION['basket'] = array();
 
     $product = $db->getProduct($_POST['product_id']);
+    $product->sizes = array_filter($product->sizes, fn($size) => $size->sizeID == $_POST['size_id']);
     $_SESSION['basket'][] = $product;
 }
 
@@ -47,7 +48,7 @@ if (is_null($product)) {
 					/** @var $size Size */
 					$isDisabled = $size->stock === 0 ? "disabled" : "";
 					echo <<<HTML
-                    <button data-price="$size->price" data-stock="$size->stock" $isDisabled>$size->name</button>
+                    <button data-id="$size->sizeID" data-price="$size->price" data-stock="$size->stock" $isDisabled>$size->name</button>
                 HTML;
 				}
 				?>
@@ -67,20 +68,29 @@ if (is_null($product)) {
         button.addEventListener("click", () => {
             const price = button.getAttribute("data-price");
             const stock = button.getAttribute("data-stock");
-            document.querySelector(".product-price span").innerHTML = `Price: £${price}`;
+            document.querySelector(".product-price span").innerHTML = `£${price}`;
             document.querySelector("#stockIndicator").innerHTML = `Stock: ${stock} available`;
-            document.querySelector(".add-to-cart").setAttribute("data-price", price); // Add price attribute to the add-to-cart button
+
+            document.querySelectorAll(".product-sizes button").forEach(button => button.classList.remove("selected"));
+			button.classList.add("selected");
         });
     });
 
-    document.querySelector(".add-to-cart").addEventListener("click", () => {
-        const selectedSize = document.querySelector(".product-sizes button:focus");
+    document.querySelector(".add-to-cart").addEventListener("click", async () => {
+        const selectedSize = document.querySelector(".product-sizes button.selected");
         if (selectedSize) {
-            const price = selectedSize.getAttribute("data-price");
-            const productId = selectedSize.getAttribute("data-product-id");
-            // You can now use the price and productId to add the product to the basket
-            console.log("Price:", price);
-            console.log("Product ID:", productId);
+            await fetch("/products/product.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    product_id: "<?= $product->productID ?>",
+                    size_id: selectedSize.getAttribute("data-id")
+                })
+            });
+
+            window.location.href = "/basket.php";
         } else {
             console.log("Please select a size.");
         }
