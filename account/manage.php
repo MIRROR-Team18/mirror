@@ -145,16 +145,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <link rel="stylesheet" href="../_stylesheets/accountManage.css">
 </head>
 <body>
-    <?php include '../_components/header.php'; ?>
-    <div class = "sidenav">
-        <div>
-            <a href="manage.php?option=details">Your Details</a><br>
-            <a href="manage.php?option=security">Security</a><br>
-            <a href="manage.php?option=pastOrders">Past Orders</a><br>
-            <a href="manage.php?option=statistics">Statistics</a><br>
-            <a href="manage.php?option=dangerZone">Danger Zone</a><br><br>
-        </div>
-    </div>
+    <?php include '../_components/header.php';
+          include '../_components/accountSidebar.php'; ?>
     <main class="main">
         <?php
         switch($currentView) {
@@ -285,7 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                 <td>{$quantity}</td>
                                 <td>{$ucStatus}</td>
                                 <td>£{$order['paidAmount']}</td>
-                                <td><a href="#">View Details</a></td>
+                                <td><a href="./orderDetails.php?orderID={$order['id']}">View Details</a></td>
                             </tr>
                             HTML;
                         }
@@ -316,8 +308,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <p>This means you have brought the equivalent of <?= $comparison ?> <?= $fact['object'] . ($comparison != 1 ? "s" : "") ?> <?= $fact['historical'] ? "(in today's money)" : "" ?></p>
                 <br><br>
                 <!-- We aren't tracking carbon emissions yet, so this is just a placeholder -->
-                <p style = "color: var(--green);">CO2 saved: 0g</p>
-                <p style = "color: var(--green);">Or, done the same amount of work as 0 trees!</p>
+                <p class="green">CO2 saved: 0g</p>
+                <p class="green">Or, done the same amount of work as 0 trees!</p>
                 <br><br>
                 <p>Articles Brought: <?= $totalBought ?></p>
                 <p>That's enough to fill <?= round($totalBought / 74, 2) ?> wardrobes!</p>

@@ -1,66 +1,3 @@
-/*
-#accountPanel {
-    background-color: #ddd;
-    padding: 1rem 2rem;
-    margin: 1rem;
-    border-radius: 8px;
-
-    display: grid;
-    grid-template-columns: 0.5fr 2.5fr;
-    justify-content: center;
-    align-items: center;
-}
-#accountPanel #options{
-    text-align: center;
-    display: flex;
-    flex-flow: column nowrap;
-}
-#accountPanel #options a{
-    font-size: 1.5rem;
-    text-decoration: none;
-
-    color: black;
-    white-space: nowrap;
-    width: 100%;
-
-    margin-bottom: 1rem;
-}
-#accountPanel #options a.button {
-    color: white;
-}
-#accountPanel #options a:hover{
-    font-weight: bold;
-}
-
-#accountPanel #view {
-    font-size: 1rem;
-    text-align: center;
-}
-#view a {
-    text-decoration: none;
-    color: black;
-}
-#view a:hover {
-    font-weight: bold;
-}
-
-input.button {
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    cursor: pointer;
-    width: 25%;
-    margin: auto;
-}
-
-.wrapper {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-}
-*/
 /* new */
 .main {
     margin-left: 20%;
@@ -72,6 +9,11 @@ input.button {
 .main h1 {
     font-family: "Dela Gothic One", cursive;
     font-size: 4rem;
+    font-weight: bold;
+}
+.main h2 {
+    font-family: "Dela Gothic One", cursive;
+    font-size: 2rem;
     font-weight: bold;
 }
 .main p {
@@ -123,4 +65,35 @@ tr:nth-child(odd) {
 .ordersNav {
     margin-left: 2.5%;
     width: 95%;
+}
+.green {
+    color: var(--green);
+}
+.orderDetails {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
+    grid-template-areas:
+        "top top"
+        "left right"
+        "bottom bottom";
+}
+.orderDetails .left {
+    grid-area: left;
+}
+.orderDetails .right {
+    grid-area: right;
+}
+.orderDetails .right h2 {
+    text-align: left;
+}
+.orderDetails .right td.total {
+    text-align: right;
+}
+.orderDetails .top {
+    grid-area: top;
+}
+.orderDetails .bottom {
+    grid-area: bottom;
+    margin-top: 1rem;
 }
