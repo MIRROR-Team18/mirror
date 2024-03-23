@@ -53,6 +53,16 @@
     justify-content:center;
     align-items:center;
 }
+form.accDetails {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50%;
+    margin: auto;
+}
+form.accDetails label { text-align: left; }
+form.accDetails input:not([type=submit]) { margin: 0 0 1rem; }
+
 table {
     margin-left: 2.5%;
     border-collapse: collapse;
@@ -61,6 +71,13 @@ table {
 }
 tr:nth-child(odd) {
     background-color: #1C1A3A;
+}
+table a {
+    color: var(--white);
+    text-decoration: none;
+}
+table a:hover {
+    color: var(--disabled)
 }
 .ordersNav {
     margin-left: 2.5%;

@@ -172,21 +172,20 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <?php
                 break;
             case "details-change":
+				$userID = $_SESSION["userID"];
+				$db = new Database();
+				$user = $db->getUser($userID);
                 ?>
-                <form method="POST" action="">
+                <form class="accDetails" method="POST" action="">
                     <input type="hidden" name="for" value="details-change">
                     <p>Leave fields you wish not to change blank.</p>
-                    <p><?= nl2br($inputError); ?></p>
-                    <br>
+                    <p><?= nl2br($inputError); ?></p><br>
                     <label for="firstName">First Name</label>
-                    <input type="text" name="firstName" id="firstName">
-                    <br>
+                    <input type="text" name="firstName" id="firstName" placeholder="<?= $user->firstName ?>">
                     <label for="surName">Last Name</label>
-                    <input type="text" name="surName" id="surName">
-                    <br>
+                    <input type="text" name="surName" id="surName" placeholder="<?= $user->lastName ?>">
                     <label for="email">Email</label>
-                    <input type="text" name = "email" id="email">
-                    <br><br>
+                    <input type="text" name = "email" id="email" placeholder="<?= $user->email ?>">
                     <input class="button" type="submit" value="Submit Changes">
                 </form>
                 <?php
@@ -210,18 +209,18 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 break;
             case "change-password":
                 ?>
-                <form method = "post" action="">
+                <form class="accDetails" method = "post" action="">
                     <input type="hidden" name="for" value="change-password">
 					<?php echo "<p>". nl2br($inputError) ."</p><br>"?>
                     <label for="currentPassword">Current Password</label>
                     <input type="password" name="currentPassword" id="currentPassword">
-                    <br>
+
                     <label for="newPassword">New Password</label>
                     <input type="password" name="newPassword" id="newPassword">
-                    <br>
+
                     <label for="confirmNewPassword">Confirm New Password</label>
                     <input type="password" name="confirmNewPassword" id="confirmNewPassword">
-                    <br><br>
+
                     <input class="button" type="submit" value="Submit Changes">
                 </form>
             <?php
@@ -277,7 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                 <td>{$quantity}</td>
                                 <td>{$ucStatus}</td>
                                 <td>£{$order['paidAmount']}</td>
-                                <td><a href="./orderDetails.php?orderID={$order['id']}">View Details</a></td>
+                                <td><a href="./orderDetails.php?orderID={$order['id']}"><i class="fa-solid fa-angles-right"></i></a></td>
                             </tr>
                             HTML;
                         }
