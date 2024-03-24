@@ -111,7 +111,8 @@ if (isset($_POST['continue'])) {
 	$db = new Database();
 
 	$parsedQuantities = json_decode($_COOKIE['quantities'], TRUE);
-	$db->createOrder($_SESSION['userID'], $_SESSION['basket'], $parsedQuantities);
+    $addressID = $db->createOrGetAddress($_POST['first-name'] . " " . $_POST['last-name'], $_POST['address-line-1'], $_POST['address-line-2'], $_POST['address-line-3'], $_POST['city'], $_POST['postcode'], $_POST['country']);
+	$db->createOrder($_SESSION['userID'], $_SESSION['basket'], $parsedQuantities, $addressID);
 
 	// Redirect to processedCheckout.php
 	header('Location: processedCheckout.php');
