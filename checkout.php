@@ -28,10 +28,10 @@
             <div class="deliveryOptions formSection">
                 <h2>DELIVERY OPTIONS</h2>
                 <input type="radio" id="evri" name="delivery-option" value="evri">
-                <label for="evri">Evri (3-5 days)</label><br>
+                <label for="evri">Evri (3-5 days)</label>
 
                 <input type="radio" id="courier" name="delivery-option" value="courier">
-                <label for="courier">Local Courier (5-7 days)</label><br>
+                <label for="courier">Local Courier (5-7 days)<i class="fa-solid fa-leaf"></i></label>
             </div>
 
             <div class="card-details formSection">
@@ -42,10 +42,8 @@
                     <input type="text" name="card-expiry" placeholder="MM/YY" required aria-label="Card Expiry Date">
                     <input type="text" name="card-cvv" placeholder="CVV" required aria-label="Card Security Code">
                 </div>
-                <br><br>
                 <input type="checkbox" name="different-billing" id="different-billing">
                 <label for="different-billing">Different billing address?</label>
-                <br><br>
             </div>
 
             <div class="delivery-address formSection">
@@ -83,25 +81,21 @@
             </div>
         </form>
         <input type="hidden" name="continue" value="yeah">
-        <button id="payNowBtn" type="submit">PAY NOW</button>
+        <button id="payNowBtn">PAY NOW</button>
     </div>
 </main>
 
 <script>
-	// Find the Pay Now button by its ID
-	var payNowBtn = document.getElementById("payNowBtn");
-
-	// Add a click event listener to the Pay Now button
-	payNowBtn.addEventListener("click", function () {
-		// Redirect the user to the order confirmation page
-		window.location.href = "processedCheckout.php";
+	// Find the Pay Now button by its ID and add a click event listener
+	document.getElementById("payNowBtn").addEventListener("click", function () {
+		// Submit form
+		document.querySelector("form").submit();
 	});
 
 	// Find the checkbox for different billing address
-	var differentBillingCheckbox = document.getElementById("different-billing");
-
+	const differentBillingCheckbox = document.getElementById("different-billing");
 	// Find the billing address section
-	var billingAddressForm = document.getElementById("billing-address");
+	const billingAddressForm = document.getElementById("billing-address");
 
 	// Add event listener to the checkbox
 	differentBillingCheckbox.addEventListener("change", function () {
@@ -109,11 +103,8 @@
 		billingAddressForm.style.display = this.checked ? "flex" : "none";
 	});
 </script>
-
-
-<?php include '_components/shortFooter.php'; ?>
-
 <?php
+include '_components/shortFooter.php';
 // Check if the form is submitted and the "Pay Now" button is clicked
 if (isset($_POST['continue'])) {
 	require_once '_components/database.php';
