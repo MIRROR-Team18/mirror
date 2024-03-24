@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 } else {
     // Redirect users to the refund page if they try to access refund_processed.php directly
-    header("Location: refund.html");
+    header("Location: refund.php");
     exit();
 }
 ?>
@@ -49,31 +49,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php include '../_components/default.php'; ?>
     <title>Refund Request Confirmation</title>
-    <link rel="stylesheet" href="../_stylesheets/main.css">
     <link rel="stylesheet" href="../_stylesheets/refund.css">
 </head>
 <body>
-
-
     <?php include '../_components/header.php'; ?>
 
+    <main>
+        <section class="processed">
+            <h1>CONFIRMED</h1>
+            <p>
+                Thank you for sending that through.<br>
+                We're sorry we've failed you on this occasion, we'll be in contact to set things right soon.
+            </p>
 
-
-    <main class="container">
-        <h2>Refund Request Confirmation</h2>
-    
-            <p>Thank you for contacting the refund team. Your refund request has been sent, and we will contact you regarding your order very soon.</p>
-            <p>Thank you</p>
-    
-        <a href="refund.php">Back to Refund Page</a>
+            <a class="return" href="/account/manage.php">Go back to your Account?</a>
+        </section>
     </main>
-
-
-
-
 
 	<?php include '../_components/footer.php'; ?>
 </body>
