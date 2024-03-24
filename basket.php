@@ -47,13 +47,13 @@
                         <tr id="{$item->productID}">
                             <td><img src="{$photo}" alt="{$item->name}" class="product-image"></td>
                             <td>
-                                <select>$quantityOptions</select>
+                                <select id="quantity-{$item->productID}">$quantityOptions</select>
                             </td>
                             <td>
                                 <p class="name">{$item->name}</p>
                                 <p class="size">Size: {$sizeName}</p>
                             </td>
-                            <td class="price">£{$sizePrice}</td>
+                            <td class="price" data-original-price="{$sizePrice}">£{$sizePrice}</td>
                         </tr>      
                     EOT;
 
@@ -82,10 +82,10 @@
 	function storeQuantityData() {
 		const basket = document.getElementById("basket");
 		const quantities = {};
-		for (let i = 1; i < basket.rows.length; i++) {
+		for (let i = 0; i < basket.rows.length; i++) {
 			if (basket.rows[i].cells.length === 1) continue; // Skip if the row is empty
-			const quantityInput = basket.rows[i].cells[1].getElementsByTagName("input")[0];
-			quantities[`${basket.rows[i].id.replace("product-", "")}`] = quantityInput.value
+			const quantityInput = basket.rows[i].getElementsByTagName("select")[0];
+			quantities[`${basket.rows[i].id.replace("quantity-", "")}`] = quantityInput.value
 		}
 		// Save cookie
 		document.cookie = `quantities=${JSON.stringify(quantities)}; path=/`;
@@ -93,32 +93,32 @@
 	}
 
 	function updatePrice(productId) {
-		const quantitySelect = document.getElementById(`quantity${productId}`);
-		const priceSpan = document.getElementById(`price${productId}`);
-		const pricePerItem = productId === 1 ? 24.99 : 4.99; // can be changed accordingly
-		const quantity = parseInt(quantitySelect.value);
+		const select = document.getElementById(`quantity-${productId}`);
+		const priceSpan = select.parentElement.parentElement.querySelector(".price");
+		const pricePerItem = priceSpan.dataset.originalPrice;
+		const quantity = parseInt(select.value);
 		const price = (pricePerItem * quantity).toFixed(2);
 		priceSpan.innerText = `£${price}`;
 		calculateTotal();
 	}
 
 	function calculateTotal() {
-		const price1 = parseFloat(document.getElementById('price1').innerText.replace("£", ""));
-		const price2 = parseFloat(document.getElementById('price2').innerText.replace("£", ""));
-		const quantity1 = parseInt(document.getElementById('quantity1').value);
-		const quantity2 = parseInt(document.getElementById('quantity2').value);
-
-		const totalPrice = (price1 * quantity1) + (price2 * quantity2);
+		let totalPrice = 0;
+		document.querySelectorAll("select").forEach(select => {
+            const pricePerItem = select.parentElement.parentElement.querySelector(".price").innerText.replace("£", "");
+            const quantity = parseInt(select.value);
+			totalPrice += pricePerItem * quantity;
+        });
 
 		// Update the total price in the order summary section
 		const totalPriceElement = document.getElementById("totalPrice");
 		totalPriceElement.innerText = totalPrice.toFixed(2);
 	}
 
-	window.addEventListener("load", calculateTotal);
+	// Don't need to do calculations on page load, as PHP does that for us
 	document.querySelectorAll("select").forEach(select => select.addEventListener("change", () => {
 		calculateTotal();
-		updatePrice(select.id.substring(8)); // Extract product ID from select element ID
+		updatePrice(select.id.substring(9)); // Extract product ID from select element ID
 	}));
 </script>
 
