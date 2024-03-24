@@ -81,14 +81,13 @@ h1 {
 
 /* Style for Checkout Page */
 .checkout-container {
-    margin: 0 auto;
-    padding: 1.5rem;
+    margin: 2rem 10vw 2rem 20vw;
 }
 
 .checkout-content form {
     display: grid;
     /* May need adjustment! */
-    grid-template-columns: repeat(auto-fit, minmax(800px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
     gap: 2rem;
 }
 
@@ -106,6 +105,7 @@ h1 {
 
 .formSection input {
     margin-bottom: .25rem;
+    width: 100%;
 }
 
 .formSection .row input {

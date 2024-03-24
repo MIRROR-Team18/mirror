@@ -36,11 +36,11 @@
 
             <div class="card-details formSection">
                 <h2>CARD DETAILS</h2>
-                <input type="text" name="card-number" placeholder="Card Number" required>
-                <input type="text" name="card-name" placeholder="Name" required>
+                <input type="text" name="card-number" placeholder="Card Number" required aria-label="Card Number">
+                <input type="text" name="card-name" placeholder="Name" required aria-label="Cardholder Name">
                 <div class="row">
-                    <input type="text" name="card-expiry" placeholder="MM/YY" required>
-                    <input type="text" name="card-cvv" placeholder="CVV" required>
+                    <input type="text" name="card-expiry" placeholder="MM/YY" required aria-label="Card Expiry Date">
+                    <input type="text" name="card-cvv" placeholder="CVV" required aria-label="Card Security Code">
                 </div>
                 <br><br>
                 <input type="checkbox" name="different-billing" id="different-billing">
@@ -48,20 +48,20 @@
                 <br><br>
             </div>
 
-            <div class="delivery-address  formSection">
+            <div class="delivery-address formSection">
                 <h2>DELIVERY ADDRESS</h2>
                 <div class="row">
-                    <input type="text" name="first-name" placeholder="First Name" required>
-                    <input type="text" name="last-name" placeholder="Last Name" required>
+                    <input type="text" name="first-name" placeholder="First Name" required aria-label="First Name">
+                    <input type="text" name="last-name" placeholder="Last Name" required aria-label="Last Name">
                 </div>
-                <input type="text" name="address-line-1" placeholder="Address Line 1" required>
-                <input type="text" name="address-line-2" placeholder="Address Line 2">
-                <input type="text" name="address-line-3" placeholder="Address Line 3">
+                <input type="text" name="address-line-1" placeholder="Address Line 1" required aria-label="Delivery Address Line 1">
+                <input type="text" name="address-line-2" placeholder="Address Line 2" aria-label="Delivery Address Line 2">
+                <input type="text" name="address-line-3" placeholder="Address Line 3" aria-label="Delivery Address Line 3">
                 <div class="row">
-                    <input type="text" name="city" placeholder="City" required>
-                    <input type="text" name="postcode" placeholder="Postcode" required>
+                    <input type="text" name="city" placeholder="City" required aria-label="Delivery Address City">
+                    <input type="text" name="postcode" placeholder="Postcode" required aria-label="Delivery Address Postcode">
                 </div>
-                <input type="text" name="country" placeholder="Country" required>
+                <input type="text" name="country" placeholder="Country" required aria-label="Delivery Address Country">
             </div>
 
             <!-- Billing Address -->
@@ -69,17 +69,17 @@
                 <h2>BILLING ADDRESS</h2>
                 <!-- Billing address form fields -->
                 <div class="row">
-                    <input type="text" name="billing-first-name" placeholder="First Name" required>
-                    <input type="text" name="billing-last-name" placeholder="Last Name" required>
+                    <input type="text" name="billing-first-name" placeholder="First Name" required aria-label="Billing Address First Name">
+                    <input type="text" name="billing-last-name" placeholder="Last Name" required aria-label="Billing Address Last Name">
                 </div>
-                <input type="text" name="billing-address-line-1" placeholder="Address Line 1" required>
-                <input type="text" name="billing-address-line-2" placeholder="Address Line 2"><br>
-                <input type="text" name="billing-address-line-3" placeholder="Address Line 3">
+                <input type="text" name="billing-address-line-1" placeholder="Address Line 1" required aria-label="Billing Address Line 1">
+                <input type="text" name="billing-address-line-2" placeholder="Address Line 2" aria-label="Billing Address Line 2">
+                <input type="text" name="billing-address-line-3" placeholder="Address Line 3" aria-label="Billing Address Line 3">
                 <div class="row">
-                    <input type="text" name="billing-city" placeholder="City" required><br>
-                    <input type="text" name="billing-postcode" placeholder="Postcode" required>
+                    <input type="text" name="billing-city" placeholder="City" required aria-label="Billing Address City">
+                    <input type="text" name="billing-postcode" placeholder="Postcode" required aria-label="Billing Address Postcode">
                 </div>
-                <input type="text" name="billing-country" placeholder="Country" required>
+                <input type="text" name="billing-country" placeholder="Country" required aria-label="Billing Address Country">
             </div>
         </form>
         <input type="hidden" name="continue" value="yeah">
