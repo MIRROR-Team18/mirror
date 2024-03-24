@@ -39,23 +39,22 @@
 					/** @var Product $item */
                     $photo = Database::findPrimaryProductImageUrl($item->productID);
 
-					$sizeName = $item->sizes[0]->name ?? "One Size";
-					$sizePrice = $item->sizes[0]->price ?? 0;
-
-                    var_dump($item->sizes[0]);
+                    $size = reset($item->sizes); // Get the first (chosen) size
+					$sizeName = $size->name ?? "One Size";
+					$sizePrice = $size->price ?? 0;
 
 					echo <<<EOT
-                            <tr id="{$item->productID}">
-                                <td><img src="{$photo}" alt="{$item->name}" class="product-image"></td>
-                                <td>
-                                    <select>$quantityOptions</select>
-                                </td>
-                                <td>
-                                    <p class="name">{$item->name}</p>
-                                    <p>Color: {$sizeName}</p>
-                                </td>
-                                <td class="price">£{$sizePrice}</td>
-                            </tr>      
+                        <tr id="{$item->productID}">
+                            <td><img src="{$photo}" alt="{$item->name}" class="product-image"></td>
+                            <td>
+                                <select>$quantityOptions</select>
+                            </td>
+                            <td>
+                                <p class="name">{$item->name}</p>
+                                <p class="size">Size: {$sizeName}</p>
+                            </td>
+                            <td class="price">£{$sizePrice}</td>
+                        </tr>      
                     EOT;
 
 					$total += $sizePrice;
@@ -70,12 +69,14 @@
 
         <!-- Order Summary Section -->
         <div id="order-summary">
-            <h2>Order Summary</h2>
-            <div>Total: £<span id="totalPrice">0.00</span></div>
-            <br><br><br><br>
-            <button onclick="storeQuantityData()" id="continue-to-checkout">Continue to Checkout</button>
+            <p>
+                <i class="fa-solid fa-leaf"></i>
+                you saved <span class="green">0kg</span> of CO<sub>2</sub> emissions!
+            </p>
+            <h2>Total: £<span id="totalPrice"><?= $total ?></span></h2>
         </div>
     </section>
+    <button onclick="storeQuantityData()" id="continue-to-checkout">Continue to Checkout</button>
 </main>
 <script>
 	function storeQuantityData() {

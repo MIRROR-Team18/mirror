@@ -11,6 +11,7 @@ h1 {
     background-color: var(--blue-2);
     display: flex;
     flex-flow: column nowrap;
+    border-radius: 24px 24px 0 24px;
 }
 
 #basket {
@@ -21,22 +22,35 @@ h1 {
 
 #basket th,
 #basket td {
-    border: 1px solid #ddd;
     padding: 12px;
-    text-align: left;
-}
-
-#basket td:first-child {
     text-align: center;
 }
 
+#basket td .name {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+#basket td .size, #basket td.price {
+    font-size: 1.5rem;
+}
+
 .product-image {
-    max-width: 8rem;
-    max-height: 8rem;
+    width: 8rem;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 24px;
 }
 
 #order-summary {
     margin-top: 20px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+#order-summary p {
+    align-self: flex-end;
 }
 
 #total {
@@ -47,26 +61,14 @@ h1 {
 }
 
 #continue-to-checkout {
-    display: inline-block;
-    width: 50%;
-    padding: 10px 20px;
-    margin: 10px 0;
+    width: 25vw;
+    margin: 0 0 0 50%;
+    border-radius: 0 0 5px 5px;
     background-color: var(--blue-4);
-    /* Change the button color */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
     text-decoration: none;
     /* Remove underline from anchor tag */
     transition: background-color 0.3s ease;
     /* Add a smooth transition effect */
-}
-
-#continue-to-checkout:hover {
-    background-color: #0d0032;
-    /* Change the button color on hover */
 }
 
 /* Fancy drop-down menu */
@@ -74,25 +76,7 @@ h1 {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    font-size: 1rem;
-}
-
-#basket select::after {
-    content: '\25BC';
-    /* Unicode character for down arrow */
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    pointer-events: none;
-    width: 1440px;
-    height: 1024px;
-}
-
-#basket select:focus {
-    outline: none;
-    border-color: var(--mirror-blue);
-    box-shadow: 0 0 5px rgba(31, 0, 93, 0.5);
+    font-size: 1.5rem;
 }
 
 /* Style for Checkout Page */
@@ -130,14 +114,6 @@ h1 {
     /* Center the button with margin */
 }
 
-/* Common styles for footer */
-.footer {
-    background-color: var(--mirror-blue);
-    color: white;
-    text-align: center;
-    padding: 10px;
-}
-
 /* Dummy Card details */
 .card-details-container {
     padding: 20px;
@@ -146,4 +122,8 @@ h1 {
     border-radius: 5px;
     grid-column: 2 / 3;
     /* Place in the right column */
+}
+
+.green {
+    color: var(--green);
 }
