@@ -1,23 +1,16 @@
-/* basket.css */
-/*Style for basket page */
-body {
-    background-color: #0d0032;
-    color: white;
+h1 {
+    font-family: 'Dela Gothic One', cursive;
+    font-size: 4rem;
+    text-align: center;
 }
 
 .basket-container {
-    max-width: 800px;
+    max-width: 50vw;
     margin: 0 auto;
     padding: 20px;
     background-color: var(--blue-2);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: grid;
-    /* Use grid layout */
-    grid-template-columns: 1fr 1fr;
-    /* Two columns */
-    gap: 20px;
-    /* Gap between columns */
-    overflow: hidden;
+    display: flex;
+    flex-flow: column nowrap;
 }
 
 #basket {
