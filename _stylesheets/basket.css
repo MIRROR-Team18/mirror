@@ -160,3 +160,18 @@ h1 {
     font-size: 1.5rem;
     font-weight: bold;
 }
+
+.confirmation-container {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 24px;
+}
+
+.confirmation-container .row {
+    justify-content: center;
+}
+
+#GoToAccountBtn, #ContinueShoppingBtn {
+    margin: 10vh 2rem;
+    width: 15%;
+}
