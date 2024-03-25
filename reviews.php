@@ -62,10 +62,10 @@
                 $ordered = $_POST['ordered'] ?? 'overall';
                 $reviews = match($ordered) {
                     'overall' => $db->getAllReviews(),
-                    'lowest' => $db->sortbyLowest(),
-                    'highest' => $db->sortbyHighest(),
-                    'newest' => $db->sortbyNewest(),
-                    'oldest' => $db->sortbyOldest(),
+                    'lowest' => $db->sortByLowest(),
+                    'highest' => $db->sortByHighest(),
+                    'newest' => $db->sortByNewest(),
+                    'oldest' => $db->sortByOldest(),
                 };
                 foreach ($reviews as $review) {
                     $name = $review["name"];

@@ -100,19 +100,19 @@ if (isset($_POST['submitted'])) {
     <form method="post" action="register.php" class="Register">
         <div class="left">
             <label for="Firstname" class="sr-only">First Name:</label>
-            <input type="text" id="Firstname" name="Firstname" placeholder="First Name" required/><br>
+            <input type="text" id="Firstname" name="Firstname" placeholder="First Name" required tabindex="1">
             <label for="email" class="sr-only">Email:</label>
-            <input type="email" id="email" name="email" placeholder="Email" required pattern=".+(\.co.uk\.uk|\.com)" title="Please a valid email address."/><br>
+            <input type="email" id="email" name="email" placeholder="Email" required pattern=".+(\.co.uk\.uk|\.com)" title="Please a valid email address." tabindex="3">
             <label for="password" class="sr-only">Password:</label>
-            <input type="password" id="password" name="password" placeholder="Password" required/><br>
+            <input type="password" id="password" name="password" placeholder="Password" required tabindex="5">
         </div>
         <div class="right">
             <label for="Lastname" class="sr-only">Last Name:</label>
-            <input type="text" id="Lastname" name="Last name" placeholder="Last Name" required/><br>
+            <input type="text" id="Lastname" name="Last name" placeholder="Last Name" required tabindex="2">
             <label for="confirm_email" class="sr-only">Confirm Email:</label>
-            <input type="email" id="confirm_email" name="confirm_email" placeholder="Confirm Email" required/><br>
+            <input type="email" id="confirm_email" name="confirm_email" placeholder="Confirm Email" required tabindex="4">
             <label for="confirm_pass" class="sr-only">Confirm Password:</label>
-            <input type="password" id="confirm_pass" name="confirm_pass" placeholder="Confirm password" required/><br>
+            <input type="password" id="confirm_pass" name="confirm_pass" placeholder="Confirm password" required tabindex="6">
         </div>
         <div class="bottom">
             <input class="button" type="submit" value="Register"/>

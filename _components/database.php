@@ -563,10 +563,11 @@ class Database {
 	 * Returns the history of stock for a given product.
 	 * @param string $productID
 	 * @param string $period Expects "month" / "year" / "all"
+	 * @param string|null $sizeID Expects a sizeID or null
 	 * @return array An array of stock history.
 	 * @throws Exception If there is a problem in getting stock history.
 	 */
-	public function getProductStockHistory(string $productID, string $period): array {
+	public function getProductStockHistory(string $productID, string $period, string $sizeID = null): array {
 		if (!in_array($period, ["month", "year", "all"])) throw new Exception("Invalid period for stock history: " . $period);
 		$dateLimit = match ($period) {
 			"year" => "DATE_SUB(NOW(), INTERVAL 1 YEAR)",
@@ -574,8 +575,13 @@ class Database {
 			default => "DATE_SUB(NOW(), INTERVAL 1 MONTH)" // includes "month"
 		};
 
-		$stmt = $this->conn->prepare("SELECT orders.timeCreated, orders.direction, products_in_orders.quantity FROM products_in_orders INNER JOIN orders ON products_in_orders.orderID = orders.id WHERE productID = ? AND orders.timeCreated > " . $dateLimit . " ORDER BY orders.timeCreated DESC;");
-		$stmt->execute([$productID]);
+		$sizeSql = !is_null($sizeID) ? "AND sizeID = :size" : "";
+
+		$sql = "SELECT orders.timeCreated, orders.direction, products_in_orders.quantity FROM products_in_orders INNER JOIN orders ON products_in_orders.orderID = orders.id WHERE productID = :product " . $sizeSql . " AND orders.timeCreated > " . $dateLimit . " ORDER BY orders.timeCreated DESC;";
+		$stmt = $this->conn->prepare($sql);
+		$stmt->bindParam(":product", $productID);
+		if (!is_null($sizeID)) $stmt->bindParam(":size", $sizeID);
+		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
@@ -638,14 +644,14 @@ class Database {
 	 * @throws Exception If there is a problem in updating a product.
 	 */
 	public function updateProduct(Product $product): bool {
-		// First, delete all the sizes for the product. It's just easier this way
-		$stmt = $this->conn->prepare("DELETE FROM product_sizes WHERE productID = ?");
+		// First, delete all the sizes for the product, provided they're not in an order.
+		$stmt = $this->conn->prepare("DELETE FROM product_sizes WHERE productID = ? AND (productID, sizeID) NOT IN (SELECT productID, sizeID FROM products_in_orders)");
 		$stmt->execute([$product->productID]);
 
 		// Then, re-add all the sizes for the product.
 		foreach ($product->sizes as $size) {
-			$stmt = $this->conn->prepare("INSERT INTO product_sizes (productID, sizeID, price) VALUES (?, ?, ?)");
-			$stmt->execute([$product->productID, $size->sizeID, $size->price]);
+			$stmt = $this->conn->prepare("INSERT INTO product_sizes (productID, sizeID, price) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE price = ?");
+			$stmt->execute([$product->productID, $size->sizeID, $size->price, $size->price]);
 		}
 
 		// Get the ID of the type and gender from the product class (as they are strings)
@@ -1048,21 +1054,40 @@ class Database {
 		}
 		return $sizes;
 	}
-  
-	public function sortbyHighest(){
+
+	/**
+	 * Returns reviews, ordered by the highest ratings first.
+	 * @return array|false An array of reviews, or false if there was an error.
+	 */
+	public function sortByHighest(): array | false {
 		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id order by rating DESC");
 		return $check->fetchAll();
-	} 
-	public function sortbyLowest(){
-		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id order by rating ASC");
+	}
+
+	/**
+	 * Returns reviews, ordered by the lowest ratings first.
+	 * @return array|false An array of reviews, or false if there was an error.
+	 */
+	public function sortByLowest(): array | false {
+		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id order by rating");
 		return $check->fetchAll();
 	}
-	public function sortbyNewest(){
+
+	/**
+	 * Returns reviews, ordered by the newest reviews first.
+	 * @return array|false An array of reviews, or false if there was an error.
+	 */
+	public function sortByNewest(): array | false {
 		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id order by date DESC");
 		return $check->fetchAll();
 	}
-	public function sortbyOldest(){
-		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id  order by date ASC");
+
+	/**
+	 * Returns reviews, ordered by the oldest reviews first.
+	 * @return array|false An array of reviews, or false if there was an error.
+	 */
+	public function sortByOldest(): array | false {
+		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id  order by date");
     return $check->fetchAll();
 	}
 
