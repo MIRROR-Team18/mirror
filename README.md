@@ -29,14 +29,21 @@ The full list of functionality (and who did it) is as follows:
 
 ## Running Locally
 If you would like to run the website on your machine, please follow the following instructions:
-1. Get XAMPP from [here](https://www.apachefriends.org/ "Apache Friends").
-2. You will also need Composer if you don't already have it, get it from [here](https://getcomposer.org/download/ "Get Composer").
-3. Clone this repo inside the `htdocs` folder in XAMPP, by default this would be `C:/xampp/htdocs` (assuming you're on Windows)
+1. Get Laragon from [here](https://laragon.org/download/ "Laragon"). We would recommend downloading the "Full" edition.
+2. If you do not have Composer already, download it from [here](https://getcomposer.org/download/ "Get Composer").
+3. Clone this repo inside the `www` folder in Laragon, by default this would be `C:/laragon/www` (assuming you're on Windows)
 4. Run the command `composer install` inside of the cloned folder to install the dotenv package.
 5. Create a `.env` file in the folder, fill it out with the details of your database.
-6. Start Apache and MySQL from the XAMPP Control Panel.
-7. Open phpMyAdmin by clicking on the `Admin` button next to MySQL.
-8. Create a database (we called ours `mirror`, but it is up to you!). The tables will be created automatically.
-9. You can now navigate to `localhost/<folder name>`, and the website will be up and running!
+6. Open Laragon **as admin**. This will allow it to create a virtual host for the website.
+7. By default, HeidiSQL is the default database manager for Laragon. If you would like to use phpMyAdmin, you can do the following:
+   - Right click anywhere on the Laragon window
+   - In the context menu, go to Tools > Quick Add > *phpMyAdmin
+   - It will download phpMyAdmin for you, and open it automatically.
+8. Open your database manager by clicking on the `Database` button at the bottom.
+9. Simply create a database (we called ours `mirror`, but it is up to you!). The tables will be created automatically.
+10. You can now navigate to `<folder_name>.test`, and the website will be up and running!
+11. After the first time, you will not need to run Laragon as admin again.
 
-_Do not forget to import the database and create the .env file!_
+_Do not forget to create the database and create the .env file!_
+
+Note: A previous version of these steps used XAMPP. By all means, it still works, but we have found Laragon to be more user-friendly and easier to set up, and the power brought by the virtual host system is astonishing.
