@@ -33,8 +33,8 @@
 			$addressID = $db->createOrGetAddress($_POST['first-name'] . " " . $_POST['last-name'], $_POST['address-line-1'], $_POST['address-line-2'], $_POST['address-line-3'], $_POST['city'], $_POST['postcode'], $_POST['country']);
 			$db->createOrder($_SESSION['userID'], $_SESSION['basket'], $parsedQuantities, $addressID);
 
-			// Redirect to processedCheckout.php
-			header('Location: processedCheckout.php');
+			// Redirect to done.php
+			header('Location: done.php');
 			exit();
 		}
 		?>
