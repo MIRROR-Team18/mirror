@@ -335,6 +335,7 @@
                                     }
                                 ?>
                             </div>
+                            <p>If an order exists with a size, it cannot be deleted here.</p>
                         </div>
 					</div>
                     <div class="col">

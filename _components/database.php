@@ -638,14 +638,14 @@ class Database {
 	 * @throws Exception If there is a problem in updating a product.
 	 */
 	public function updateProduct(Product $product): bool {
-		// First, delete all the sizes for the product. It's just easier this way
-		$stmt = $this->conn->prepare("DELETE FROM product_sizes WHERE productID = ?");
+		// First, delete all the sizes for the product, provided they're not in an order.
+		$stmt = $this->conn->prepare("DELETE FROM product_sizes WHERE productID = ? AND (productID, sizeID) NOT IN (SELECT productID, sizeID FROM products_in_orders)");
 		$stmt->execute([$product->productID]);
 
 		// Then, re-add all the sizes for the product.
 		foreach ($product->sizes as $size) {
-			$stmt = $this->conn->prepare("INSERT INTO product_sizes (productID, sizeID, price) VALUES (?, ?, ?)");
-			$stmt->execute([$product->productID, $size->sizeID, $size->price]);
+			$stmt = $this->conn->prepare("INSERT INTO product_sizes (productID, sizeID, price) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE price = ?");
+			$stmt->execute([$product->productID, $size->sizeID, $size->price, $size->price]);
 		}
 
 		// Get the ID of the type and gender from the product class (as they are strings)
