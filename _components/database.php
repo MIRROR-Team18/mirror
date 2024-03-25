@@ -563,10 +563,11 @@ class Database {
 	 * Returns the history of stock for a given product.
 	 * @param string $productID
 	 * @param string $period Expects "month" / "year" / "all"
+	 * @param string|null $sizeID Expects a sizeID or null
 	 * @return array An array of stock history.
 	 * @throws Exception If there is a problem in getting stock history.
 	 */
-	public function getProductStockHistory(string $productID, string $period): array {
+	public function getProductStockHistory(string $productID, string $period, string $sizeID = null): array {
 		if (!in_array($period, ["month", "year", "all"])) throw new Exception("Invalid period for stock history: " . $period);
 		$dateLimit = match ($period) {
 			"year" => "DATE_SUB(NOW(), INTERVAL 1 YEAR)",
@@ -574,8 +575,13 @@ class Database {
 			default => "DATE_SUB(NOW(), INTERVAL 1 MONTH)" // includes "month"
 		};
 
-		$stmt = $this->conn->prepare("SELECT orders.timeCreated, orders.direction, products_in_orders.quantity FROM products_in_orders INNER JOIN orders ON products_in_orders.orderID = orders.id WHERE productID = ? AND orders.timeCreated > " . $dateLimit . " ORDER BY orders.timeCreated DESC;");
-		$stmt->execute([$productID]);
+		$sizeSql = !is_null($sizeID) ? "AND sizeID = :size" : "";
+
+		$sql = "SELECT orders.timeCreated, orders.direction, products_in_orders.quantity FROM products_in_orders INNER JOIN orders ON products_in_orders.orderID = orders.id WHERE productID = :product " . $sizeSql . " AND orders.timeCreated > " . $dateLimit . " ORDER BY orders.timeCreated DESC;";
+		$stmt = $this->conn->prepare($sql);
+		$stmt->bindParam(":product", $productID);
+		if (!is_null($sizeID)) $stmt->bindParam(":size", $sizeID);
+		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
