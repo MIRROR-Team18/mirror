@@ -1047,21 +1047,40 @@ class Database {
 		}
 		return $sizes;
 	}
-  
-	public function sortbyHighest(){
+
+	/**
+	 * Returns reviews, ordered by the highest ratings first.
+	 * @return array|false An array of reviews, or false if there was an error.
+	 */
+	public function sortByHighest(): array | false {
 		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id order by rating DESC");
 		return $check->fetchAll();
-	} 
-	public function sortbyLowest(){
-		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id order by rating ASC");
+	}
+
+	/**
+	 * Returns reviews, ordered by the lowest ratings first.
+	 * @return array|false An array of reviews, or false if there was an error.
+	 */
+	public function sortByLowest(): array | false {
+		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id order by rating");
 		return $check->fetchAll();
 	}
-	public function sortbyNewest(){
+
+	/**
+	 * Returns reviews, ordered by the newest reviews first.
+	 * @return array|false An array of reviews, or false if there was an error.
+	 */
+	public function sortByNewest(): array | false {
 		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id order by date DESC");
 		return $check->fetchAll();
 	}
-	public function sortbyOldest(){
-		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id  order by date ASC");
+
+	/**
+	 * Returns reviews, ordered by the oldest reviews first.
+	 * @return array|false An array of reviews, or false if there was an error.
+	 */
+	public function sortByOldest(): array | false {
+		$check = $this->conn->query("SELECT * FROM reviews LEFT JOIN user_images ON reviews.imageID = user_images.id  order by date");
     return $check->fetchAll();
 	}
 
