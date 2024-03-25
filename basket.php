@@ -2,115 +2,129 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basket - MIЯЯOR</title>
-    <link rel="stylesheet" href="_stylesheets/main.css">
+	<?php include '_components/default.php'; ?>
+    <title>Basket - MIRЯOR</title>
     <link rel="stylesheet" href="_stylesheets/basket.css">
 </head>
 
 <body>
-    <?php include '_components/header.php'; ?>
+<?php include '_components/header.php'; ?>
 
-    <main class="basket-container">
-        <h1>Basket</h1>
+<main>
+    <h1>
+        <i class="fa-solid fa-basket-shopping"></i>
+        BASKET
+    </h1>
+    <section class="basket-container">
         <table id="basket">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Description</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                </tr>
-            </thead>
             <tbody>
-                <?php
-                require_once '_components/database.php';
-                if (session_status() === PHP_SESSION_NONE)
-                    session_start();
-                $total = 0; // Used at the bottom
-                
-                if (isset($_SESSION['basket'])) {
-                    $basket = array_map(function ($item) {
-                        return unserialize(serialize($item));
-                    }, $_SESSION['basket']);
+			<?php
+			require_once '_components/database.php';
+			if (session_status() === PHP_SESSION_NONE) session_start();
+			$total = 0; // Used at the bottom
 
-                    foreach ($basket as $item) {
-                        $photo = file_exists("_images/products/{$item->productID}/") ? "_images/products/{$item->productID}/" . scandir("_images/products/{$item->productID}/")[2] : "https://picsum.photos/512";
+			if (isset($_SESSION['basket'])) {
+				// Fixes __PHP_Incomplete_Class_Name. Did you know I dislike PHP? - Pawel
+				$basket = array_map(function ($item) {
+					return unserialize(serialize($item));
+				}, $_SESSION['basket']);
 
-                        $sizeName = $item->sizes[0]->name ?? "One Size";
-                        $sizePrice = $item->sizes[0]->price ?? 0;
+				$MAX_QUANTITY = 10;
+				$quantityOptions = "";
+				for ($i = 1; $i <= $MAX_QUANTITY; $i++) {
+					$quantityOptions .= "<option value='$i'>$i</option>";
+				}
 
-                        echo <<<EOT
-            <tr id="{$item->productID}">
-                <td><img src="{$photo}" alt="{$item->name}" class="product-image"></td>
-                <td>
-                    <p class="name">{$item->name}</p>
-                    <p>Color: {$sizeName}</p>
-                    <p>Price: £{$sizePrice}</p>
-                    <p>You saved 3.06kg of CO2 emissions!</p>
-                </td>
-                <td>
-                    <select>
-                        <option value="1" selected>1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <!-- Add more quantity options as needed -->
-                    </select>
-                </td>
-            </tr>
-        EOT;
-                    }
-                }
-                ?>
+				foreach ($basket as $item) {
+					/** @var Product $item */
+                    $photo = Database::findPrimaryProductImageUrl($item->productID);
+
+                    $size = reset($item->sizes); // Get the first (chosen) size
+					$sizeName = $size->name ?? "One Size";
+					$sizePrice = $size->price ?? 0;
+
+					echo <<<EOT
+                        <tr id="{$item->productID}">
+                            <td><img src="{$photo}" alt="{$item->name}" class="product-image"></td>
+                            <td>
+                                <select id="quantity-{$item->productID}">$quantityOptions</select>
+                            </td>
+                            <td>
+                                <p class="name">{$item->name}</p>
+                                <p class="size" data-size-id="{$size->sizeID}">Size: {$sizeName}</p>
+                            </td>
+                            <td class="price" data-original-price="{$sizePrice}">£{$sizePrice}</td>
+                        </tr>      
+                    EOT;
+
+					$total += $sizePrice;
+				}
+			} else {
+				echo "<tr><td colspan='4'>Your basket is empty!</td></tr>";
+			}
+			?>
             </tbody>
         </table>
 
+
         <!-- Order Summary Section -->
         <div id="order-summary">
-            <h2>Order Summary</h2>
-            <!-- <p>Order Value: £19.99</p> Reimplement after MVP -->
-
-            <!-- Add other order summary details as needed -->
-            <div id="total">TOTAL: £0.00</div>
-
-            <!-- Use an anchor tag around the button for navigation -->
-
-            <button onclick="storeQuantityData()" id="continue-to-checkout">Continue to Checkout</button>
+            <p>
+                <i class="fa-solid fa-leaf"></i>
+                you saved <span class="green">0kg</span> of CO<sub>2</sub> emissions!
+            </p>
+            <h2>Total: £<span id="totalPrice"><?= $total ?></span></h2>
         </div>
-    </main>
+    </section>
+    <button onclick="storeQuantityData()" id="continue-to-checkout">Continue to Checkout</button>
+</main>
+<script>
+	function storeQuantityData() {
+		const basket = document.getElementById("basket");
+		const quantities = {};
+		for (let i = 0; i < basket.rows.length; i++) {
+			if (basket.rows[i].cells.length === 1) continue; // Skip if the row is empty
+			const quantityInput = basket.rows[i].getElementsByTagName("select")[0];
+			const sizeID = basket.rows[i].querySelector(".size").dataset.sizeId;
+			const productID = basket.rows[i].id.replace("quantity-", "");
+			if (!quantities[productID]) quantities[productID] = {};
+			quantities[productID][sizeID] = quantityInput.value;
+		}
+		// Save cookie
+		document.cookie = `quantities=${JSON.stringify(quantities)}; path=/`;
+		window.location.href = "checkout.php";
+	}
 
-    <script>
-        function storeQuantityData() {
-            const basket = document.getElementById("basket");
-            const quantities = {};
-            for (let i = 1; i < basket.rows.length; i++) {
-                if (basket.rows[i].cells.length === 1) continue; // Skip if the row is empty
-                quantities[`${basket.rows[i].id}`] = basket.rows[i].cells[2].children[0].value
-            }
-            // Save cookie
-            document.cookie = `quantities=${JSON.stringify(quantities)}; path=/`;
+	function updatePrice(productId) {
+		const select = document.getElementById(`quantity-${productId}`);
+		const priceSpan = select.parentElement.parentElement.querySelector(".price");
+		const pricePerItem = priceSpan.dataset.originalPrice;
+		const quantity = parseInt(select.value);
+		const price = (pricePerItem * quantity).toFixed(2);
+		priceSpan.innerText = `£${price}`;
+		calculateTotal();
+	}
 
-            window.location.href = "checkout.php";
-        }
+	function calculateTotal() {
+		let totalPrice = 0;
+		document.querySelectorAll("select").forEach(select => {
+            const pricePerItem = select.parentElement.parentElement.querySelector(".price").innerText.replace("£", "");
+			totalPrice += parseInt(pricePerItem);
+        });
 
-        function calculateTotal() {
-            const basket = document.getElementById("basket");
-            const total = document.getElementById("total");
+		// Update the total price in the order summary section
+		const totalPriceElement = document.getElementById("totalPrice");
+		totalPriceElement.innerText = totalPrice.toFixed(2);
+	}
 
-            // Add up all totals
-            let totalValue = 0;
-            for (let i = 1; i < basket.rows.length; i++) {
-                totalValue += parseFloat(basket.rows[i].cells[3].innerText.replace("£", "")) * parseInt(basket.rows[i].cells[2].children[0].value)
-            }
-            total.innerText = `TOTAL: £${totalValue.toFixed(2)}`;
-        }
+	// Don't need to do calculations on page load, as PHP does that for us
+	document.querySelectorAll("select").forEach(select => select.addEventListener("change", () => {
+		calculateTotal();
+		updatePrice(select.id.substring(9)); // Extract product ID from select element ID
+	}));
+</script>
 
-        window.addEventListener("load", calculateTotal)
-        document.querySelectorAll("select").forEach(select => select.addEventListener("change", calculateTotal));
-    </script>
-
-    <?php include '_components/footer.php'; ?>
+<?php include '_components/footer.php'; ?>
 </body>
 
-</html>
+</html> 

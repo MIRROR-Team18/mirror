@@ -114,6 +114,7 @@ footer {
 
     text-align: right;
     z-index: 100;
+    position: relative;
 }
 
 footer.short {
