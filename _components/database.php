@@ -834,8 +834,9 @@ class Database {
 
 		foreach	($basket as $item) {
 			/* @var $item Product */
-			$totalPrice += $item->sizes[0]->price * $quantityMap[$item->productID][$item->sizes[0]->sizeID];
-			$productsInOrdersQueue[] = [$item->productID, $item->sizes[0]->sizeID, $quantityMap[$item->productID][$item->sizes[0]->sizeID]];
+			$size = reset($item->sizes); // Get the first size
+			$totalPrice += $size->price * $quantityMap[$item->productID][$size->sizeID];
+			$productsInOrdersQueue[] = [$item->productID, $size->sizeID, $quantityMap[$item->productID][$size->sizeID]];
 		}
 
 		$stmt = $this->conn->prepare("INSERT INTO orders (userID, addressID, direction, status, paidAmount) VALUES (?, ?, ?, ?, ?)");

@@ -51,7 +51,7 @@
                             </td>
                             <td>
                                 <p class="name">{$item->name}</p>
-                                <p class="size">Size: {$sizeName}</p>
+                                <p class="size" data-size-id="{$size->sizeID}">Size: {$sizeName}</p>
                             </td>
                             <td class="price" data-original-price="{$sizePrice}">£{$sizePrice}</td>
                         </tr>      
@@ -85,7 +85,10 @@
 		for (let i = 0; i < basket.rows.length; i++) {
 			if (basket.rows[i].cells.length === 1) continue; // Skip if the row is empty
 			const quantityInput = basket.rows[i].getElementsByTagName("select")[0];
-			quantities[`${basket.rows[i].id.replace("quantity-", "")}`] = quantityInput.value
+			const sizeID = basket.rows[i].querySelector(".size").dataset.sizeId;
+			const productID = basket.rows[i].id.replace("quantity-", "");
+			if (!quantities[productID]) quantities[productID] = {};
+			quantities[productID][sizeID] = quantityInput.value;
 		}
 		// Save cookie
 		document.cookie = `quantities=${JSON.stringify(quantities)}; path=/`;
