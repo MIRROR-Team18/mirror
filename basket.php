@@ -106,8 +106,7 @@
 		let totalPrice = 0;
 		document.querySelectorAll("select").forEach(select => {
             const pricePerItem = select.parentElement.parentElement.querySelector(".price").innerText.replace("£", "");
-            const quantity = parseInt(select.value);
-			totalPrice += pricePerItem * quantity;
+			totalPrice += parseInt(pricePerItem);
         });
 
 		// Update the total price in the order summary section

@@ -136,3 +136,27 @@ h1 {
 .green {
     color: var(--green);
 }
+
+.sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10vw;
+    height: 100vh;
+    background-color: var(--blue-2);
+    padding: calc(69px + 1rem) 0;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.sidebar .product-image {
+    margin-bottom: 1rem;
+}
+
+.sidebar .total {
+    font-size: 1.5rem;
+    font-weight: bold;
+}

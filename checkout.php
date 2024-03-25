@@ -22,7 +22,37 @@
 			echo "<p><a href='./products'>Go to get some products first!</a></p>";
 			exit();
 		}
+
+		require_once '_components/database.php';
+		$db = new Database();
 		?>
+        <div class="sidebar">
+            <div class="products">
+				<?php
+                $total = 0;
+                $basket = array_map(function ($item) {
+                    return unserialize(serialize($item));
+                }, $_SESSION['basket']);
+
+				$parsedQuantities = json_decode($_COOKIE['quantities'], TRUE);
+
+                foreach ($basket as $item) {
+                    $photo = $db->findPrimaryProductImageUrl($item->productID);
+                    $size = reset($item->sizes);
+                    $sizeName = $size->name ?? "One Size";
+                    $sizePrice = $size->price ?? 0;
+                    $quantity = $parsedQuantities[$item->productID];
+                    $total += $sizePrice * $quantity;
+                    echo <<<HTML
+                        <img src="{$photo}" alt="{$item->name}" class="product-image">
+                    HTML;
+                }
+				?>
+            </div>
+            <div class="total">
+                £<?php echo number_format($total, 2); ?>
+            </div>
+        </div>
 
         <form method="post">
             <div class="deliveryOptions formSection">
@@ -107,10 +137,7 @@
 include '_components/shortFooter.php';
 // Check if the form is submitted and the "Pay Now" button is clicked
 if (isset($_POST['continue'])) {
-	require_once '_components/database.php';
-	$db = new Database();
-
-	$parsedQuantities = json_decode($_COOKIE['quantities'], TRUE);
+    // $parsedQuantities is defined much earlier in the code
     $addressID = $db->createOrGetAddress($_POST['first-name'] . " " . $_POST['last-name'], $_POST['address-line-1'], $_POST['address-line-2'], $_POST['address-line-3'], $_POST['city'], $_POST['postcode'], $_POST['country']);
 	$db->createOrder($_SESSION['userID'], $_SESSION['basket'], $parsedQuantities, $addressID);
 
